@@ -32,34 +32,29 @@ final class Welcome extends UiLayout {
   order by v.visit_date desc
   """;
 
-  private final Web.Paginator paginator;
+  public Welcome(Http.Exchange http) {
+    super(http);
 
-  private final Sql.Transaction trx;
+    section = UiSection.HOME;
 
-  public Welcome(Web.Paginator paginator, Sql.Transaction trx) {
-    super(UiSection.HOME, "PetClinic :: an Objectos Way demonstration");
-
-    this.paginator = paginator;
-    this.trx = trx;
-  }
-
-  public static void get(Http.Exchange http) {
-    Sql.Transaction trx;
-    trx = http.get(Sql.Transaction.class);
-
-    int count = trx.count(QUERY);
-
-    Web.Paginator paginator;
-    paginator = Way.paginator(http, count);
-
-    Welcome template;
-    template = new Welcome(paginator, trx);
-
-    http.ok(template);
+    title = "PetClinic :: an Objectos Way demonstration";
   }
 
   @Override
   protected final void mainContent() {
+    Sql.Transaction trx;
+    trx = http.get(Sql.Transaction.class);
+
+    int count;
+    count = trx.count(QUERY);
+
+    Web.Paginator paginator;
+    paginator = Way.paginator(http, count);
+
+    ui(trx, paginator);
+  }
+
+  private void ui(Sql.Transaction trx, Web.Paginator paginator) {
     dataFrame("main", "welcome");
 
     header(Ui.PAGE_HEADER,
@@ -81,7 +76,7 @@ final class Welcome extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::rows)
+                    f(this::rows, trx, paginator)
                 )
             )
 
@@ -90,11 +85,8 @@ final class Welcome extends UiLayout {
     );
   }
 
-  private void rows() {
-    Sql.Page page;
-    page = paginator.current();
-
-    trx.queryPage(QUERY, this::row, page);
+  private void rows(Sql.Transaction trx, Web.Paginator paginator) {
+    trx.queryPage(QUERY, this::row, paginator.current());
   }
 
   private void row(ResultSet rs) throws SQLException {

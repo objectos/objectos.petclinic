@@ -35,27 +35,29 @@ final class VetsBrowse extends UiLayout {
   order by  v.last_name, v.id
   """;
 
-  private final Web.Paginator paginator;
-
-  private final Sql.Transaction trx;
-
   VetsBrowse(Http.Exchange http) {
     super(http);
 
     section = UiSection.VETS;
 
     title = "Veterinarians :: Objectos PetClinic";
+  }
 
+  @Override
+  protected final void mainContent() {
+    Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
     int count;
     count = trx.count(QUERY);
 
+    Web.Paginator paginator;
     paginator = Way.paginator(http, count);
+
+    ui(trx, paginator);
   }
 
-  @Override
-  protected final void mainContent() {
+  private void ui(Sql.Transaction trx, Web.Paginator paginator) {
     dataFrame("main", "vets");
 
     header(Ui.PAGE_HEADER,
@@ -76,7 +78,7 @@ final class VetsBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    include(this::rows)
+                    f(this::rows, trx, paginator)
                 )
             )
 
@@ -85,11 +87,8 @@ final class VetsBrowse extends UiLayout {
     );
   }
 
-  private void rows() {
-    Sql.Page page;
-    page = paginator.current();
-
-    trx.queryPage(QUERY, this::row, page);
+  private void rows(Sql.Transaction trx, Web.Paginator paginator) {
+    trx.queryPage(QUERY, this::row, paginator.current());
   }
 
   private void row(ResultSet rs) throws SQLException {

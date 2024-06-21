@@ -74,7 +74,7 @@ public class OwnersBrowseTest {
   public void filtering() {
     Http.TestingExchange http;
     http = Http.testingExchange(
-        Http.requestTarget("/owners?q=dav"),
+        Http.requestTarget("/owners?lastName=dav"),
 
         Http.set(Sql.Transaction.class, trx)
     );

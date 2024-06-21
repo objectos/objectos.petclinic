@@ -23,7 +23,7 @@ import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
-final class OwnersBrowse extends UiLayout implements Web.Action {
+final class OwnersBrowse extends UiLayout {
 
   static final String QUERY = """
   select    concat_ws(' ', o.first_name, o.last_name) as name,
@@ -35,19 +35,11 @@ final class OwnersBrowse extends UiLayout implements Web.Action {
   left join pets as p
   on        p.owner_id = o.id
   --
-  where     o.last_name like ?
+  where     o.last_name like concat(?, '%')
   --
   group by  name
   order by  o.last_name, o.id
   """;
-
-  private final String lastName;
-
-  private final Web.Paginator paginator;
-
-  private final String path;
-
-  private final Sql.Transaction trx;
 
   OwnersBrowse(Http.Exchange http) {
     super(http);
@@ -55,29 +47,29 @@ final class OwnersBrowse extends UiLayout implements Web.Action {
     section = UiSection.OWNERS;
 
     title = "Owners :: PetClinic";
-
-    trx = http.get(Sql.Transaction.class);
-
-    path = http.path().value();
-
-    String q = http.query().get("q");
-
-    String lastName = null;
-
-    if (q != null && !q.isBlank()) {
-      lastName = q + "%";
-    }
-
-    this.lastName = lastName;
-
-    int count;
-    count = trx.count(QUERY, lastName);
-
-    paginator = Way.paginator(http, count);
   }
 
   @Override
   protected final void mainContent() {
+    Sql.Transaction trx;
+    trx = http.get(Sql.Transaction.class);
+
+    String lastName;
+    lastName = http.query().get("lastName");
+
+    int count;
+    count = trx.count(QUERY, lastName);
+
+    Web.Paginator paginator;
+    paginator = Way.paginator(http, count);
+
+    String searchAction;
+    searchAction = http.path().value();
+
+    ui(trx, lastName, paginator, searchAction);
+  }
+
+  private void ui(Sql.Transaction trx, String lastName, Web.Paginator paginator, String searchAction) {
     dataFrame("main", "owners");
 
     ElementId formId;
@@ -86,11 +78,14 @@ final class OwnersBrowse extends UiLayout implements Web.Action {
     header(Ui.PAGE_HEADER,
         h1("Owners"),
 
-        form(formId, action(path), method("get"),
-            input(name("q"), type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
+        form(formId, action(searchAction), method("get"),
+            input(
+                name("lastName"),
+                type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
                 dataOnInput(
                     Action.delay(500, Action.submit(formId))
-                )
+                ),
+                lastName != null ? value(lastName) : noop()
             )
         )
     );
@@ -111,7 +106,7 @@ final class OwnersBrowse extends UiLayout implements Web.Action {
                     )
                 ),
                 tbody(
-                    include(this::rows)
+                    f(this::rows, trx, paginator, lastName)
                 )
             )
         )
@@ -119,7 +114,7 @@ final class OwnersBrowse extends UiLayout implements Web.Action {
     );
   }
 
-  private void rows() {
+  private void rows(Sql.Transaction trx, Web.Paginator paginator, String lastName) {
     trx.queryPage(QUERY, this::row, paginator.current(), lastName);
   }
 

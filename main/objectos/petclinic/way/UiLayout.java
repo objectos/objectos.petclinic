@@ -41,7 +41,7 @@ abstract class UiLayout extends HtmlTemplate implements Web.Action {
 
   protected String title;
 
-  private Http.Exchange http;
+  protected Http.Exchange http;
 
   UiLayout(Http.Exchange http) {
     this.http = http;

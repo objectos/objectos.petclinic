@@ -48,7 +48,7 @@ public class Way extends Web.Module {
 
     interceptMatched(this::transactional);
 
-    route(path("/"), GET(Welcome::get));
+    route(path("/"), GET(action(Welcome::new)));
     route(segments(eq("owners"), zeroOrMore()), new Owners());
     route(segments(eq("vets"), zeroOrMore()), new Vets());
   }
