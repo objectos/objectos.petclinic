@@ -1,0 +1,164 @@
+/*
+ * Copyright (C) 2023-2024 Objectos Software LTDA.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package objectos.petclinic;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.sql.SQLException;
+import objectos.html.script.WayJs;
+import objectos.lang.ShutdownHook;
+import objectos.lang.WayShutdownHook;
+import objectos.notes.LongNote;
+import objectos.notes.Note0;
+import objectos.notes.NoteSink;
+import objectos.way.Bootstrap;
+import objectos.way.HandlerFactory;
+import objectos.way.Http;
+import objectos.way.Sql;
+import objectos.web.BootstrapException;
+import objectos.web.WayWebResources;
+import objectos.web.WebResources;
+import objectox.petclinic.Injector;
+import objectox.petclinic.PetClinicH2;
+import org.h2.jdbcx.JdbcConnectionPool;
+
+abstract class PetClinic extends Bootstrap {
+
+  public static final int DEVELOPMENT_HTTP_PORT = 8004;
+
+  public static final int PRODUCTION_HTTP_PORT = 4004;
+
+  PetClinic() {
+  }
+
+  @Override
+  protected final void bootstrap() throws BootstrapException {
+    long startTime;
+    startTime = System.currentTimeMillis();
+
+    // NoteSink
+    NoteSink noteSink;
+    noteSink = noteSink();
+
+    Note0 startNote;
+    startNote = Note0.info(getClass(), "Start");
+
+    noteSink.send(startNote);
+
+    // ShutdownHook
+    ShutdownHook shutdownHook;
+    shutdownHook = shutdownHook(noteSink);
+
+    // Sql.Source
+    Sql.Source dataSource;
+    dataSource = dataSource(noteSink, shutdownHook);
+
+    // WebResources
+    WebResources webResources;
+    webResources = webResources();
+
+    shutdownHook.registerIfPossible(webResources);
+
+    // Injector
+    Injector injector;
+    injector = new Injector(dataSource, noteSink, webResources);
+
+    // HandlerFactory
+    HandlerFactory handlerFactory;
+    handlerFactory = handlerFactory(shutdownHook, injector);
+
+    // WebServer
+    try {
+      Http.Server httpServer;
+      httpServer = Http.createServer(
+          handlerFactory,
+
+          Http.bufferSize(1024, 4096),
+
+          Http.noteSink(noteSink),
+
+          Http.port(serverPort())
+      );
+
+      shutdownHook.addAutoCloseable(httpServer);
+
+      httpServer.start();
+    } catch (IOException e) {
+      throw new BootstrapException("WebServer", e);
+    }
+
+    LongNote totalTimeNote;
+    totalTimeNote = LongNote.info(getClass(), "Total time [ms]");
+
+    long totalTime;
+    totalTime = System.currentTimeMillis() - startTime;
+
+    noteSink.send(totalTimeNote, totalTime);
+  }
+
+  abstract NoteSink noteSink();
+
+  private ShutdownHook shutdownHook(NoteSink noteSink) {
+    WayShutdownHook shutdownHook;
+    shutdownHook = new WayShutdownHook();
+
+    shutdownHook.noteSink(noteSink);
+
+    shutdownHook.registerIfPossible(noteSink);
+
+    return shutdownHook;
+  }
+
+  private Sql.Source dataSource(NoteSink noteSink, ShutdownHook shutdownHook) throws BootstrapException {
+    try {
+      JdbcConnectionPool dataSource;
+      dataSource = PetClinicH2.create();
+
+      shutdownHook.addAutoCloseable(dataSource::dispose);
+
+      return Sql.createSource(
+          dataSource,
+
+          Sql.noteSink(noteSink)
+      );
+    } catch (SQLException e) {
+      throw new BootstrapException("SqlDataSource", e);
+    }
+  }
+
+  private WebResources webResources() throws BootstrapException {
+    try {
+      WayWebResources webResources;
+      webResources = new WayWebResources();
+
+      webResources.contentType(".js", "text/javascript; charset=utf-8");
+
+      Path way;
+      way = Path.of("ui");
+
+      webResources.createNew(way.resolve("script.js"), WayJs.getBytes());
+
+      return webResources;
+    } catch (IOException e) {
+      throw new BootstrapException("WebResources", e);
+    }
+  }
+
+  abstract HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector) throws BootstrapException;
+
+  abstract int serverPort();
+
+}
