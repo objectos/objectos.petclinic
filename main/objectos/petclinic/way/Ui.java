@@ -15,7 +15,7 @@
  */
 package objectos.petclinic.way;
 
-import objectos.html.ElementClass;
+import objectos.way.Html;
 import objectos.way.Http;
 import objectos.web.WebResources;
 import objectox.petclinic.Injector;
@@ -27,65 +27,65 @@ final class Ui extends Http.Module {
 
   // layout
 
-  static final ElementClass HTML = ElementClass.of(
+  static final Html.ClassName HTML = Html.className(
       "theme-white bg-background"
   );
 
-  static final ElementClass BODY = ElementClass.of(
+  static final Html.ClassName BODY = Html.className(
       "overflow-auto"
   );
 
-  static final ElementClass MAIN = ElementClass.of(
+  static final Html.ClassName MAIN = Html.className(
       "sm:mt-32px"
   );
 
-  static final ElementClass CONTAINER = ElementClass.of(
+  static final Html.ClassName CONTAINER = Html.className(
       "w-full max-w-screen-lg mx-auto"
   );
 
   // $header
 
-  static final ElementClass HEADER = ElementClass.of(
+  static final Html.ClassName HEADER = Html.className(
       "border-b border-b-border-subtle",
       "bg-background"
   );
 
-  static final ElementClass HEADER_CONTENTS = ElementClass.of(
+  static final Html.ClassName HEADER_CONTENTS = Html.className(
       "grid grid-cols-3 h-header px-16px",
       "sm:flex"
   );
 
-  static final ElementClass HEADER_LEFT = ElementClass.of(
+  static final Html.ClassName HEADER_LEFT = Html.className(
       "flex items-center -ml-8px",
       "sm:hidden"
   );
 
-  static final ElementClass HEADER_BTN = ElementClass.of(
+  static final Html.ClassName HEADER_BTN = Html.className(
       "size-32px cursor-pointer flex items-center justify-center outline-1",
       "active:bg-background-active focus:outline-focus hover:bg-background-hover",
       "lg:hidden"
   );
 
-  static final ElementClass HEADER_BTN_ICON = ElementClass.of(
+  static final Html.ClassName HEADER_BTN_ICON = Html.className(
       "size-16px"
   );
 
-  static final ElementClass HEADER_TITLE = ElementClass.of(
+  static final Html.ClassName HEADER_TITLE = Html.className(
       "flex items-center justify-center text-sm"
   );
 
-  static final ElementClass HEADER_NAV_WRAPPER = ElementClass.of(
+  static final Html.ClassName HEADER_NAV_WRAPPER = Html.className(
       "hidden",
       "sm:flex sm:grow sm:justify-end"
   );
 
-  static final ElementClass HEADER_NAV = ElementClass.of(
+  static final Html.ClassName HEADER_NAV = Html.className(
       "flex"
   );
 
   // $backdrop
 
-  static final ElementClass BACKDROP = ElementClass.of(
+  static final Html.ClassName BACKDROP = Html.className(
       "absolute inset-0px z-10 mt-header",
       "hidden",
       "bg-overlay"
@@ -93,19 +93,19 @@ final class Ui extends Http.Module {
 
   // $nav
 
-  static final ElementClass NAV_FRAME = ElementClass.of(
+  static final Html.ClassName NAV_FRAME = Html.className(
       "absolute top-header bottom-0px left-0px z-20 w-256px",
       "hidden bg-background pt-20px",
       "border-r border-r-border-subtle"
   );
 
-  static final ElementClass NAV_GROUP = ElementClass.of(
+  static final Html.ClassName NAV_GROUP = Html.className(
       "flex flex-col",
 
       "sm:h-full sm:flex-row sm:justify-end"
   );
 
-  static final ElementClass NAV_LINK = ElementClass.of(
+  static final Html.ClassName NAV_LINK = Html.className(
       "flex gap-14px items-center",
       "px-16px py-8px",
       "text-sm",
@@ -113,23 +113,23 @@ final class Ui extends Http.Module {
       "hover:bg-background-hover"
   );
 
-  static final ElementClass NAV_LINK_SELECTED = ElementClass.of(
+  static final Html.ClassName NAV_LINK_SELECTED = Html.className(
       "bg-background-selected hover:bg-background-selected-hover"
   );
 
   // page stuff
 
-  static final ElementClass PAGE_HEADER = ElementClass.of(
+  static final Html.ClassName PAGE_HEADER = Html.className(
       "px-16px py-32px",
 
       "h1:text-lg"
   );
 
-  static final ElementClass PAGE_MAIN = ElementClass.of(
+  static final Html.ClassName PAGE_MAIN = Html.className(
       "px-16px"
   );
 
-  static final ElementClass PAGE_TABLE = ElementClass.of(
+  static final Html.ClassName PAGE_TABLE = Html.className(
       "w-full overflow-x-auto",
 
       "table:w-full table:table-fixed table:text-sm table:text-left",
@@ -139,14 +139,14 @@ final class Ui extends Http.Module {
 
   // utilities
 
-  static final ElementClass FLEX = ElementClass.of("flex");
-  static final ElementClass HIDDEN = ElementClass.of("hidden");
+  static final Html.ClassName FLEX = Html.className("flex");
+  static final Html.ClassName HIDDEN = Html.className("hidden");
 
-  static final ElementClass W_96PX = ElementClass.of("w-96px");
-  static final ElementClass W_112PX = ElementClass.of("w-112px");
-  static final ElementClass W_128PX = ElementClass.of("w-128px");
-  static final ElementClass W_144PX = ElementClass.of("w-144px");
-  static final ElementClass W_160PX = ElementClass.of("w-160px");
+  static final Html.ClassName W_96PX = Html.className("w-96px");
+  static final Html.ClassName W_112PX = Html.className("w-112px");
+  static final Html.ClassName W_128PX = Html.className("w-128px");
+  static final Html.ClassName W_144PX = Html.className("w-144px");
+  static final Html.ClassName W_160PX = Html.className("w-160px");
 
   private final Injector injector;
 

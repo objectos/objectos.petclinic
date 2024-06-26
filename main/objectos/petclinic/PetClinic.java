@@ -18,7 +18,6 @@ package objectos.petclinic;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import objectos.html.script.WayJs;
 import objectos.lang.ShutdownHook;
 import objectos.lang.WayShutdownHook;
 import objectos.notes.LongNote;
@@ -27,6 +26,7 @@ import objectos.notes.NoteSink;
 import objectos.way.Bootstrap;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
+import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.web.BootstrapException;
 import objectos.web.WayWebResources;
@@ -149,7 +149,7 @@ abstract class PetClinic extends Bootstrap {
       Path way;
       way = Path.of("ui");
 
-      webResources.createNew(way.resolve("script.js"), WayJs.getBytes());
+      webResources.createNew(way.resolve("script.js"), Script.getBytes());
 
       return webResources;
     } catch (IOException e) {

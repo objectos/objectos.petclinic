@@ -17,9 +17,9 @@ package objectos.petclinic.way;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import objectos.html.Action;
-import objectos.html.ElementId;
+import objectos.way.Html;
 import objectos.way.Http;
+import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -72,8 +72,8 @@ final class OwnersBrowse extends UiLayout {
   private void ui(Sql.Transaction trx, String lastName, Web.Paginator paginator, String searchAction) {
     dataFrame("main", "owners");
 
-    ElementId formId;
-    formId = ElementId.of("search-form");
+    Html.Id formId;
+    formId = Html.id("search-form");
 
     header(Ui.PAGE_HEADER,
         h1("Owners"),
@@ -83,7 +83,7 @@ final class OwnersBrowse extends UiLayout {
                 name("lastName"),
                 type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
                 dataOnInput(
-                    Action.delay(500, Action.submit(formId))
+                    Script.delay(500, Script.submit(formId))
                 ),
                 lastName != null ? value(lastName) : noop()
             )

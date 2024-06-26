@@ -16,12 +16,11 @@
 package objectos.petclinic.way;
 
 import java.util.function.Function;
-import objectos.html.Api;
-import objectos.html.HtmlTemplate;
-import objectos.html.icon.TablerIcons;
+import objectos.way.Html;
+import objectos.way.Icons;
 import objectos.way.Web;
 
-final class UiPagination extends HtmlTemplate {
+final class UiPagination extends Html.Template {
 
   private final Web.Paginator paginator;
 
@@ -47,8 +46,8 @@ final class UiPagination extends HtmlTemplate {
   }
 
   private void paginationControl() {
-    TablerIcons icons;
-    icons = new TablerIcons(this);
+    Icons.Tabler icons;
+    icons = Icons.tabler(this);
 
     if (paginator.hasPrevious()) {
       active(paginator.previousHref(), icons::chevronLeft);
@@ -63,7 +62,7 @@ final class UiPagination extends HtmlTemplate {
     }
   }
 
-  private void active(String href, Function<Api.GlobalAttribute, Api.Element> icon) {
+  private void active(String href, Function<Html.AttributeInstruction, Html.ElementInstruction> icon) {
     a(
         className("size-40px flex items-center justify-center rounded-full outline-1"),
         className("active:bg-background-active focus:outline-focus hover:bg-background-hover"),
@@ -72,7 +71,7 @@ final class UiPagination extends HtmlTemplate {
     );
   }
 
-  private void inactive(Function<Api.GlobalAttribute, Api.Element> icon) {
+  private void inactive(Function<Html.AttributeInstruction, Html.ElementInstruction> icon) {
     span(className("cursor-not-allowed"),
         button(
             className("size-40px flex items-center justify-center rounded-full"),

@@ -15,27 +15,24 @@
  */
 package objectos.petclinic.way;
 
-import objectos.html.Action;
-import objectos.html.ElementId;
-import objectos.html.HtmlTemplate;
-import objectos.html.Api.Fragment;
-import objectos.html.Api.GlobalAttribute;
-import objectos.html.icon.TablerIcons;
+import objectos.way.Html;
 import objectos.way.Http;
+import objectos.way.Icons;
+import objectos.way.Script;
 import objectos.way.Web;
 
 /**
  * Main template.
  */
-abstract class UiLayout extends HtmlTemplate implements Web.Action {
+abstract class UiLayout extends Html.Template implements Web.Action {
 
-  private static final ElementId _BODY = ElementId.of("body");
-  private static final ElementId _BACKDROP = ElementId.of("backdrop");
-  private static final ElementId _BTN_OPEN = ElementId.of("btn-open-menu");
-  private static final ElementId _BTN_CLOSE = ElementId.of("btn-close-menu");
-  private static final ElementId _NAV = ElementId.of("app-nav");
+  private static final Html.Id _BODY = Html.id("body");
+  private static final Html.Id _BACKDROP = Html.id("backdrop");
+  private static final Html.Id _BTN_OPEN = Html.id("btn-open-menu");
+  private static final Html.Id _BTN_CLOSE = Html.id("btn-close-menu");
+  private static final Html.Id _NAV = Html.id("app-nav");
 
-  protected final TablerIcons icons = new TablerIcons(this);
+  protected final Icons.Tabler icons = Icons.tabler(this);
 
   protected UiSection section;
 
@@ -125,23 +122,23 @@ abstract class UiLayout extends HtmlTemplate implements Web.Action {
     );
   }
 
-  private GlobalAttribute $clickOpenMenu() {
+  private Html.AttributeInstruction $clickOpenMenu() {
     return dataOnClick(
-        Action.replaceClass(_BACKDROP, "hidden", "block"),
-        Action.replaceClass(_BTN_OPEN, "flex", "hidden"),
-        Action.replaceClass(_BTN_CLOSE, "hidden", "flex"),
-        Action.replaceClass(_NAV, "hidden", "block"),
-        Action.replaceClass(_BODY, "overflow-auto", "overflow-hidden")
+        Script.replaceClass(_BACKDROP, "hidden", "block"),
+        Script.replaceClass(_BTN_OPEN, "flex", "hidden"),
+        Script.replaceClass(_BTN_CLOSE, "hidden", "flex"),
+        Script.replaceClass(_NAV, "hidden", "block"),
+        Script.replaceClass(_BODY, "overflow-auto", "overflow-hidden")
     );
   }
 
-  private GlobalAttribute $clickCloseMenu() {
+  private Html.AttributeInstruction $clickCloseMenu() {
     return dataOnClick(
-        Action.replaceClass(_BACKDROP, "block", "hidden"),
-        Action.replaceClass(_BTN_OPEN, "hidden", "flex"),
-        Action.replaceClass(_BTN_CLOSE, "flex", "hidden"),
-        Action.replaceClass(_NAV, "block", "hidden"),
-        Action.replaceClass(_BODY, "overflow-hidden", "overflow-auto")
+        Script.replaceClass(_BACKDROP, "block", "hidden"),
+        Script.replaceClass(_BTN_OPEN, "hidden", "flex"),
+        Script.replaceClass(_BTN_CLOSE, "flex", "hidden"),
+        Script.replaceClass(_NAV, "block", "hidden"),
+        Script.replaceClass(_BODY, "overflow-hidden", "overflow-auto")
     );
   }
 
@@ -166,7 +163,7 @@ abstract class UiLayout extends HtmlTemplate implements Web.Action {
       a(Ui.NAV_LINK,
           item == section ? Ui.NAV_LINK_SELECTED : noop(),
           $clickCloseMenu(),
-          dataOnClick(Action.location(item.href)),
+          dataOnClick(Script.location(item.href)),
           href(item.href), span(item.title)
       );
     }
@@ -174,7 +171,7 @@ abstract class UiLayout extends HtmlTemplate implements Web.Action {
 
   protected abstract void mainContent();
 
-  final Fragment pagination(Web.Paginator paginator) {
+  final Html.FragmentInstruction pagination(Web.Paginator paginator) {
     UiPagination pagination;
     pagination = new UiPagination(paginator);
 

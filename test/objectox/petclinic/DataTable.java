@@ -17,12 +17,7 @@ package objectox.petclinic;
 
 import java.util.ArrayList;
 import java.util.List;
-import objectos.html.Html;
-import objectos.html.HtmlTemplate;
-import objectos.html.pseudom.HtmlDocument;
-import objectos.html.pseudom.HtmlElement;
-import objectos.html.pseudom.HtmlNode;
-import objectos.html.pseudom.HtmlText;
+import objectos.way.Html;
 
 public class DataTable {
 
@@ -32,7 +27,7 @@ public class DataTable {
     this.rows = rows;
   }
 
-  public static DataTable of(HtmlTemplate template) {
+  public static DataTable of(Html.Template template) {
     Builder builder;
     builder = new Builder(template);
 
@@ -49,7 +44,7 @@ public class DataTable {
 
   private static class Builder {
 
-    private final HtmlTemplate template;
+    private final Html.Template template;
 
     private List<List<String>> data = new ArrayList<>();
 
@@ -57,20 +52,20 @@ public class DataTable {
 
     private boolean tbody;
 
-    public Builder(HtmlTemplate template) {
+    public Builder(Html.Template template) {
       this.template = template;
     }
 
     public final DataTable build() {
-      Html html;
-      html = new Html();
+      Html.Compiler html;
+      html = Html.createCompiler();
 
       template.accept(html);
 
-      HtmlDocument document;
+      Html.Document document;
       document = html.compile();
 
-      for (HtmlNode node : document.nodes()) {
+      for (Html.Node node : document.nodes()) {
         node(node);
       }
 
@@ -79,11 +74,11 @@ public class DataTable {
       );
     }
 
-    private void node(HtmlNode node) {
+    private void node(Html.Node node) {
       switch (node) {
-        case HtmlElement element -> element(element);
+        case Html.Element element -> element(element);
 
-        case HtmlText text -> {
+        case Html.Text text -> {
           if (row != null) {
             String value;
             value = text.value();
@@ -96,7 +91,7 @@ public class DataTable {
       }
     }
 
-    private void element(HtmlElement element) {
+    private void element(Html.Element element) {
       String name;
       name = element.name();
 
@@ -130,8 +125,8 @@ public class DataTable {
       }
     }
 
-    private void children(HtmlElement element) {
-      for (HtmlNode node : element.nodes()) {
+    private void children(Html.Element element) {
+      for (Html.Node node : element.nodes()) {
         node(node);
       }
     }

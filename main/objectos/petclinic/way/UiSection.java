@@ -17,29 +17,28 @@ package objectos.petclinic.way;
 
 import java.util.List;
 import java.util.function.BiFunction;
-import objectos.html.Api.Element;
-import objectos.html.Api.GlobalAttribute;
-import objectos.html.icon.TablerIcons;
+import objectos.way.Html;
+import objectos.way.Icons;
 
 enum UiSection {
 
-  HOME(TablerIcons::home2, "Home", "/"),
+  HOME(Icons.Tabler::home2, "Home", "/"),
 
-  OWNERS(TablerIcons::users, "Owners", "/owners"),
+  OWNERS(Icons.Tabler::users, "Owners", "/owners"),
 
-  VETS(TablerIcons::healthRecognition, "Veterinarians", "/vets"),
+  VETS(Icons.Tabler::healthRecognition, "Veterinarians", "/vets"),
 
-  ERROR(TablerIcons::exclamationCircle, "Error", "/oups");
+  ERROR(Icons.Tabler::exclamationCircle, "Error", "/oups");
 
   public static final List<UiSection> ALL = List.of(UiSection.values());
 
-  public final BiFunction<TablerIcons, GlobalAttribute, Element> icon;
+  public final BiFunction<Icons.Tabler, Html.AttributeInstruction, Html.ElementInstruction> icon;
 
   public final String title;
 
   public final String href;
 
-  private UiSection(BiFunction<TablerIcons, GlobalAttribute, Element> icon, String title, String href) {
+  private UiSection(BiFunction<Icons.Tabler, Html.AttributeInstruction, Html.ElementInstruction> icon, String title, String href) {
     this.icon = icon;
 
     this.title = title;
