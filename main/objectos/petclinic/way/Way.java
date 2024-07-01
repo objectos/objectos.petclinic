@@ -42,15 +42,15 @@ public class Way extends Web.Module {
 
   @Override
   protected final void configure() {
-    route(segments(eq("ui"), oneOrMore()), new Ui(injector));
+    install(new Ui(injector));
 
     source(injector.dataSource());
 
     interceptMatched(this::transactional);
 
-    route(path("/"), GET(action(Welcome::new)));
-    route(segments(eq("owners"), zeroOrMore()), new Owners());
-    route(segments(eq("vets"), zeroOrMore()), new Vets());
+    route("/", GET(Welcome::new));
+    install(new Owners());
+    install(new Vets());
   }
 
 }

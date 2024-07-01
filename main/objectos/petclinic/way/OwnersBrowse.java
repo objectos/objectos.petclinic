@@ -26,19 +26,20 @@ import objectos.way.Web;
 final class OwnersBrowse extends UiLayout {
 
   static final String QUERY = """
-  select    concat_ws(' ', o.first_name, o.last_name) as name,
+  SELECT    CONCAT_WS(' ', o.first_name, o.last_name) AS name,
             o.address,
             o.city,
             o.telephone,
-            listagg(p.name, ', ') within group (order by p.name) as pets
-  from      owners as o
-  left join pets as p
-  on        p.owner_id = o.id
+            CONCAT('/owners/', o.id) as href,
+            LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name) AS pets
+  FROM      owners AS o
+  LEFT JOIN pets AS p
+  ON        p.owner_id = o.id
   --
-  where     o.last_name like concat(?, '%')
+  WHERE     o.last_name LIKE CONCAT(?, '%')
   --
-  group by  name
-  order by  o.last_name, o.id
+  GROUP BY  name
+  ORDER BY  o.last_name, o.id
   """;
 
   OwnersBrowse(Http.Exchange http) {
@@ -55,7 +56,7 @@ final class OwnersBrowse extends UiLayout {
     trx = http.get(Sql.Transaction.class);
 
     String lastName;
-    lastName = http.query().get("lastName");
+    lastName = http.queryParam("lastName");
 
     int count;
     count = trx.count(QUERY, lastName);
@@ -64,7 +65,7 @@ final class OwnersBrowse extends UiLayout {
     paginator = Way.paginator(http, count);
 
     String searchAction;
-    searchAction = http.path().value();
+    searchAction = http.path();
 
     ui(trx, lastName, paginator, searchAction);
   }
@@ -106,7 +107,7 @@ final class OwnersBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::rows, trx, paginator, lastName)
+                    f(this::tbody, trx, paginator, lastName)
                 )
             )
         )
@@ -114,33 +115,40 @@ final class OwnersBrowse extends UiLayout {
     );
   }
 
-  private void rows(Sql.Transaction trx, Web.Paginator paginator, String lastName) {
-    trx.queryPage(QUERY, this::row, paginator.current(), lastName);
+  private void tbody(Sql.Transaction trx, Web.Paginator paginator, String lastName) {
+    trx.processQuery(this::rows, paginator, QUERY, lastName);
   }
 
-  private void row(ResultSet rs) throws SQLException {
-    String name;
-    name = rs.getString("name");
+  private void rows(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      String name;
+      name = rs.getString("name");
 
-    String address;
-    address = rs.getString("address");
+      String address;
+      address = rs.getString("address");
 
-    String city;
-    city = rs.getString("city");
+      String city;
+      city = rs.getString("city");
 
-    String telephone;
-    telephone = rs.getString("telephone");
+      String telephone;
+      telephone = rs.getString("telephone");
 
-    String pets;
-    pets = rs.getString("pets");
+      String pets;
+      pets = rs.getString("pets");
 
-    tr(
-        td(name),
-        td(address),
-        td(city),
-        td(telephone),
-        td(pets)
-    );
+      String href;
+      href = rs.getString("href");
+
+      tr(
+          td(
+              a(href(href), t(name))
+          ),
+          td(address),
+          td(city),
+          td(telephone),
+          td(pets)
+      );
+    }
   }
 
 }

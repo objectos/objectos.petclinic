@@ -78,7 +78,7 @@ final class VetsBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::rows, trx, paginator)
+                    f(this::tbody, trx, paginator)
                 )
             )
 
@@ -87,21 +87,23 @@ final class VetsBrowse extends UiLayout {
     );
   }
 
-  private void rows(Sql.Transaction trx, Web.Paginator paginator) {
-    trx.queryPage(QUERY, this::row, paginator.current());
+  private void tbody(Sql.Transaction trx, Web.Paginator paginator) {
+    trx.processQuery(this::rows, paginator, QUERY);
   }
 
-  private void row(ResultSet rs) throws SQLException {
-    String name;
-    name = rs.getString("vet_name");
+  private void rows(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      String name;
+      name = rs.getString("vet_name");
 
-    String specialties;
-    specialties = rs.getString("spec_names");
+      String specialties;
+      specialties = rs.getString("spec_names");
 
-    tr(
-        td(name),
-        td(specialties)
-    );
+      tr(
+          td(name),
+          td(specialties)
+      );
+    }
   }
 
 }

@@ -29,7 +29,7 @@ final class UiPagination extends Html.Template {
   }
 
   @Override
-  protected final void definition() {
+  protected final void render() {
     div(
         className("grid grid-cols-2 items-center py-32px text-sm"),
 

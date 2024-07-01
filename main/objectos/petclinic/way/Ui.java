@@ -160,9 +160,9 @@ final class Ui extends Http.Module {
 
   @Override
   protected final void configure() {
-    route(path("/ui/script.js"), webResources::handle);
+    route("/ui/script.js", webResources::handle);
 
-    route(path("/ui/styles.css"), GET(new UiStyles(injector)));
+    route("/ui/styles.css", GET(new UiStyles(injector)));
   }
 
 }

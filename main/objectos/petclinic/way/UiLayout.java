@@ -50,12 +50,12 @@ abstract class UiLayout extends Html.Template implements Web.Action {
   }
 
   @Override
-  public final void execute() {
+  public void execute() {
     http.ok(this);
   }
 
   @Override
-  protected final void definition() {
+  protected final void render() {
     doctype();
     html(Ui.HTML,
         head(

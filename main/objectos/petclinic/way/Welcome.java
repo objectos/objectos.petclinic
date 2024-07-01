@@ -27,7 +27,7 @@ final class Welcome extends UiLayout {
   static final String QUERY = """
   select p.name, v.visit_date, v.description
   from   visits as v
-  join   pets as p 
+  join   pets as p
   on     v.pet_id = p.id
   order by v.visit_date desc
   """;
@@ -76,7 +76,7 @@ final class Welcome extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::rows, trx, paginator)
+                    f(this::tbody, trx, paginator)
                 )
             )
 
@@ -85,25 +85,27 @@ final class Welcome extends UiLayout {
     );
   }
 
-  private void rows(Sql.Transaction trx, Web.Paginator paginator) {
-    trx.queryPage(QUERY, this::row, paginator.current());
+  private void tbody(Sql.Transaction trx, Web.Paginator paginator) {
+    trx.processQuery(this::rows, paginator, QUERY);
   }
 
-  private void row(ResultSet rs) throws SQLException {
-    Date visitDate;
-    visitDate = rs.getDate("visit_date");
+  private void rows(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      Date visitDate;
+      visitDate = rs.getDate("visit_date");
 
-    String name;
-    name = rs.getString("name");
+      String name;
+      name = rs.getString("name");
 
-    String description;
-    description = rs.getString("description");
+      String description;
+      description = rs.getString("description");
 
-    tr(
-        td(visitDate.toString()),
-        td(name),
-        td(description)
-    );
+      tr(
+          td(visitDate.toString()),
+          td(name),
+          td(description)
+      );
+    }
   }
 
 }
