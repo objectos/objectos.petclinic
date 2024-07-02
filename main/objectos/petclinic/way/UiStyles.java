@@ -103,7 +103,7 @@ final class UiStyles implements Http.Handler {
     );
 
     Set<Class<?>> classes;
-    classes = Set.of(Ui.class, UiOwnerDetails.class, UiPagination.class);
+    classes = Set.of(Ui.class, UiOwnerDetails.class, UiOwnerVCard.class, UiPagination.class);
 
     String s;
     s = styleGen.generate(classes);

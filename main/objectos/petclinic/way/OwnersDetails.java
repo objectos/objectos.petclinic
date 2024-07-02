@@ -23,9 +23,8 @@ import objectos.way.Sql;
 final class OwnersDetails extends UiLayout {
 
   private static final String QUERY = """
-  SELECT CONCAT_WS(' ', first_name, last_name) AS name,
-         address,
-         city,
+  SELECT CONCAT_WS(' ', first_name, last_name) AS fullName,
+         CONCAT(address, ', ', city) AS fullAddress,
          telephone
   FROM   owners
   WHERE  id = ?
@@ -63,10 +62,9 @@ final class OwnersDetails extends UiLayout {
       throw new UnsupportedOperationException("Implement me :: not found");
     }
 
-    UiOwnerDetails details;
-    details = new UiOwnerDetails(rs);
-
-    include(details);
+    include(
+        new UiOwnerVCard(rs)
+    );
   }
 
 }
