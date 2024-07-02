@@ -63,23 +63,10 @@ final class OwnersDetails extends UiLayout {
       throw new UnsupportedOperationException("Implement me :: not found");
     }
 
-    dl(
-        f(this::renderDetails, rs)
-    );
-  }
+    UiOwnerDetails details;
+    details = new UiOwnerDetails(rs);
 
-  private void renderDetails(ResultSet rs) throws SQLException {
-    dt("Name");
-    dd(rs.getString("name"));
-
-    dt("Address");
-    dd(rs.getString("address"));
-
-    dt("City");
-    dd(rs.getString("city"));
-
-    dt("Telephone");
-    dd(rs.getString("telephone"));
+    include(details);
   }
 
 }

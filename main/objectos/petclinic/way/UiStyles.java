@@ -17,8 +17,8 @@ package objectos.petclinic.way;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 import objectos.css.WayStyleGen;
 import objectos.notes.NoteSink;
 import objectos.way.Http;
@@ -103,7 +103,7 @@ final class UiStyles implements Http.Handler {
     );
 
     Set<Class<?>> classes;
-    classes = Set.of(Ui.class, UiPagination.class);
+    classes = Set.of(Ui.class, UiOwnerDetails.class, UiPagination.class);
 
     String s;
     s = styleGen.generate(classes);

@@ -36,7 +36,7 @@ final class Ui extends Http.Module {
   );
 
   static final Html.ClassName MAIN = Html.className(
-      "sm:mt-32px"
+      "px-16px sm:mt-32px"
   );
 
   static final Html.ClassName CONTAINER = Html.className(
@@ -120,13 +120,9 @@ final class Ui extends Http.Module {
   // page stuff
 
   static final Html.ClassName PAGE_HEADER = Html.className(
-      "px-16px py-32px",
+      "py-32px",
 
       "h1:text-lg"
-  );
-
-  static final Html.ClassName PAGE_MAIN = Html.className(
-      "px-16px"
   );
 
   static final Html.ClassName PAGE_TABLE = Html.className(
@@ -136,8 +132,6 @@ final class Ui extends Http.Module {
       "tbody:tr:border-t tbody:tr:border-t-border-subtle tbody:tr:hover:bg-background-hover",
       "tr:h-48px"
   );
-
-  // utilities
 
   static final Html.ClassName FLEX = Html.className("flex");
   static final Html.ClassName HIDDEN = Html.className("hidden");

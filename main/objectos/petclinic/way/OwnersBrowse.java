@@ -91,7 +91,7 @@ final class OwnersBrowse extends UiLayout {
         )
     );
 
-    div(Ui.PAGE_MAIN, dataFrame("owners-table"),
+    div(dataFrame("owners-table"),
 
         pagination(paginator),
 

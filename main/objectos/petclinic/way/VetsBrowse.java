@@ -64,7 +64,7 @@ final class VetsBrowse extends UiLayout {
         h1("Veterinarians")
     );
 
-    div(Ui.PAGE_MAIN, dataFrame("vets-table"),
+    div(dataFrame("vets-table"),
 
         pagination(paginator),
 

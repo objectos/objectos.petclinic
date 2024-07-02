@@ -61,7 +61,7 @@ final class Welcome extends UiLayout {
         h1("Welcome")
     );
 
-    div(Ui.PAGE_MAIN, dataFrame("visits-table"),
+    div(dataFrame("visits-table"),
 
         pagination(paginator),
 
