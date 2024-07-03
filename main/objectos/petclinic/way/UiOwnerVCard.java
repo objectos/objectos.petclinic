@@ -37,13 +37,13 @@ final class UiOwnerVCard extends Html.Template {
     fullName = rs.getString("fullName");
 
     div(
-        className("grid grid-cols-2 gap-8px py-32px"),
+        className("flex py-32px"),
 
         div(
-            className("flex justify-center"),
+            className("w-112px"),
 
             div(
-                className("size-144px flex justify-center items-center border border-border-subtle"),
+                className("size-112px flex justify-center items-center border border-border-subtle"),
 
                 icons.user(
                     className("size-64px")
@@ -52,9 +52,24 @@ final class UiOwnerVCard extends Html.Template {
         ),
 
         div(
-            h1(
-                className("text-2xl"),
-                t(fullName)
+            className("grow pl-32px"),
+
+            div(
+                className("flex justify-between"),
+
+                h1(
+                    className("text-2xl"),
+                    t(fullName)
+                ),
+
+                button(
+                    className("bg-button-primary text-sm text-text-on-color px-16px"),
+                    className("active:bg-button-primary-active"),
+                    className("focus:bg-focus"),
+                    className("hover:bg-button-primary-hover hover:cursor-pointer"),
+
+                    t("Edit")
+                )
             ),
 
             dl(

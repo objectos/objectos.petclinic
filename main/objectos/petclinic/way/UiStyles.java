@@ -55,6 +55,9 @@ final class UiStyles implements Http.Handler {
     --color-border-subtle-01: #c6c6c6;
     --color-border-subtle-02: #e0e0e0;
     --color-border-subtle-03: #c6c6c6;
+    --color-button-primary: #0f62fe;
+    --color-button-primary-active: #002d9c;
+    --color-button-primary-hover: #0050e6;
     --color-focus: #0f62fe;
     --color-icon-disabled: rgba(22, 22, 22, 0.25);
     --color-icon-primary: #161616;
@@ -62,6 +65,7 @@ final class UiStyles implements Http.Handler {
     --color-layer-02: #ffffff;
     --color-layer-03: #f4f4f4;
     --color-overlay: rgba(22, 22, 22, 0.5);
+    --color-text-on-color: #ffffff;
     """);
 
     styleGen.addVariant("h1", "& h1");
@@ -79,11 +83,15 @@ final class UiStyles implements Http.Handler {
         Map.entry("background-selected", "var(--color-background-selected)"),
         Map.entry("background-selected-hover", "var(--color-background-selected-hover)"),
         Map.entry("border-subtle", "var(--color-border-subtle)"),
+        Map.entry("button-primary", "var(--color-button-primary)"),
+        Map.entry("button-primary-active", "var(--color-button-primary-active)"),
+        Map.entry("button-primary-hover", "var(--color-button-primary-hover)"),
         Map.entry("focus", "var(--color-focus)"),
         Map.entry("icon-disabled", "var(--color-icon-disabled)"),
         Map.entry("icon-primary", "var(--color-icon-primary)"),
         Map.entry("layer", "var(--color-layer)"),
-        Map.entry("overlay", "var(--color-overlay)")
+        Map.entry("overlay", "var(--color-overlay)"),
+        Map.entry("text-on-color", "var(--color-text-on-color)")
     );
 
     styleGen.overrideSpacing(
@@ -95,6 +103,7 @@ final class UiStyles implements Http.Handler {
         px(40), px(44), px(48),
         px(56),
         px(60), px(64),
+        px(80),
         px(96),
         px(112), px(128), px(144), px(160),
         px(256),
@@ -103,7 +112,7 @@ final class UiStyles implements Http.Handler {
     );
 
     Set<Class<?>> classes;
-    classes = Set.of(Ui.class, UiOwnerDetails.class, UiOwnerVCard.class, UiPagination.class);
+    classes = Set.of(Ui.class, UiOwnerVCard.class, UiPagination.class);
 
     String s;
     s = styleGen.generate(classes);
