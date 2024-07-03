@@ -62,9 +62,15 @@ final class OwnersDetails extends UiLayout {
       throw new UnsupportedOperationException("Implement me :: not found");
     }
 
-    include(
-        new UiOwnerVCard(rs)
-    );
+    UiOwnerEdit edit;
+    edit = new UiOwnerEdit();
+
+    UiOwnerVCard vcard;
+    vcard = new UiOwnerVCard(rs);
+
+    include(edit);
+
+    include(vcard);
   }
 
 }

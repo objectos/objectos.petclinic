@@ -68,6 +68,8 @@ final class UiOwnerVCard extends Html.Template {
                     className("focus:bg-focus"),
                     className("hover:bg-button-primary-hover hover:cursor-pointer"),
 
+                    dataOnClick(UiOwnerEdit.SHOW),
+
                     t("Edit")
                 )
             ),

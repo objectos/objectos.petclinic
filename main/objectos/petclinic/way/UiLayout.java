@@ -32,6 +32,9 @@ abstract class UiLayout extends Html.Template implements Web.Action {
   private static final Html.Id _BTN_CLOSE = Html.id("btn-close-menu");
   private static final Html.Id _NAV = Html.id("app-nav");
 
+  static final Script.Action BODY_HIDE_OVERFLOW = Script.replaceClass(_BODY, "overflow-auto", "overflow-hidden");
+  static final Script.Action BODY_AUTO_OVERFLOW = Script.replaceClass(_BODY, "overflow-hidden", "overflow-auto");
+
   protected final Icons.Tabler icons = Icons.tabler(this);
 
   protected UiSection section;
@@ -128,7 +131,7 @@ abstract class UiLayout extends Html.Template implements Web.Action {
         Script.replaceClass(_BTN_OPEN, "flex", "hidden"),
         Script.replaceClass(_BTN_CLOSE, "hidden", "flex"),
         Script.replaceClass(_NAV, "hidden", "block"),
-        Script.replaceClass(_BODY, "overflow-auto", "overflow-hidden")
+        BODY_HIDE_OVERFLOW
     );
   }
 
@@ -138,7 +141,7 @@ abstract class UiLayout extends Html.Template implements Web.Action {
         Script.replaceClass(_BTN_OPEN, "hidden", "flex"),
         Script.replaceClass(_BTN_CLOSE, "flex", "hidden"),
         Script.replaceClass(_NAV, "block", "hidden"),
-        Script.replaceClass(_BODY, "overflow-hidden", "overflow-auto")
+        BODY_AUTO_OVERFLOW
     );
   }
 
