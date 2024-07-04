@@ -21,28 +21,41 @@ import objectos.way.Script;
 final class UiOwnerEdit extends Html.Template {
 
   private static final Html.Id BACKDROP = Html.id("owner-edit-backdrop");
-
-  static final Script.Action SHOW = Script.actions(
-      Script.replaceClass(BACKDROP, "hidden", "block"),
-      UiLayout.BODY_HIDE_OVERFLOW
-  );
+  private static final Html.Id MODAL = Html.id("owner-edit-modal");
 
   private static final Script.Action HIDE = Script.actions(
-      Script.replaceClass(BACKDROP, "block", "hidden"),
+      Script.replaceClass(BACKDROP, "opacity-100", "opacity-0"),
+      Script.delay(500, Script.replaceClass(BACKDROP, "visible", "invisible")),
       UiLayout.BODY_AUTO_OVERFLOW
+  );
+
+  public static final Script.Action SHOW = Script.actions(
+      Script.replaceClass(BACKDROP, "invisible", "visible"),
+      Script.replaceClass(BACKDROP, "opacity-0", "opacity-100"),
+      UiLayout.BODY_HIDE_OVERFLOW
   );
 
   @Override
   protected final void render() {
     $backdrop();
+
+    $modal();
   }
 
   private void $backdrop() {
     div(
         BACKDROP,
-        Ui.BACKDROP_FULL,
+        className("invisible fixed inset-0px bg-overlay opacity-0"),
+        className("transition-opacity duration-500"),
 
         dataOnClick(HIDE)
+    );
+  }
+
+  private void $modal() {
+    div(
+        MODAL,
+        className("invisible fixed inset-0px grid bg-layer")
     );
   }
 

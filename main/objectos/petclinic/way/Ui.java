@@ -92,13 +92,6 @@ final class Ui extends Http.Module {
       "transition-opacity"
   );
 
-  static final Html.ClassName BACKDROP_FULL = Html.className(
-      "absolute inset-0px z-10",
-      "hidden",
-      "bg-overlay",
-      "transition-opacity duration-700"
-  );
-
   // $nav
 
   static final Html.ClassName NAV_FRAME = Html.className(
