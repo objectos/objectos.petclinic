@@ -16,7 +16,6 @@
 package objectos.petclinic;
 
 import java.io.IOException;
-import java.nio.file.Path;
 import java.sql.SQLException;
 import objectos.lang.ShutdownHook;
 import objectos.lang.WayShutdownHook;
@@ -28,9 +27,8 @@ import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Sql;
+import objectos.way.Web;
 import objectos.web.BootstrapException;
-import objectos.web.WayWebResources;
-import objectos.web.WebResources;
 import objectox.petclinic.Injector;
 import objectox.petclinic.PetClinicH2;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -66,9 +64,9 @@ abstract class PetClinic extends Bootstrap {
     Sql.Source dataSource;
     dataSource = dataSource(noteSink, shutdownHook);
 
-    // WebResources
-    WebResources webResources;
-    webResources = webResources();
+    // Web.Resources
+    Web.Resources webResources;
+    webResources = webResources(noteSink);
 
     shutdownHook.registerIfPossible(webResources);
 
@@ -139,19 +137,17 @@ abstract class PetClinic extends Bootstrap {
     }
   }
 
-  private WebResources webResources() throws BootstrapException {
+  private Web.Resources webResources(NoteSink noteSink) throws BootstrapException {
     try {
-      WayWebResources webResources;
-      webResources = new WayWebResources();
+      return Web.createResources(
+          Web.noteSink(noteSink),
 
-      webResources.contentType(".js", "text/javascript; charset=utf-8");
+          Web.contentTypes("""
+          .js: text/javascript; charset=utf-8
+          """),
 
-      Path way;
-      way = Path.of("ui");
-
-      webResources.createNew(way.resolve("script.js"), Script.getBytes());
-
-      return webResources;
+          Web.serveFile("/ui/script.js", Script.getBytes())
+      );
     } catch (IOException e) {
       throw new BootstrapException("WebResources", e);
     }

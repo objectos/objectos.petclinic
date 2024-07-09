@@ -17,8 +17,8 @@ package objectox.petclinic;
 
 import objectos.notes.NoteSink;
 import objectos.way.Sql;
-import objectos.web.WebResources;
+import objectos.way.Web;
 
 public record Injector(Sql.Source dataSource,
                        NoteSink noteSink,
-                       WebResources webResources) {}
+                       Web.Resources webResources) {}

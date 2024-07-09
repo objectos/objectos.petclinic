@@ -17,7 +17,7 @@ package objectos.petclinic.way;
 
 import objectos.way.Html;
 import objectos.way.Http;
-import objectos.web.WebResources;
+import objectos.way.Web;
 import objectox.petclinic.Injector;
 
 final class Ui extends Http.Module {
@@ -145,7 +145,7 @@ final class Ui extends Http.Module {
 
   private final Injector injector;
 
-  private final WebResources webResources;
+  private final Web.Resources webResources;
 
   public Ui(Injector injector) {
     this.injector = injector;
@@ -155,7 +155,7 @@ final class Ui extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/ui/script.js", webResources::handle);
+    route("/ui/script.js", webResources);
 
     route("/ui/styles.css", GET(new UiStyles(injector)));
   }
