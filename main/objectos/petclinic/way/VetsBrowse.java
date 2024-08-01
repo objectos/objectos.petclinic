@@ -37,14 +37,15 @@ final class VetsBrowse extends UiLayout {
 
   VetsBrowse(Http.Exchange http) {
     super(http);
-
-    section = UiSection.VETS;
-
-    title = "Veterinarians :: Objectos PetClinic";
   }
 
   @Override
-  protected final void mainContent() {
+  protected final void renderHead() {
+    title("Veterinarians :: Objectos PetClinic");
+  }
+
+  @Override
+  protected final void renderContent() throws Exception {
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
@@ -60,7 +61,7 @@ final class VetsBrowse extends UiLayout {
   private void ui(Sql.Transaction trx, Web.Paginator paginator) {
     dataFrame("main", "vets");
 
-    header(Ui.PAGE_HEADER,
+    header(
         h1("Veterinarians")
     );
 
@@ -68,12 +69,12 @@ final class VetsBrowse extends UiLayout {
 
         pagination(paginator),
 
-        div(Ui.PAGE_TABLE,
+        div(
 
             table(
                 thead(
                     tr(
-                        th(Ui.W_144PX, t("Name")),
+                        th(t("Name")),
                         th("Specialties")
                     )
                 ),

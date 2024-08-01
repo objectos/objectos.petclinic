@@ -15,14 +15,11 @@
  */
 package objectos.petclinic.way;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import objectos.way.Http;
-import objectos.way.Sql;
 
 final class OwnersDetails extends UiLayout {
 
-  private static final String QUERY = """
+  static final String QUERY = """
   SELECT CONCAT_WS(' ', first_name, last_name) AS fullName,
          CONCAT(address, ', ', city) AS fullAddress,
          telephone
@@ -30,47 +27,17 @@ final class OwnersDetails extends UiLayout {
   WHERE  id = ?
   """;
 
-  private Sql.Transaction trx;
-
-  private int id;
-
   OwnersDetails(Http.Exchange http) {
     super(http);
   }
 
   @Override
-  protected final void preRender() {
-    section = UiSection.OWNERS;
-
-    trx = http.get(Sql.Transaction.class);
-
-    String idValue;
-    idValue = http.pathParam("id");
-
-    id = Integer.parseInt(idValue);
+  protected final void renderHead() {
   }
 
   @Override
-  protected final void mainContent() {
-    dataFrame("main", "owners:" + id);
-
-    trx.processQuery(this::renderMain, QUERY, id);
-  }
-
-  private void renderMain(ResultSet rs) throws SQLException {
-    if (!rs.next()) {
-      throw new UnsupportedOperationException("Implement me :: not found");
-    }
-
-    UiOwnerEdit edit;
-    edit = new UiOwnerEdit();
-
-    UiOwnerVCard vcard;
-    vcard = new UiOwnerVCard(rs);
-
-    include(edit);
-
-    include(vcard);
+  protected final void renderContent() throws Exception {
+    // dataFrame("main", "owners:" + id);
   }
 
 }

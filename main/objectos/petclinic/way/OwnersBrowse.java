@@ -44,14 +44,15 @@ final class OwnersBrowse extends UiLayout {
 
   OwnersBrowse(Http.Exchange http) {
     super(http);
-
-    section = UiSection.OWNERS;
-
-    title = "Owners :: PetClinic";
   }
 
   @Override
-  protected final void mainContent() {
+  protected final void renderHead() {
+    title("Owners :: PetClinic");
+  }
+
+  @Override
+  protected final void renderContent() throws Exception {
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
@@ -76,7 +77,7 @@ final class OwnersBrowse extends UiLayout {
     Html.Id formId;
     formId = Html.id("search-form");
 
-    header(Ui.PAGE_HEADER,
+    header(
         h1("Owners"),
 
         form(formId, action(searchAction), method("get"),
@@ -95,14 +96,14 @@ final class OwnersBrowse extends UiLayout {
 
         pagination(paginator),
 
-        div(Ui.PAGE_TABLE,
+        div(
             table(
                 thead(
                     tr(
-                        th(Ui.W_160PX, t("Name")),
-                        th(Ui.W_160PX, t("Address")),
-                        th(Ui.W_128PX, t("City")),
-                        th(Ui.W_128PX, t("Telephone")),
+                        th(t("Name")),
+                        th(t("Address")),
+                        th(t("City")),
+                        th(t("Telephone")),
                         th("Pets")
                     )
                 ),

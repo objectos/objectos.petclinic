@@ -15,6 +15,7 @@
  */
 package objectos.petclinic.way;
 
+import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Web;
 import objectox.petclinic.Injector;
@@ -42,7 +43,14 @@ public class Way extends Web.Module {
 
   @Override
   protected final void configure() {
-    install(new Ui(injector));
+    Carbon carbon = Carbon.create(
+        Carbon.classes(
+            UiLayout.class,
+            Welcome.class
+        )
+    );
+
+    install(carbon.createHttpModule());
 
     source(injector.dataSource());
 

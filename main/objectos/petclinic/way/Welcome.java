@@ -15,9 +15,7 @@
  */
 package objectos.petclinic.way;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
@@ -32,16 +30,17 @@ final class Welcome extends UiLayout {
   order by v.visit_date desc
   """;
 
-  public Welcome(Http.Exchange http) {
+  Welcome(Http.Exchange http) {
     super(http);
-
-    section = UiSection.HOME;
-
-    title = "PetClinic :: an Objectos Way demonstration";
   }
 
   @Override
-  protected final void mainContent() {
+  protected final void renderHead() {
+    title("Objectos PetClinic");
+  }
+
+  @Override
+  protected final void renderContent() {
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
@@ -55,57 +54,48 @@ final class Welcome extends UiLayout {
   }
 
   private void ui(Sql.Transaction trx, Web.Paginator paginator) {
-    dataFrame("main", "welcome");
+    section(
+        className("page-header page-header-title-only"),
 
-    header(Ui.PAGE_HEADER,
-        h1("Welcome")
-    );
+        div(
+            className("page-header-title-row"),
 
-    div(dataFrame("visits-table"),
+            h1(
+                className("page-header-title"),
 
-        pagination(paginator),
+                t(msg("Welcome"))
+            ),
 
-        div(Ui.PAGE_TABLE,
+            div(
+                className("page-header-actions"),
 
-            table(
-                thead(
-                    tr(
-                        th(Ui.W_112PX, t("Date")),
-                        th(Ui.W_144PX, t("Pet")),
-                        th("Description")
-                    )
-                ),
-                tbody(
-                    f(this::tbody, trx, paginator)
+                button(
+                    className("button-md button-primary"),
+                    type("button"),
+
+                    t(msg("Create visit")),
+
+                    icon16(Carbon.Icon.ADD)
                 )
             )
-
         )
-
     );
-  }
 
-  private void tbody(Sql.Transaction trx, Web.Paginator paginator) {
-    trx.processQuery(this::rows, paginator, QUERY);
-  }
+    div(
+        className("grid-narrow grid-cols-4 mt-07"),
 
-  private void rows(ResultSet rs) throws SQLException {
-    while (rs.next()) {
-      Date visitDate;
-      visitDate = rs.getDate("visit_date");
+        div(
+            className("tile min-h-screen col-span-3"),
 
-      String name;
-      name = rs.getString("name");
+            t("Column 1")
+        ),
 
-      String description;
-      description = rs.getString("description");
+        div(
+            className("tile min-h-screen col-span-1"),
 
-      tr(
-          td(visitDate.toString()),
-          td(name),
-          td(description)
-      );
-    }
+            t("Column 2")
+        )
+    );
   }
 
 }
