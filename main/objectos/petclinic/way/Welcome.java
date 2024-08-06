@@ -15,6 +15,9 @@
  */
 package objectos.petclinic.way;
 
+import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import objectos.way.Carbon;
 import objectos.way.Http;
 import objectos.way.Sql;
@@ -23,15 +26,29 @@ import objectos.way.Web;
 final class Welcome extends UiLayout {
 
   static final String QUERY = """
-  select p.name, v.visit_date, v.description
-  from   visits as v
-  join   pets as p
-  on     v.pet_id = p.id
+  select   p.name, v.visit_date, v.description
+  from     visits as v
+  join     pets as p
+  on       v.pet_id = p.id
   order by v.visit_date desc
   """;
 
+  private Web.Paginator paginator;
+
+  private Sql.Transaction trx;
+
   Welcome(Http.Exchange http) {
     super(http);
+  }
+
+  @Override
+  protected final void preRender() {
+    trx = http.get(Sql.Transaction.class);
+
+    int count;
+    count = trx.count(QUERY);
+
+    paginator = Way.paginator(http, count);
   }
 
   @Override
@@ -41,19 +58,6 @@ final class Welcome extends UiLayout {
 
   @Override
   protected final void renderContent() {
-    Sql.Transaction trx;
-    trx = http.get(Sql.Transaction.class);
-
-    int count;
-    count = trx.count(QUERY);
-
-    Web.Paginator paginator;
-    paginator = Way.paginator(http, count);
-
-    ui(trx, paginator);
-  }
-
-  private void ui(Sql.Transaction trx, Web.Paginator paginator) {
     section(
         className("page-header page-header-title-only"),
 
@@ -85,9 +89,9 @@ final class Welcome extends UiLayout {
         className("grid-narrow grid-cols-4 mt-07"),
 
         div(
-            className("tile min-h-screen col-span-3"),
+            className("tile col-span-3"),
 
-            t("Column 1")
+            f(this::lastVisits)
         ),
 
         div(
@@ -98,4 +102,42 @@ final class Welcome extends UiLayout {
     );
   }
 
+  private void lastVisits() {
+    table(
+        thead(
+            tr(
+                th(msg("Pet")),
+                th(msg("Date")),
+                th(msg("Description"))
+            )
+        ),
+
+        tbody(
+            f(this::tbody)
+        )
+    );
+  }
+
+  private void tbody() {
+    trx.processQuery(this::rows, paginator, QUERY);
+  }
+
+  private void rows(ResultSet rs) throws SQLException {
+    while (rs.next()) {
+      Date visitDate;
+      visitDate = rs.getDate("visit_date");
+
+      String name;
+      name = rs.getString("name");
+
+      String description;
+      description = rs.getString("description");
+
+      tr(
+          td(visitDate.toString()),
+          td(name),
+          td(description)
+      );
+    }
+  }
 }
