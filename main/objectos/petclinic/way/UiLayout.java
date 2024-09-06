@@ -17,17 +17,12 @@ package objectos.petclinic.way;
 
 import objectos.way.Carbon;
 import objectos.way.Html;
-import objectos.way.Http;
 import objectos.way.Web;
 
 /**
  * Main template.
  */
 abstract class UiLayout extends Carbon.Template {
-
-  UiLayout(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void render() {

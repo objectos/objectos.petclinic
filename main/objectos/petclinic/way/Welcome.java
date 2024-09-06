@@ -19,7 +19,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import objectos.way.Carbon;
-import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -36,10 +35,6 @@ final class Welcome extends UiLayout {
   private Web.Paginator paginator;
 
   private Sql.Transaction trx;
-
-  Welcome(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void preRender() {
@@ -88,11 +83,7 @@ final class Welcome extends UiLayout {
     div(
         className("grid-narrow grid-cols-4 mt-07"),
 
-        div(
-            className("tile col-span-3"),
-
-            f(this::lastVisits)
-        ),
+        f(this::lastVisits),
 
         div(
             className("tile min-h-screen col-span-1"),
@@ -103,17 +94,23 @@ final class Welcome extends UiLayout {
   }
 
   private void lastVisits() {
-    table(
-        thead(
-            tr(
-                th(msg("Pet")),
-                th(msg("Date")),
-                th(msg("Description"))
-            )
-        ),
+    div(
+        className("data-table-contents col-span-3"), tabindex("0"),
 
-        tbody(
-            f(this::tbody)
+        table(
+            className("data-table"),
+
+            thead(
+                tr(
+                    th(msg("Date")),
+                    th(msg("Pet")),
+                    th(msg("Description"))
+                )
+            ),
+
+            tbody(
+                f(this::tbody)
+            )
         )
     );
   }

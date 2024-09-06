@@ -15,8 +15,6 @@
  */
 package objectos.petclinic.way;
 
-import objectos.way.Http;
-
 final class OwnersDetails extends UiLayout {
 
   static final String QUERY = """
@@ -26,10 +24,6 @@ final class OwnersDetails extends UiLayout {
   FROM   owners
   WHERE  id = ?
   """;
-
-  OwnersDetails(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void renderHead() {

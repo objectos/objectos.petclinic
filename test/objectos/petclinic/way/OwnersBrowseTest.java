@@ -57,7 +57,9 @@ public class OwnersBrowseTest {
     );
 
     OwnersBrowse owners;
-    owners = new OwnersBrowse(http);
+    owners = new OwnersBrowse();
+
+    owners.handle(http);
 
     DataTable t;
     t = DataTable.of(owners);
@@ -80,7 +82,9 @@ public class OwnersBrowseTest {
     );
 
     OwnersBrowse owners;
-    owners = new OwnersBrowse(http);
+    owners = new OwnersBrowse();
+
+    owners.handle(http);
 
     DataTable t;
     t = DataTable.of(owners);

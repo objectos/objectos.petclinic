@@ -43,20 +43,20 @@ public class Way extends Web.Module {
 
   @Override
   protected final void configure() {
-    Carbon carbon = Carbon.create(
-        Carbon.classes(
-            UiLayout.class,
-            Welcome.class
+    install(
+        Carbon.createHttpModule(
+            Carbon.classes(
+                UiLayout.class,
+                Welcome.class
+            )
         )
     );
-
-    install(carbon.createHttpModule());
 
     source(injector.dataSource());
 
     interceptMatched(this::transactional);
 
-    route("/", GET(Welcome::new));
+    route("/", f(Welcome::new));
     install(new Owners());
     install(new Vets());
   }

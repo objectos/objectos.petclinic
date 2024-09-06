@@ -57,7 +57,9 @@ public class VetsBrowseTest {
     );
 
     VetsBrowse vets;
-    vets = new VetsBrowse(http);
+    vets = new VetsBrowse();
+
+    vets.handle(http);
 
     DataTable t;
     t = DataTable.of(vets);

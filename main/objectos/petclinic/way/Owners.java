@@ -22,9 +22,9 @@ final class Owners extends Web.Module {
   @Override
   protected final void configure() {
     // /owners
-    route("/owners", GET(OwnersBrowse::new));
+    route("/owners", f(OwnersBrowse::new));
     // /owners/123
-    route("/owners/:id", GET(OwnersDetails::new), params(digits("id")));
+    route("/owners/:id", f(OwnersDetails::new), params(digits("id")));
   }
 
 }

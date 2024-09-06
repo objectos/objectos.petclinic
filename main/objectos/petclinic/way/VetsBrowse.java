@@ -17,7 +17,6 @@ package objectos.petclinic.way;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -34,10 +33,6 @@ final class VetsBrowse extends UiLayout {
   group by  vet_name
   order by  v.last_name, v.id
   """;
-
-  VetsBrowse(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void renderHead() {

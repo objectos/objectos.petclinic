@@ -21,7 +21,7 @@ final class Vets extends Web.Module {
 
   @Override
   protected final void configure() {
-    route("/vets", GET(VetsBrowse::new));
+    route("/vets", f(VetsBrowse::new));
   }
 
 }

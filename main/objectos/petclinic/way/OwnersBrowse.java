@@ -18,7 +18,6 @@ package objectos.petclinic.way;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import objectos.way.Html;
-import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
@@ -41,10 +40,6 @@ final class OwnersBrowse extends UiLayout {
   GROUP BY  name
   ORDER BY  o.last_name, o.id
   """;
-
-  OwnersBrowse(Http.Exchange http) {
-    super(http);
-  }
 
   @Override
   protected final void renderHead() {
