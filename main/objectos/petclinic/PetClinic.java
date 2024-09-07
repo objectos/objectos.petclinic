@@ -22,18 +22,17 @@ import objectos.lang.WayShutdownHook;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.NoteSink;
-import objectos.way.Bootstrap;
+import objectos.way.App;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
-import objectos.web.BootstrapException;
 import objectox.petclinic.Injector;
 import objectox.petclinic.PetClinicH2;
 import org.h2.jdbcx.JdbcConnectionPool;
 
-abstract class PetClinic extends Bootstrap {
+abstract class PetClinic extends App.Bootstrap {
 
   public static final int DEVELOPMENT_HTTP_PORT = 8004;
 
@@ -43,7 +42,7 @@ abstract class PetClinic extends Bootstrap {
   }
 
   @Override
-  protected final void bootstrap() throws BootstrapException {
+  protected final void bootstrap() {
     long startTime;
     startTime = System.currentTimeMillis();
 
@@ -95,7 +94,7 @@ abstract class PetClinic extends Bootstrap {
 
       httpServer.start();
     } catch (IOException e) {
-      throw new BootstrapException("WebServer", e);
+      throw App.serviceFailed("WebServer", e);
     }
 
     LongNote totalTimeNote;
@@ -120,7 +119,7 @@ abstract class PetClinic extends Bootstrap {
     return shutdownHook;
   }
 
-  private Sql.Source dataSource(NoteSink noteSink, ShutdownHook shutdownHook) throws BootstrapException {
+  private Sql.Source dataSource(NoteSink noteSink, ShutdownHook shutdownHook) {
     try {
       JdbcConnectionPool dataSource;
       dataSource = PetClinicH2.create();
@@ -133,11 +132,11 @@ abstract class PetClinic extends Bootstrap {
           Sql.noteSink(noteSink)
       );
     } catch (SQLException e) {
-      throw new BootstrapException("SqlDataSource", e);
+      throw App.serviceFailed("SqlDataSource", e);
     }
   }
 
-  private Web.Resources webResources(NoteSink noteSink) throws BootstrapException {
+  private Web.Resources webResources(NoteSink noteSink) {
     try {
       return Web.createResources(
           Web.noteSink(noteSink),
@@ -149,11 +148,11 @@ abstract class PetClinic extends Bootstrap {
           Web.serveFile("/ui/script.js", Script.getBytes())
       );
     } catch (IOException e) {
-      throw new BootstrapException("WebResources", e);
+      throw App.serviceFailed("WebResources", e);
     }
   }
 
-  abstract HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector) throws BootstrapException;
+  abstract HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector);
 
   abstract int serverPort();
 

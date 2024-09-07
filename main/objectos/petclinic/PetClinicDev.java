@@ -28,9 +28,9 @@ import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
+import objectos.way.App;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
-import objectos.web.BootstrapException;
 import objectox.petclinic.Injector;
 
 public final class PetClinicDev extends PetClinic {
@@ -57,7 +57,7 @@ public final class PetClinicDev extends PetClinic {
   }
 
   @Override
-  final HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector) throws BootstrapException {
+  final HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector) {
     // WatchService
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
@@ -67,7 +67,7 @@ public final class PetClinicDev extends PetClinic {
     try {
       watchService = fileSystem.newWatchService();
     } catch (IOException e) {
-      throw new BootstrapException("WatchService", e);
+      throw App.serviceFailed("WatchService", e);
     }
 
     shutdownHook.addAutoCloseable(watchService);
@@ -92,7 +92,7 @@ public final class PetClinicDev extends PetClinic {
 
       shutdownHook.addAutoCloseable(classReloader);
     } catch (IOException e) {
-      throw new BootstrapException("ClassReloader", e);
+      throw App.serviceFailed("ClassReloader", e);
     }
 
     return new ThisHandlerFactory(injector, classReloader);
