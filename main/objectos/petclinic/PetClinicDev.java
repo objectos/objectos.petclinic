@@ -22,7 +22,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.args.PathOption;
 import objectos.lang.ShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
@@ -35,14 +34,14 @@ import objectox.petclinic.Injector;
 
 public final class PetClinicDev extends PetClinic {
 
-  private final PathOption classOutputOption;
+  private final App.Option<Path> classOutputOption = option(
+      "--class-output", ofPath(),
+      //description("Where to look for class files in dev mode")
+      required(),
+      withValidator(Files::isDirectory, "Path must be a directory")
+  );
 
-  private PetClinicDev() {
-    classOutputOption = newPathOption("--class-output");
-    classOutputOption.description("Where to look for class files in dev mode");
-    classOutputOption.required();
-    classOutputOption.validator(Files::isDirectory, "Path must be a directory");
-  }
+  private PetClinicDev() {}
 
   public static void main(String[] args) {
     PetClinicDev petClinic;
