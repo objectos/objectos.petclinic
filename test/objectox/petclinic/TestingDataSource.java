@@ -17,7 +17,7 @@ package objectox.petclinic;
 
 import java.sql.SQLException;
 import javax.sql.DataSource;
-import objectos.lang.ShutdownHook;
+import objectos.way.App;
 import org.h2.jdbcx.JdbcConnectionPool;
 
 public final class TestingDataSource {
@@ -29,10 +29,10 @@ public final class TestingDataSource {
       JdbcConnectionPool source;
       source = PetClinicH2.create();
 
-      ShutdownHook shutdownHook;
+      App.ShutdownHook shutdownHook;
       shutdownHook = TestingShutdownHook.INSTANCE;
 
-      shutdownHook.addAutoCloseable(source::dispose);
+      shutdownHook.register(source::dispose);
 
       INSTANCE = source;
     } catch (SQLException e) {

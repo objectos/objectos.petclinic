@@ -17,8 +17,6 @@ package objectos.petclinic;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import objectos.lang.ShutdownHook;
-import objectos.lang.WayShutdownHook;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.NoteSink;
@@ -56,8 +54,10 @@ abstract class PetClinic extends App.Bootstrap {
     noteSink.send(startNote);
 
     // ShutdownHook
-    ShutdownHook shutdownHook;
-    shutdownHook = shutdownHook(noteSink);
+    App.ShutdownHook shutdownHook;
+    shutdownHook = App.createShutdownHook(noteSink);
+
+    shutdownHook.registerIfPossible(noteSink);
 
     // Sql.Source
     Sql.Source dataSource;
@@ -90,7 +90,7 @@ abstract class PetClinic extends App.Bootstrap {
           Http.port(serverPort())
       );
 
-      shutdownHook.addAutoCloseable(httpServer);
+      shutdownHook.register(httpServer);
 
       httpServer.start();
     } catch (IOException e) {
@@ -108,23 +108,12 @@ abstract class PetClinic extends App.Bootstrap {
 
   abstract NoteSink noteSink();
 
-  private ShutdownHook shutdownHook(NoteSink noteSink) {
-    WayShutdownHook shutdownHook;
-    shutdownHook = new WayShutdownHook();
-
-    shutdownHook.noteSink(noteSink);
-
-    shutdownHook.registerIfPossible(noteSink);
-
-    return shutdownHook;
-  }
-
-  private Sql.Source dataSource(NoteSink noteSink, ShutdownHook shutdownHook) {
+  private Sql.Source dataSource(NoteSink noteSink, App.ShutdownHook shutdownHook) {
     try {
       JdbcConnectionPool dataSource;
       dataSource = PetClinicH2.create();
 
-      shutdownHook.addAutoCloseable(dataSource::dispose);
+      shutdownHook.register(dataSource::dispose);
 
       return Sql.createSource(
           dataSource,
@@ -152,7 +141,7 @@ abstract class PetClinic extends App.Bootstrap {
     }
   }
 
-  abstract HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector);
+  abstract HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
 
   abstract int serverPort();
 

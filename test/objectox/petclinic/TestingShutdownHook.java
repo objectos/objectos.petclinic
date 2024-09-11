@@ -15,20 +15,14 @@
  */
 package objectox.petclinic;
 
-import objectos.lang.ShutdownHook;
-import objectos.lang.WayShutdownHook;
+import objectos.way.App;
 
 public final class TestingShutdownHook {
 
-  public static final ShutdownHook INSTANCE;
+  public static final App.ShutdownHook INSTANCE;
 
   static {
-    WayShutdownHook hook;
-    hook = new WayShutdownHook();
-
-    hook.noteSink(TestingNoteSink.INSTANCE);
-
-    INSTANCE = hook;
+    INSTANCE = App.createShutdownHook(TestingNoteSink.INSTANCE);
   }
 
   private TestingShutdownHook() {}

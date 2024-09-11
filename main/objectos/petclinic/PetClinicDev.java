@@ -22,7 +22,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.ShutdownHook;
 import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
@@ -56,7 +55,7 @@ public final class PetClinicDev extends PetClinic {
   }
 
   @Override
-  final HandlerFactory handlerFactory(ShutdownHook shutdownHook, Injector injector) {
+  final HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector) {
     // WatchService
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
@@ -69,7 +68,7 @@ public final class PetClinicDev extends PetClinic {
       throw App.serviceFailed("WatchService", e);
     }
 
-    shutdownHook.addAutoCloseable(watchService);
+    shutdownHook.register(watchService);
 
     // ClassReloader
     ClassReloader.Builder classReloaderBuilder;
@@ -89,7 +88,7 @@ public final class PetClinicDev extends PetClinic {
     try {
       classReloader = classReloaderBuilder.of("objectos.petclinic.way.Way");
 
-      shutdownHook.addAutoCloseable(classReloader);
+      shutdownHook.register(classReloader);
     } catch (IOException e) {
       throw App.serviceFailed("ClassReloader", e);
     }
