@@ -22,7 +22,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.lang.classloader.ClassReloader;
 import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
@@ -70,30 +69,26 @@ public final class PetClinicDev extends PetClinic {
 
     shutdownHook.register(watchService);
 
-    // ClassReloader
-    ClassReloader.Builder classReloaderBuilder;
-    classReloaderBuilder = ClassReloader.builder();
-
-    classReloaderBuilder.noteSink(injector.noteSink());
-
-    classReloaderBuilder.watchService(watchService);
-
-    Path classOutput;
-    classOutput = classOutputOption.get();
-
-    classReloaderBuilder.watch(classOutput, "objectos.petclinic");
-
-    ClassReloader classReloader;
+    // App.Reloader
+    App.Reloader reloader;
 
     try {
-      classReloader = classReloaderBuilder.of("objectos.petclinic.way.Way");
+      reloader = App.createReloader(
+          "objectos.petclinic.way.Way",
 
-      shutdownHook.register(classReloader);
+          watchService,
+
+          App.noteSink(injector.noteSink()),
+
+          App.watchDirectory(classOutputOption.get())
+      );
+
+      shutdownHook.register(reloader);
     } catch (IOException e) {
       throw App.serviceFailed("ClassReloader", e);
     }
 
-    return new ThisHandlerFactory(injector, classReloader);
+    return new ThisHandlerFactory(injector, reloader);
   }
 
   @Override
@@ -105,18 +100,18 @@ public final class PetClinicDev extends PetClinic {
 
     private final Injector injector;
 
-    private final ClassReloader classReloader;
+    private final App.Reloader reloader;
 
-    public ThisHandlerFactory(Injector injector, ClassReloader classReloader) {
+    public ThisHandlerFactory(Injector injector, App.Reloader reloader) {
       this.injector = injector;
 
-      this.classReloader = classReloader;
+      this.reloader = reloader;
     }
 
     @Override
     public final Http.Handler create() throws Exception {
       Class<?> handlerClass;
-      handlerClass = classReloader.get();
+      handlerClass = reloader.get();
 
       Constructor<?> constructor;
       constructor = handlerClass.getConstructor(Injector.class);
