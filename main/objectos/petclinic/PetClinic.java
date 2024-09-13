@@ -67,11 +67,15 @@ abstract class PetClinic extends App.Bootstrap {
     Web.Resources webResources;
     webResources = webResources(noteSink);
 
-    shutdownHook.registerIfPossible(webResources);
+    shutdownHook.register(webResources);
+
+    // Carbon
+    Http.Handler carbonHandler;
+    carbonHandler = carbonHandler();
 
     // Injector
     Injector injector;
-    injector = new Injector(dataSource, noteSink, webResources);
+    injector = new Injector(dataSource, noteSink, webResources, carbonHandler);
 
     // HandlerFactory
     HandlerFactory handlerFactory;
@@ -140,6 +144,8 @@ abstract class PetClinic extends App.Bootstrap {
       throw App.serviceFailed("WebResources", e);
     }
   }
+
+  abstract Http.Handler carbonHandler();
 
   abstract HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
 

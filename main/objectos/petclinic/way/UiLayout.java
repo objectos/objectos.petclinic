@@ -16,12 +16,14 @@
 package objectos.petclinic.way;
 
 import objectos.way.Carbon;
+import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Web;
 
 /**
  * Main template.
  */
+@Css.Source
 abstract class UiLayout extends Carbon.Template {
 
   @Override

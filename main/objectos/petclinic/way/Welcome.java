@@ -19,9 +19,11 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import objectos.way.Carbon;
+import objectos.way.Css;
 import objectos.way.Sql;
 import objectos.way.Web;
 
+@Css.Source
 final class Welcome extends UiLayout {
 
   static final String QUERY = """

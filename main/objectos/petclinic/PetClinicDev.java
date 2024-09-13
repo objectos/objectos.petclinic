@@ -26,6 +26,7 @@ import objectos.notes.Level;
 import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
+import objectos.way.Carbon;
 import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectox.petclinic.Injector;
@@ -51,6 +52,11 @@ public final class PetClinicDev extends PetClinic {
   @Override
   final NoteSink noteSink() {
     return new ConsoleNoteSink(Level.TRACE);
+  }
+
+  @Override
+  final Http.Handler carbonHandler() {
+    return Carbon.generateOnGetHandler(classOutputOption.get());
   }
 
   @Override

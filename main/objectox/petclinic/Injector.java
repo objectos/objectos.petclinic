@@ -17,10 +17,12 @@ package objectox.petclinic;
 
 import objectos.notes.NoteSink;
 import objectos.way.App;
+import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
 @App.DoNotReload
 public record Injector(Sql.Source dataSource,
                        NoteSink noteSink,
-                       Web.Resources webResources) {}
+                       Web.Resources webResources,
+                       Http.Handler carbonHandler) {}
