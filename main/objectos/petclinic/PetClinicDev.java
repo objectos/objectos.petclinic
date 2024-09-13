@@ -16,7 +16,6 @@
 package objectos.petclinic;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -27,7 +26,6 @@ import objectos.notes.NoteSink;
 import objectos.notes.impl.ConsoleNoteSink;
 import objectos.way.App;
 import objectos.way.Carbon;
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectox.petclinic.Injector;
 
@@ -60,7 +58,7 @@ public final class PetClinicDev extends PetClinic {
   }
 
   @Override
-  final HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector) {
+  final Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector) {
     // WatchService
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
@@ -94,43 +92,12 @@ public final class PetClinicDev extends PetClinic {
       throw App.serviceFailed("ClassReloader", e);
     }
 
-    return new ThisHandlerFactory(injector, reloader);
+    return App.createHandlerFactory(reloader, Injector.class, injector);
   }
 
   @Override
   final int serverPort() {
     return DEVELOPMENT_HTTP_PORT;
-  }
-
-  private static class ThisHandlerFactory implements HandlerFactory {
-
-    private final Injector injector;
-
-    private final App.Reloader reloader;
-
-    public ThisHandlerFactory(Injector injector, App.Reloader reloader) {
-      this.injector = injector;
-
-      this.reloader = reloader;
-    }
-
-    @Override
-    public final Http.Handler create() throws Exception {
-      Class<?> handlerClass;
-      handlerClass = reloader.get();
-
-      Constructor<?> constructor;
-      constructor = handlerClass.getConstructor(Injector.class);
-
-      Object instance;
-      instance = constructor.newInstance(injector);
-
-      Http.Module module;
-      module = (Http.Module) instance;
-
-      return module.compile();
-    }
-
   }
 
 }

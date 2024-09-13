@@ -21,7 +21,6 @@ import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.NoteSink;
 import objectos.way.App;
-import objectos.way.HandlerFactory;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Sql;
@@ -78,7 +77,7 @@ abstract class PetClinic extends App.Bootstrap {
     injector = new Injector(dataSource, noteSink, webResources, carbonHandler);
 
     // HandlerFactory
-    HandlerFactory handlerFactory;
+    Http.HandlerFactory handlerFactory;
     handlerFactory = handlerFactory(shutdownHook, injector);
 
     // WebServer
@@ -147,7 +146,7 @@ abstract class PetClinic extends App.Bootstrap {
 
   abstract Http.Handler carbonHandler();
 
-  abstract HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
+  abstract Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
 
   abstract int serverPort();
 
