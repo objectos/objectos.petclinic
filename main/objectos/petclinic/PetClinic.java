@@ -70,7 +70,7 @@ abstract class PetClinic extends App.Bootstrap {
 
     // Carbon
     Http.Handler carbonHandler;
-    carbonHandler = carbonHandler();
+    carbonHandler = carbonHandler(noteSink);
 
     // Injector
     Injector injector;
@@ -144,7 +144,7 @@ abstract class PetClinic extends App.Bootstrap {
     }
   }
 
-  abstract Http.Handler carbonHandler();
+  abstract Http.Handler carbonHandler(NoteSink noteSink);
 
   abstract Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
 

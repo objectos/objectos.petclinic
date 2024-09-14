@@ -53,8 +53,8 @@ public final class PetClinicDev extends PetClinic {
   }
 
   @Override
-  final Http.Handler carbonHandler() {
-    return Carbon.generateOnGetHandler(classOutputOption.get());
+  final Http.Handler carbonHandler(NoteSink noteSink) {
+    return Carbon.generateOnGetHandler(noteSink, classOutputOption.get());
   }
 
   @Override
