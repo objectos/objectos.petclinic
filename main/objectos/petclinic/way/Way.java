@@ -42,14 +42,14 @@ public class Way extends Web.Module {
 
   @Override
   protected final void configure() {
-    route("/ui/carbon.css", injector.carbonHandler());
-    route("/ui/script.js", injector.webResources());
+    route("/ui/carbon.css", handler(injector.carbonHandler()));
+    route("/ui/script.js", handler(injector.webResources()));
 
     source(injector.dataSource());
 
     interceptMatched(this::transactional);
 
-    route("/", f(Welcome::new));
+    route("/", handlerFactory(Welcome::new));
     install(new Owners());
     install(new Vets());
   }
