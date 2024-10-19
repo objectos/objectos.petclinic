@@ -20,22 +20,18 @@ import objectos.way.Sql;
 
 public final class TestingSqlDataSource {
 
-  public static final Sql.Source INSTANCE;
+  public static final Sql.Database INSTANCE;
 
   static {
-    try {
-      Sql.Source dataSource;
-      dataSource = Sql.createSource(TestingDataSource.INSTANCE);
+    Sql.Database dataSource;
+    dataSource = Sql.createDatabase(TestingDataSource.INSTANCE);
 
-      INSTANCE = dataSource;
-    } catch (SQLException e) {
-      throw new AssertionError(e);
-    }
+    INSTANCE = dataSource;
   }
 
   private TestingSqlDataSource() {}
 
-  public static Sql.Transaction beginTransaction(Sql.Transaction.IsolationLevel level) throws SQLException {
+  public static Sql.Transaction beginTransaction(Sql.Transaction.Isolation level) throws SQLException {
     return INSTANCE.beginTransaction(level);
   }
 

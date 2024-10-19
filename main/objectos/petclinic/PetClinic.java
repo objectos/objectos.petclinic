@@ -59,7 +59,7 @@ abstract class PetClinic extends App.Bootstrap {
     shutdownHook.registerIfPossible(noteSink);
 
     // Sql.Source
-    Sql.Source dataSource;
+    Sql.Database dataSource;
     dataSource = dataSource(noteSink, shutdownHook);
 
     // Web.Resources
@@ -111,14 +111,14 @@ abstract class PetClinic extends App.Bootstrap {
 
   abstract NoteSink noteSink();
 
-  private Sql.Source dataSource(NoteSink noteSink, App.ShutdownHook shutdownHook) {
+  private Sql.Database dataSource(NoteSink noteSink, App.ShutdownHook shutdownHook) {
     try {
       JdbcConnectionPool dataSource;
       dataSource = PetClinicH2.create();
 
       shutdownHook.register(dataSource::dispose);
 
-      return Sql.createSource(
+      return Sql.createDatabase(
           dataSource,
 
           Sql.noteSink(noteSink)

@@ -79,7 +79,7 @@ dev@clean:
 	rm -f $(DEV_MODULE_PATH)
 
 .PHONY: re-dev
-re-dev: dev dev@clean
+re-dev: dev@clean dev
 	
 $(DEV_MODULE_PATH): $(COMPILE_MARKER) $(DEV_RESOLUTION_FILES)
 	echo $(CLASS_OUTPUT) > $@.tmp

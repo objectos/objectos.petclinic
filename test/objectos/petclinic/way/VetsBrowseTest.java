@@ -33,7 +33,7 @@ public class VetsBrowseTest {
 
   @BeforeClass
   public void setUp() throws SQLException {
-    trx = TestingSqlDataSource.beginTransaction(Sql.Transaction.IsolationLevel.SERIALIZABLE);
+    trx = TestingSqlDataSource.beginTransaction(Sql.SERIALIZABLE);
   }
 
   @AfterClass(alwaysRun = true)

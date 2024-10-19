@@ -22,7 +22,7 @@ import objectos.way.Sql;
 import objectos.way.Web;
 
 @App.DoNotReload
-public record Injector(Sql.Source dataSource,
+public record Injector(Sql.Database dataSource,
                        NoteSink noteSink,
                        Web.Resources webResources,
                        Http.Handler carbonHandler) {}
