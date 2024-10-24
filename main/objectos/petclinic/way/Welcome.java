@@ -64,7 +64,7 @@ final class Welcome extends UiLayout {
             h1(
                 className("page-header-title"),
 
-                t(msg("Welcome"))
+                text(msg("Welcome"))
             ),
 
             div(
@@ -74,7 +74,7 @@ final class Welcome extends UiLayout {
                     className("button-md button-primary"),
                     type("button"),
 
-                    t(msg("Create visit")),
+                    text(msg("Create visit")),
 
                     icon16(Carbon.Icon.ADD)
                 )
@@ -90,7 +90,7 @@ final class Welcome extends UiLayout {
         div(
             className("tile min-h-screen col-span-1"),
 
-            t("Column 2")
+            text("Column 2")
         )
     );
   }

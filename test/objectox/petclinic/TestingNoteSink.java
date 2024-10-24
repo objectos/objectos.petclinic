@@ -15,15 +15,14 @@
  */
 package objectox.petclinic;
 
-import objectos.notes.Level;
-import objectos.notes.impl.ConsoleNoteSink;
+import objectos.way.App;
 
 public final class TestingNoteSink {
 
-  public static final ConsoleNoteSink INSTANCE;
+  public static final App.NoteSink INSTANCE;
 
   static {
-    INSTANCE = new ConsoleNoteSink(Level.TRACE);
+    INSTANCE = App.NoteSink.OfConsole.create();
   }
 
   private TestingNoteSink() {}

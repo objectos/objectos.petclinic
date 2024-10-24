@@ -22,7 +22,7 @@ public final class TestingShutdownHook {
   public static final App.ShutdownHook INSTANCE;
 
   static {
-    INSTANCE = App.createShutdownHook(TestingNoteSink.INSTANCE);
+    INSTANCE = App.ShutdownHook.create(TestingNoteSink.INSTANCE);
   }
 
   private TestingShutdownHook() {}

@@ -21,7 +21,7 @@ import objectos.way.Html;
 
 public class DataTable {
 
-  private List<List<String>> rows;
+  private final List<List<String>> rows;
 
   private DataTable(List<List<String>> rows) {
     this.rows = rows;
@@ -46,7 +46,7 @@ public class DataTable {
 
     private final Html.Template template;
 
-    private List<List<String>> data = new ArrayList<>();
+    private final List<List<String>> data = new ArrayList<>();
 
     private List<String> row;
 
@@ -57,15 +57,10 @@ public class DataTable {
     }
 
     public final DataTable build() {
-      Html.Compiler html;
-      html = Html.createCompiler();
+      Html.Dom document;
+      document = Html.Dom.create(template);
 
-      template.accept(html);
-
-      Html.Document document;
-      document = html.compile();
-
-      for (Html.Node node : document.nodes()) {
+      for (Html.Dom.Node node : document.nodes()) {
         node(node);
       }
 
@@ -74,11 +69,11 @@ public class DataTable {
       );
     }
 
-    private void node(Html.Node node) {
+    private void node(Html.Dom.Node node) {
       switch (node) {
-        case Html.Element element -> element(element);
+        case Html.Dom.Element element -> element(element);
 
-        case Html.Text text -> {
+        case Html.Dom.Text text -> {
           if (row != null) {
             String value;
             value = text.value();
@@ -91,7 +86,7 @@ public class DataTable {
       }
     }
 
-    private void element(Html.Element element) {
+    private void element(Html.Dom.Element element) {
       String name;
       name = element.name();
 
@@ -125,8 +120,8 @@ public class DataTable {
       }
     }
 
-    private void children(Html.Element element) {
-      for (Html.Node node : element.nodes()) {
+    private void children(Html.Dom.Element element) {
+      for (Html.Dom.Node node : element.nodes()) {
         node(node);
       }
     }

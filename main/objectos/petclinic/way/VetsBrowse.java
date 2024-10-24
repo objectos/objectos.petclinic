@@ -69,7 +69,7 @@ final class VetsBrowse extends UiLayout {
             table(
                 thead(
                     tr(
-                        th(t("Name")),
+                        th(text("Name")),
                         th("Specialties")
                     )
                 ),

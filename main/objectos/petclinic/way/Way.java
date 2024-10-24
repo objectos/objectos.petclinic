@@ -28,16 +28,13 @@ public class Way extends Web.Module {
   }
 
   static Web.Paginator paginator(Http.Exchange http, int count) {
-    Http.Request.Target target;
-    target = http.target();
-
     String pageAttrName;
     pageAttrName = "page";
 
     int pageSize;
     pageSize = 5;
 
-    return Web.createPaginator(target, pageAttrName, pageSize, count);
+    return Web.createPaginator(http, pageAttrName, pageSize, count);
   }
 
   @Override

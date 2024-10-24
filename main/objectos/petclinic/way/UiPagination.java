@@ -34,7 +34,7 @@ final class UiPagination extends Html.Template {
         className("grid grid-cols-2 items-center py-32px text-sm"),
 
         div(
-            t(paginator.firstItem() + " - " + paginator.lastItem() + " of " + paginator.totalCount())
+            text(paginator.firstItem() + " - " + paginator.lastItem() + " of " + paginator.totalCount())
         ),
 
         div(
@@ -62,7 +62,7 @@ final class UiPagination extends Html.Template {
     }
   }
 
-  private void active(String href, Function<Html.AttributeInstruction, Html.ElementInstruction> icon) {
+  private void active(String href, Function<Html.Instruction.OfAttribute, Html.Instruction.OfElement> icon) {
     a(
         className("size-40px flex items-center justify-center rounded-full outline-1"),
         className("active:bg-background-active focus:outline-focus hover:bg-background-hover"),
@@ -71,7 +71,7 @@ final class UiPagination extends Html.Template {
     );
   }
 
-  private void inactive(Function<Html.AttributeInstruction, Html.ElementInstruction> icon) {
+  private void inactive(Function<Html.Instruction.OfAttribute, Html.Instruction.OfElement> icon) {
     span(className("cursor-not-allowed"),
         button(
             className("size-40px flex items-center justify-center rounded-full"),

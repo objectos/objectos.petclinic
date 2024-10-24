@@ -44,7 +44,7 @@ abstract class PetClinic extends App.Bootstrap {
     startTime = System.currentTimeMillis();
 
     // NoteSink
-    NoteSink noteSink;
+    App.NoteSink noteSink;
     noteSink = noteSink();
 
     Note0 startNote;
@@ -54,7 +54,7 @@ abstract class PetClinic extends App.Bootstrap {
 
     // ShutdownHook
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.createShutdownHook(noteSink);
+    shutdownHook = App.ShutdownHook.create(noteSink);
 
     shutdownHook.registerIfPossible(noteSink);
 
@@ -109,7 +109,7 @@ abstract class PetClinic extends App.Bootstrap {
     noteSink.send(totalTimeNote, totalTime);
   }
 
-  abstract NoteSink noteSink();
+  abstract App.NoteSink noteSink();
 
   private Sql.Database dataSource(NoteSink noteSink, App.ShutdownHook shutdownHook) {
     try {

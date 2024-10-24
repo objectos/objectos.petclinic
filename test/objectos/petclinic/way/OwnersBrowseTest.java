@@ -50,11 +50,11 @@ public class OwnersBrowseTest {
   @Test
   public void query() {
     Http.TestingExchange http;
-    http = Http.testingExchange(
-        Http.requestTarget("/owners"),
+    http = Http.TestingExchange.create(config -> {
+      config.path("/owners");
 
-        Http.set(Sql.Transaction.class, trx)
-    );
+      config.set(Sql.Transaction.class, trx);
+    });
 
     OwnersBrowse owners;
     owners = new OwnersBrowse();
@@ -75,11 +75,13 @@ public class OwnersBrowseTest {
   @Test
   public void filtering() {
     Http.TestingExchange http;
-    http = Http.testingExchange(
-        Http.requestTarget("/owners?lastName=dav"),
+    http = Http.TestingExchange.create(config -> {
+      config.path("/owners");
 
-        Http.set(Sql.Transaction.class, trx)
-    );
+      config.queryParam("lastName", "dav");
+
+      config.set(Sql.Transaction.class, trx);
+    });
 
     OwnersBrowse owners;
     owners = new OwnersBrowse();

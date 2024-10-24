@@ -60,7 +60,7 @@ abstract class UiLayout extends Carbon.Template {
 
                 href("/"),
 
-                span("Objectos"), nbsp(), t("PetClinic")
+                span("Objectos"), nbsp(), text("PetClinic")
             )
         )
     );
@@ -76,7 +76,7 @@ abstract class UiLayout extends Carbon.Template {
 
   protected abstract void renderContent() throws Exception;
 
-  final Html.FragmentInstruction pagination(Web.Paginator paginator) {
+  final Html.Instruction.OfFragment pagination(Web.Paginator paginator) {
     UiPagination pagination;
     pagination = new UiPagination(paginator);
 

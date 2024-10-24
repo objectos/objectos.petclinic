@@ -70,7 +70,7 @@ final class OwnersBrowse extends UiLayout {
     dataFrame("main", "owners");
 
     Html.Id formId;
-    formId = Html.id("search-form");
+    formId = Html.Id.id("search-form");
 
     header(
         h1("Owners"),
@@ -95,10 +95,10 @@ final class OwnersBrowse extends UiLayout {
             table(
                 thead(
                     tr(
-                        th(t("Name")),
-                        th(t("Address")),
-                        th(t("City")),
-                        th(t("Telephone")),
+                        th(text("Name")),
+                        th(text("Address")),
+                        th(text("City")),
+                        th(text("Telephone")),
                         th("Pets")
                     )
                 ),
@@ -137,7 +137,7 @@ final class OwnersBrowse extends UiLayout {
 
       tr(
           td(
-              a(href(href), t(name))
+              a(href(href), text(name))
           ),
           td(address),
           td(city),

@@ -50,11 +50,11 @@ public class VetsBrowseTest {
   @Test
   public void query() {
     Http.TestingExchange http;
-    http = Http.testingExchange(
-        Http.requestTarget("/vets"),
+    http = Http.TestingExchange.create(config -> {
+      config.path("/vets");
 
-        Http.set(Sql.Transaction.class, trx)
-    );
+      config.set(Sql.Transaction.class, trx);
+    });
 
     VetsBrowse vets;
     vets = new VetsBrowse();
