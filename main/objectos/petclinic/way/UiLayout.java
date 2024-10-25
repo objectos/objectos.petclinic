@@ -34,12 +34,12 @@ abstract class UiLayout extends Carbon.Template {
         className("theme-white"),
 
         head(
-            f(this::renderStandardHead),
-            f(this::renderHead)
+            include(this::renderStandardHead),
+            include(this::renderHead)
         ),
 
         body(
-            f(this::renderBody)
+            include(this::renderBody)
         )
     );
   }
@@ -70,7 +70,7 @@ abstract class UiLayout extends Carbon.Template {
 
         className("header-offset"),
 
-        f(this::renderContent)
+        include(this::renderContent)
     );
   }
 

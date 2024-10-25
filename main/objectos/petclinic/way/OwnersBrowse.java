@@ -103,7 +103,7 @@ final class OwnersBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::tbody, trx, paginator, lastName)
+                    include(this::tbody, trx, paginator, lastName)
                 )
             )
         )

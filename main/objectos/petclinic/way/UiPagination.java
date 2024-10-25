@@ -40,7 +40,7 @@ final class UiPagination extends Html.Template {
         div(
             className("flex gap-x-16px justify-end"),
 
-            f(this::paginationControl)
+            include(this::paginationControl)
         )
     );
   }

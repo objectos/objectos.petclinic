@@ -74,7 +74,7 @@ final class VetsBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    f(this::tbody, trx, paginator)
+                    include(this::tbody, trx, paginator)
                 )
             )
 
