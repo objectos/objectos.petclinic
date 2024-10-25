@@ -85,7 +85,7 @@ final class Welcome extends UiLayout {
     div(
         className("grid-narrow grid-cols-4 mt-07"),
 
-        include(this::lastVisits),
+        renderFragment(this::lastVisits),
 
         div(
             className("tile min-h-screen col-span-1"),
@@ -111,7 +111,7 @@ final class Welcome extends UiLayout {
             ),
 
             tbody(
-                include(this::tbody)
+                renderFragment(this::tbody)
             )
         )
     );

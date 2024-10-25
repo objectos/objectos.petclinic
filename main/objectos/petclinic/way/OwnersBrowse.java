@@ -103,7 +103,7 @@ final class OwnersBrowse extends UiLayout {
                     )
                 ),
                 tbody(
-                    include(this::tbody, trx, paginator, lastName)
+                    renderFragment(this::tbody, trx, paginator, lastName)
                 )
             )
         )

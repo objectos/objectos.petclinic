@@ -34,12 +34,12 @@ abstract class UiLayout extends Carbon.Template {
         className("theme-white"),
 
         head(
-            include(this::renderStandardHead),
-            include(this::renderHead)
+            renderFragment(this::renderStandardHead),
+            renderFragment(this::renderHead)
         ),
 
         body(
-            include(this::renderBody)
+            renderFragment(this::renderBody)
         )
     );
   }
@@ -70,7 +70,7 @@ abstract class UiLayout extends Carbon.Template {
 
         className("header-offset"),
 
-        include(this::renderContent)
+        renderFragment(this::renderContent)
     );
   }
 
@@ -80,7 +80,7 @@ abstract class UiLayout extends Carbon.Template {
     UiPagination pagination;
     pagination = new UiPagination(paginator);
 
-    return include(pagination);
+    return renderTemplate(pagination);
   }
 
   final String msg(String msg) {
