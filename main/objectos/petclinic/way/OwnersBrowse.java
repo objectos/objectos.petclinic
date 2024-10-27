@@ -70,7 +70,7 @@ final class OwnersBrowse extends UiLayout {
     dataFrame("main", "owners");
 
     Html.Id formId;
-    formId = Html.Id.id("search-form");
+    formId = Html.Id.of("search-form");
 
     header(
         h1("Owners"),

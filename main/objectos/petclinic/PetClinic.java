@@ -22,6 +22,7 @@ import objectos.notes.Note0;
 import objectos.notes.NoteSink;
 import objectos.way.App;
 import objectos.way.Http;
+import objectos.way.Note;
 import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
@@ -128,17 +129,17 @@ abstract class PetClinic extends App.Bootstrap {
     }
   }
 
-  private Web.Resources webResources(NoteSink noteSink) {
+  private Web.Resources webResources(Note.Sink noteSink) {
     try {
-      return Web.createResources(
-          Web.noteSink(noteSink),
+      return Web.Resources.create(config -> {
+        config.noteSink(noteSink);
 
-          Web.contentTypes("""
+        config.contentTypes("""
           .js: text/javascript; charset=utf-8
-          """),
+          """);
 
-          Web.serveFile("/ui/script.js", Script.getBytes())
-      );
+        config.serveFile("/ui/script.js", Script.getBytes());
+      });
     } catch (IOException e) {
       throw App.serviceFailed("WebResources", e);
     }
