@@ -15,9 +15,9 @@
  */
 package objectos.petclinic.way;
 
-import objectos.way.Web;
+import objectos.way.Http;
 
-final class Owners extends Web.Module {
+final class Owners extends Http.Module {
 
   @Override
   protected final void configure() {

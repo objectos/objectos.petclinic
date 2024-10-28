@@ -84,15 +84,15 @@ abstract class PetClinic extends App.Bootstrap {
     // WebServer
     try {
       Http.Server httpServer;
-      httpServer = Http.createServer(
-          handlerFactory,
+      httpServer = Http.Server.create(config -> {
+        config.handlerFactory(handlerFactory);
 
-          Http.bufferSize(1024, 4096),
+        config.bufferSize(1024, 4096);
 
-          Http.noteSink(noteSink),
+        config.noteSink(noteSink);
 
-          Http.port(serverPort())
-      );
+        config.port(serverPort());
+      });
 
       shutdownHook.register(httpServer);
 
