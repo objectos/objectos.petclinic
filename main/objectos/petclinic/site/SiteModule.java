@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
 import objectos.way.Http;
 import objectos.way.Web;
-import objectox.petclinic.Injector;
 
-public class Way extends Web.Module {
+public class SiteModule extends Web.Module {
 
-  private final Injector injector;
+  private final SiteInjector injector;
 
-  public Way(Injector injector) {
+  public SiteModule(SiteInjector injector) {
     this.injector = injector;
   }
 
@@ -42,7 +41,7 @@ public class Way extends Web.Module {
     route("/ui/carbon.css", handler(injector.carbonHandler()));
     route("/ui/script.js", handler(injector.webResources()));
 
-    source(injector.dataSource());
+    source(injector.db());
 
     interceptMatched(this::transactional);
 

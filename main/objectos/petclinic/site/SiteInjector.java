@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
+import objectos.notes.NoteSink;
+import objectos.way.App;
 import objectos.way.Http;
+import objectos.way.Sql;
+import objectos.way.Web;
 
-final class Vets extends Http.Module {
-
-  @Override
-  protected final void configure() {
-    route("/vets", handlerFactory(VetsBrowse::new));
-  }
-
-}
+@App.DoNotReload
+public record SiteInjector(
+    Sql.Database db,
+    NoteSink noteSink,
+    Web.Resources webResources,
+    Http.Handler carbonHandler
+) {}

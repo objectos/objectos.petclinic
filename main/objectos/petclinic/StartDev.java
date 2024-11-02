@@ -22,12 +22,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
 import objectos.notes.NoteSink;
+import objectos.petclinic.site.SiteInjector;
 import objectos.way.App;
 import objectos.way.Carbon;
 import objectos.way.Http;
-import objectox.petclinic.Injector;
 
-public final class PetClinicDev extends PetClinic {
+public final class StartDev extends Start {
 
   private final App.Option<Path> classOutputOption = option(
       "--class-output", ofPath(),
@@ -36,13 +36,10 @@ public final class PetClinicDev extends PetClinic {
       withValidator(Files::isDirectory, "Path must be a directory")
   );
 
-  private PetClinicDev() {}
+  private StartDev() {}
 
   public static void main(String[] args) {
-    PetClinicDev petClinic;
-    petClinic = new PetClinicDev();
-
-    petClinic.start(args);
+    new StartDev().start(args);
   }
 
   @Override
@@ -56,7 +53,7 @@ public final class PetClinicDev extends PetClinic {
   }
 
   @Override
-  final Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector) {
+  final Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, SiteInjector injector) {
     // WatchService
     FileSystem fileSystem;
     fileSystem = FileSystems.getDefault();
@@ -90,7 +87,7 @@ public final class PetClinicDev extends PetClinic {
       throw App.serviceFailed("ClassReloader", e);
     }
 
-    return App.createHandlerFactory(reloader, Injector.class, injector);
+    return App.createHandlerFactory(reloader, SiteInjector.class, injector);
   }
 
   @Override

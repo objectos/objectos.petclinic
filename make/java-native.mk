@@ -34,6 +34,11 @@ $(error The required variable MODULE was not defined)
 endif
 endif
 
+## used by the filename
+ifndef ARTIFACT_ID
+$(error The required variable ARTIFACT_ID was not defined)
+endif
+
 ## app version
 ifndef VERSION
 $(error The required variable VERSION was not defined)
@@ -47,8 +52,11 @@ endif
 ## native output dir
 NATIVE_OUTPUT := $(WORK)/bin
 
+## native file name
+NATIVE_FILENAME := $(ARTIFACT_ID)-$(VERSION)
+
 ## native output file
-NATIVE_OUTPUT_FILE := $(NATIVE_OUTPUT)/$(MODULE)-$(VERSION)
+NATIVE_OUTPUT_FILE := $(NATIVE_OUTPUT)/$(NATIVE_FILENAME)
 
 ## native dependencies
 ifdef NATIVE_DEPS

@@ -20,23 +20,23 @@ import java.sql.SQLException;
 import objectos.notes.LongNote;
 import objectos.notes.Note0;
 import objectos.notes.NoteSink;
+import objectos.petclinic.boot.PetClinicH2;
+import objectos.petclinic.site.SiteInjector;
 import objectos.way.App;
 import objectos.way.Http;
 import objectos.way.Note;
 import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
-import objectox.petclinic.Injector;
-import objectox.petclinic.PetClinicH2;
 import org.h2.jdbcx.JdbcConnectionPool;
 
-abstract class PetClinic extends App.Bootstrap {
+abstract class Start extends App.Bootstrap {
 
   public static final int DEVELOPMENT_HTTP_PORT = 8004;
 
   public static final int PRODUCTION_HTTP_PORT = 4004;
 
-  PetClinic() {
+  Start() {
   }
 
   @Override
@@ -59,9 +59,9 @@ abstract class PetClinic extends App.Bootstrap {
 
     shutdownHook.registerIfPossible(noteSink);
 
-    // Sql.Source
-    Sql.Database dataSource;
-    dataSource = dataSource(noteSink, shutdownHook);
+    // Sql.Database
+    Sql.Database db;
+    db = db(noteSink, shutdownHook);
 
     // Web.Resources
     Web.Resources webResources;
@@ -74,8 +74,8 @@ abstract class PetClinic extends App.Bootstrap {
     carbonHandler = carbonHandler(noteSink);
 
     // Injector
-    Injector injector;
-    injector = new Injector(dataSource, noteSink, webResources, carbonHandler);
+    SiteInjector injector;
+    injector = new SiteInjector(db, noteSink, webResources, carbonHandler);
 
     // HandlerFactory
     Http.HandlerFactory handlerFactory;
@@ -112,7 +112,7 @@ abstract class PetClinic extends App.Bootstrap {
 
   abstract App.NoteSink noteSink();
 
-  private Sql.Database dataSource(NoteSink noteSink, App.ShutdownHook shutdownHook) {
+  private Sql.Database db(NoteSink noteSink, App.ShutdownHook shutdownHook) {
     try {
       JdbcConnectionPool dataSource;
       dataSource = PetClinicH2.create();
@@ -147,7 +147,7 @@ abstract class PetClinic extends App.Bootstrap {
 
   abstract Http.Handler carbonHandler(NoteSink noteSink);
 
-  abstract Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, Injector injector);
+  abstract Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, SiteInjector injector);
 
   abstract int serverPort();
 

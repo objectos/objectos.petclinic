@@ -17,6 +17,7 @@ package objectox.petclinic;
 
 import java.sql.SQLException;
 import javax.sql.DataSource;
+import objectos.petclinic.boot.PetClinicH2;
 import objectos.way.App;
 import org.h2.jdbcx.JdbcConnectionPool;
 

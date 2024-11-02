@@ -22,6 +22,7 @@ import org.testng.xml.XmlSuite;
 import org.testng.xml.XmlTest;
 
 public class RunTests {
+
   public static void main(String[] args) {
     XmlSuite suite;
     suite = new XmlSuite();
@@ -54,4 +55,5 @@ public class RunTests {
 
     System.exit(ng.getStatus());
   }
+
 }

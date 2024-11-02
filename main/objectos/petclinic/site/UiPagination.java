@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
 import java.util.function.Function;
 import objectos.way.Html;

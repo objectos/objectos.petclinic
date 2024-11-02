@@ -24,9 +24,9 @@ ARTIFACT_ID := objectos.petclinic
 VERSION := 0.1-SNAPSHOT
 
 ## Dependencies
-H2_SRC := com.h2database/h2/2.2.224
-H2_LOCAL := br.com.objectos/h2-petclinic/2.2.224
-WAY := br.com.objectos/objectos.way/0.20-SNAPSHOT
+H2_SRC := com.h2database/h2/2.3.232
+H2_LOCAL := br.com.objectos/h2-petclinic/2.2.232
+WAY := br.com.objectos/objectos.way/0.21-SNAPSHOT
 
 SLF4J_API := org.slf4j/slf4j-api/1.7.36
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
@@ -98,7 +98,7 @@ TEST_RUNTIME_DEPS := $(SLF4J_NOP)
 TEST_ADD_MODULES := org.testng
 
 ## test --add-exports
-TEST_ADD_EXPORTS := objectos.petclinic/objectos.petclinic.way=org.testng
+TEST_ADD_EXPORTS := objectos.petclinic/objectos.petclinic.site=org.testng
 
 ## test --add-reads
 TEST_ADD_READS := objectos.petclinic=org.testng
@@ -110,7 +110,7 @@ include make/java-test.mk
 #
 
 ## dev main class
-DEV_MAIN := objectos.petclinic.PetClinicDev
+DEV_MAIN := objectos.petclinic.StartDev
 
 ## dev jvm opts
 DEV_JVM_OPTS := -Xmx64m

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
 import java.sql.Date;
 import java.sql.ResultSet;
@@ -45,7 +45,7 @@ final class Welcome extends UiLayout {
     int count;
     count = trx.count(QUERY);
 
-    paginator = Way.paginator(http, count);
+    paginator = SiteModule.paginator(http, count);
   }
 
   @Override

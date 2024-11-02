@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
-final class OwnersDetails extends UiLayout {
+import objectos.way.Http;
 
-  static final String QUERY = """
-  SELECT CONCAT_WS(' ', first_name, last_name) AS fullName,
-         CONCAT(address, ', ', city) AS fullAddress,
-         telephone
-  FROM   owners
-  WHERE  id = ?
-  """;
+final class Owners extends Http.Module {
 
   @Override
-  protected final void renderHead() {
-  }
-
-  @Override
-  protected final void renderContent() throws Exception {
-    // dataFrame("main", "owners:" + id);
+  protected final void configure() {
+    // /owners
+    route("/owners", handlerFactory(OwnersBrowse::new));
+    // /owners/123
+    route("/owners/:id", pathParams(digits("id")), handlerFactory(OwnersDetails::new));
   }
 
 }

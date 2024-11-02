@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package objectos.petclinic.way;
+package objectos.petclinic.site;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,7 +48,7 @@ final class VetsBrowse extends UiLayout {
     count = trx.count(QUERY);
 
     Web.Paginator paginator;
-    paginator = Way.paginator(http, count);
+    paginator = SiteModule.paginator(http, count);
 
     ui(trx, paginator);
   }

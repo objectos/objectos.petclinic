@@ -21,7 +21,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/mendo/.cache/objectos/repository/br/com/objectos/h2-petclinic/2.2.224/h2-petclinic-2.2.224.jar" sourcepath="/home/mendo/.m2/repository/com/h2database/h2/2.2.224/h2-2.2.224-sources.jar">
+	<classpathentry kind="lib" path="/home/mendo/.cache/objectos/repository/br/com/objectos/h2-petclinic/2.2.232/h2-petclinic-2.2.232.jar" sourcepath="/home/mendo/.m2/repository/com/h2database/h2/2.3.232/h2-2.3.232-sources.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
