@@ -15,18 +15,16 @@
  */
 package objectos.petclinic.site;
 
-import java.nio.file.Path;
-import objectos.way.App;
-import objectos.way.Http;
-import objectos.way.Sql;
-import objectos.way.Web;
+import objectos.way.Css;
+import objectos.way.Html;
 
-@App.DoNotReload
-public record SiteInjector(
-    Sql.Database db,
-    App.NoteSink noteSink,
-    Web.Resources webResources,
+@Css.Source
+final class Ui extends Html.Component {
 
-    Http.Handler stylesHandler,
-    Path stylesScanDirectory
-) {}
+  public final Html.ClassName themeWhite = Html.ClassName.of("theme-white");
+
+  public Ui(Html.TemplateBase parent) {
+    super(parent);
+  }
+
+}

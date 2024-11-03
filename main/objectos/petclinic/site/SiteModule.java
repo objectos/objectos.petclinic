@@ -18,7 +18,7 @@ package objectos.petclinic.site;
 import objectos.way.Http;
 import objectos.way.Web;
 
-public class SiteModule extends Web.Module {
+public class SiteModule extends Http.Module {
 
   private final SiteInjector injector;
 
@@ -38,16 +38,13 @@ public class SiteModule extends Web.Module {
 
   @Override
   protected final void configure() {
-    route("/ui/carbon.css", handler(injector.carbonHandler()));
-    route("/ui/script.js", handler(injector.webResources()));
+    route("/", handlerFactory(SiteWelcome::new));
 
-    source(injector.db());
-
-    interceptMatched(this::transactional);
-
-    route("/", handlerFactory(Welcome::new));
-    install(new Owners());
-    install(new Vets());
+    route("/ui/styles.css",
+        handler(injector.stylesHandler()), // in prod, we serve the file from the filesystem
+        handlerFactory(UiStyles::new, injector)); // in dev, we generate the file on each request
+    route("/ui/script.js",
+        handler(injector.webResources()));
   }
 
 }

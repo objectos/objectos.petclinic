@@ -16,9 +16,8 @@
 package objectos.petclinic;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
-import objectos.notes.LongNote;
-import objectos.notes.Note0;
 import objectos.notes.NoteSink;
 import objectos.petclinic.boot.PetClinicH2;
 import objectos.petclinic.site.SiteInjector;
@@ -48,8 +47,8 @@ abstract class Start extends App.Bootstrap {
     App.NoteSink noteSink;
     noteSink = noteSink();
 
-    Note0 startNote;
-    startNote = Note0.info(getClass(), "Start");
+    Note.Ref0 startNote;
+    startNote = Note.Ref0.create(getClass(), "Start", Note.INFO);
 
     noteSink.send(startNote);
 
@@ -69,13 +68,16 @@ abstract class Start extends App.Bootstrap {
 
     shutdownHook.register(webResources);
 
-    // Carbon
-    Http.Handler carbonHandler;
-    carbonHandler = carbonHandler(noteSink);
-
     // Injector
     SiteInjector injector;
-    injector = new SiteInjector(db, noteSink, webResources, carbonHandler);
+    injector = new SiteInjector(
+        db,
+        noteSink,
+        webResources,
+
+        stylesHandler(),
+        stylesScanDirectory()
+    );
 
     // HandlerFactory
     Http.HandlerFactory handlerFactory;
@@ -98,11 +100,11 @@ abstract class Start extends App.Bootstrap {
 
       httpServer.start();
     } catch (IOException e) {
-      throw App.serviceFailed("WebServer", e);
+      throw App.serviceFailed("Http.Server", e);
     }
 
-    LongNote totalTimeNote;
-    totalTimeNote = LongNote.info(getClass(), "Total time [ms]");
+    Note.Long1 totalTimeNote;
+    totalTimeNote = Note.Long1.create(getClass(), "Total time [ms]", Note.INFO);
 
     long totalTime;
     totalTime = System.currentTimeMillis() - startTime;
@@ -125,7 +127,7 @@ abstract class Start extends App.Bootstrap {
           Sql.noteSink(noteSink)
       );
     } catch (SQLException e) {
-      throw App.serviceFailed("SqlDataSource", e);
+      throw App.serviceFailed("Sql.Database", e);
     }
   }
 
@@ -135,17 +137,19 @@ abstract class Start extends App.Bootstrap {
         config.noteSink(noteSink);
 
         config.contentTypes("""
-          .js: text/javascript; charset=utf-8
-          """);
+        .js: text/javascript; charset=utf-8
+        """);
 
         config.serveFile("/ui/script.js", Script.getBytes());
       });
     } catch (IOException e) {
-      throw App.serviceFailed("WebResources", e);
+      throw App.serviceFailed("Web.Resources", e);
     }
   }
 
-  abstract Http.Handler carbonHandler(NoteSink noteSink);
+  abstract Http.Handler stylesHandler();
+
+  abstract Path stylesScanDirectory();
 
   abstract Http.HandlerFactory handlerFactory(App.ShutdownHook shutdownHook, SiteInjector injector);
 

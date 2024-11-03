@@ -21,10 +21,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.WatchService;
-import objectos.notes.NoteSink;
 import objectos.petclinic.site.SiteInjector;
 import objectos.way.App;
-import objectos.way.Carbon;
 import objectos.way.Http;
 
 public final class StartDev extends Start {
@@ -48,8 +46,14 @@ public final class StartDev extends Start {
   }
 
   @Override
-  final Http.Handler carbonHandler(NoteSink noteSink) {
-    return Carbon.generateOnGetHandler(noteSink, classOutputOption.get());
+  final Http.Handler stylesHandler() {
+    // in dev mode, we want to generate the styles.css file on each request
+    return http -> {};
+  }
+
+  @Override
+  final Path stylesScanDirectory() {
+    return classOutputOption.get();
   }
 
   @Override
@@ -73,7 +77,7 @@ public final class StartDev extends Start {
 
     try {
       reloader = App.createReloader(
-          "objectos.petclinic.way.Way",
+          "objectos.petclinic.site.SiteModule",
 
           watchService,
 

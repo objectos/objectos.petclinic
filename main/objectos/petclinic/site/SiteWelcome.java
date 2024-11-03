@@ -15,18 +15,24 @@
  */
 package objectos.petclinic.site;
 
-import java.nio.file.Path;
-import objectos.way.App;
+import objectos.way.Css;
 import objectos.way.Http;
-import objectos.way.Sql;
-import objectos.way.Web;
 
-@App.DoNotReload
-public record SiteInjector(
-    Sql.Database db,
-    App.NoteSink noteSink,
-    Web.Resources webResources,
+@Css.Source
+final class SiteWelcome extends UiTemplate {
 
-    Http.Handler stylesHandler,
-    Path stylesScanDirectory
-) {}
+  @Override
+  public final void handle(Http.Exchange http) {
+    switch (http.method()) {
+      case GET, HEAD -> http.ok(this);
+
+      default -> http.methodNotAllowed();
+    }
+  }
+
+  @Override
+  protected final void renderHead() {
+    title("Objectos PetClinic");
+  }
+
+}
