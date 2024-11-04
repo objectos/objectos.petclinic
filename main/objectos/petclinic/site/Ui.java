@@ -23,7 +23,7 @@ final class Ui extends Html.Component {
 
   public final Html.ClassName themeWhite = Html.ClassName.of("theme-white");
 
-  public Ui(Html.TemplateBase parent) {
+  Ui(Html.TemplateBase parent) {
     super(parent);
   }
 

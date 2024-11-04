@@ -22,14 +22,13 @@ import objectos.way.Http;
 @Css.Source
 abstract class UiTemplate extends Html.Template implements Http.Handler {
 
-  final Ui ui = new Ui(this);
-
   @Override
   protected final void render() {
     doctype();
 
     html(
-        ui.themeWhite,
+        className("theme-light"),
+        className("size-full bg-background text-text"),
 
         head(
             meta(charset("utf-8")),
@@ -42,23 +41,43 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
         ),
 
         body(
-            renderFragment(this::renderBody)
+            className("size-full"),
+
+            renderFragment(this::renderShell)
         )
     );
   }
 
   abstract void renderHead();
 
-  private void renderBody() {
+  private void renderShell() {
     div(
+        className("mx-auto w-full max-w-screen-2xl flex items-start px-16px 2xl:px-32px"),
+
         div(
-            text("sidebar")
+            className("sticky top-0px w-256px shrink-0"),
+
+            text("sidenav"),
+
+            renderFragment(this::contents, 1)
         ),
 
         main(
-            text("main")
+            className("grow"),
+
+            text("main"),
+
+            renderFragment(this::contents, 10)
         )
     );
+  }
+
+  private void contents(int count) {
+    for (int i = 0; i < count; i++) {
+      p("""
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac enim vel ante tincidunt tincidunt ut venenatis massa. Integer euismod, nibh ac bibendum facilisis, orci felis blandit urna, at convallis ligula tortor non magna. Nam purus odio, scelerisque at lorem vel, dapibus maximus nunc. Morbi ut libero sed diam sodales posuere non a purus. In vitae magna nec sem varius interdum eget quis libero. Cras eget felis volutpat, condimentum orci id, venenatis felis. Morbi rutrum, velit id placerat facilisis, lorem dui posuere leo, vitae feugiat nibh lacus ac dui. Suspendisse sit amet porta leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam et tempus odio. Duis ullamcorper ante at nisl scelerisque eleifend.
+      """);
+    }
   }
 
 }
