@@ -15,12 +15,17 @@
  */
 package objectos.petclinic.site;
 
+import java.util.Locale;
 import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Http;
 
 @Css.Source
 abstract class UiTemplate extends Html.Template implements Http.Handler {
+
+  static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.of("""
+  text-14px leading-18px font-400 tracking-0.16px
+  """);
 
   @Override
   protected final void render() {
@@ -52,32 +57,76 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
 
   private void renderShell() {
     div(
-        className("mx-auto w-full max-w-screen-2xl flex items-start px-16px 2xl:px-32px"),
+        className("mx-auto w-full max-w-screen-xl flex items-start"),
 
-        div(
-            className("sticky top-0px w-256px shrink-0"),
-
-            text("sidenav"),
-
-            renderFragment(this::contents, 1)
-        ),
+        renderFragment(this::renderSidebar),
 
         main(
             className("grow"),
+            dataFrame("main", mainFrameName()),
 
-            text("main"),
-
-            renderFragment(this::contents, 10)
+            renderFragment(this::renderMain)
         )
     );
   }
 
-  private void contents(int count) {
-    for (int i = 0; i < count; i++) {
-      p("""
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ac enim vel ante tincidunt tincidunt ut venenatis massa. Integer euismod, nibh ac bibendum facilisis, orci felis blandit urna, at convallis ligula tortor non magna. Nam purus odio, scelerisque at lorem vel, dapibus maximus nunc. Morbi ut libero sed diam sodales posuere non a purus. In vitae magna nec sem varius interdum eget quis libero. Cras eget felis volutpat, condimentum orci id, venenatis felis. Morbi rutrum, velit id placerat facilisis, lorem dui posuere leo, vitae feugiat nibh lacus ac dui. Suspendisse sit amet porta leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam et tempus odio. Duis ullamcorper ante at nisl scelerisque eleifend.
-      """);
-    }
+  private String mainFrameName() {
+    Class<? extends UiTemplate> thisClass;
+    thisClass = getClass();
+
+    String simpleName;
+    simpleName = thisClass.getSimpleName();
+
+    return simpleName.toLowerCase(Locale.US);
   }
+
+  private void renderSidebar() {
+    div(
+        className("sticky top-0px w-240px h-screen shrink-0 border-r border-r-border px-16px"),
+        BODY_COMPACT_01,
+
+        div(
+            className("flex items-center pt-16px px-16px"),
+
+            raw(UiIcon.LOGO.value),
+
+            span(
+                className("pl-8px"),
+
+                text("Objectos PetClinic")
+            )
+        ),
+
+        nav(
+            className("pt-24px"),
+
+            renderSidebarItem(UiIcon.HOME, "Home", "/"),
+
+            renderSidebarItem(UiIcon.OWNERS, "Owners", "/owners")
+        )
+    );
+  }
+
+  private Html.Instruction.OfElement renderSidebarItem(UiIcon icon, String title, String href) {
+    return a(
+        className("flex items-center px-16px py-8px hover:bg-background-hover"),
+
+        href(href),
+
+        div(
+            className("pl-2px"),
+
+            raw(icon.value)
+        ),
+
+        div(
+            className("pl-10px"),
+
+            text(title)
+        )
+    );
+  }
+
+  abstract void renderMain();
 
 }

@@ -38,7 +38,11 @@ public class SiteModule extends Http.Module {
 
   @Override
   protected final void configure() {
-    route("/", handlerFactory(SiteWelcome::new));
+    route("/",
+        handlerFactory(SiteWelcome::new));
+
+    route("/owners",
+        handlerFactory(Owners::new));
 
     route("/ui/styles.css",
         handler(injector.stylesHandler()), // in prod, we serve the file from the filesystem

@@ -22,7 +22,7 @@ import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
 
-final class OwnersBrowse extends UiLayout {
+final class OwnersBrowseOld extends UiLayout {
 
   static final String QUERY = """
   SELECT    CONCAT_WS(' ', o.first_name, o.last_name) AS name,

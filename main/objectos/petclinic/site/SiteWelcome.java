@@ -35,4 +35,9 @@ final class SiteWelcome extends UiTemplate {
     title("Objectos PetClinic");
   }
 
+  @Override
+  final void renderMain() {
+    h1("Welcome");
+  }
+
 }

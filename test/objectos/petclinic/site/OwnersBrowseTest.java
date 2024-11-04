@@ -56,8 +56,8 @@ public class OwnersBrowseTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    OwnersBrowse owners;
-    owners = new OwnersBrowse();
+    OwnersBrowseOld owners;
+    owners = new OwnersBrowseOld();
 
     owners.handle(http);
 
@@ -83,8 +83,8 @@ public class OwnersBrowseTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    OwnersBrowse owners;
-    owners = new OwnersBrowse();
+    OwnersBrowseOld owners;
+    owners = new OwnersBrowseOld();
 
     owners.handle(http);
 

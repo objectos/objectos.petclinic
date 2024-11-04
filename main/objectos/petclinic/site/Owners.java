@@ -15,16 +15,29 @@
  */
 package objectos.petclinic.site;
 
+import objectos.way.Css;
 import objectos.way.Http;
 
-final class Owners extends Http.Module {
+@Css.Source
+final class Owners extends UiTemplate {
 
   @Override
-  protected final void configure() {
-    // /owners
-    route("/owners", handlerFactory(OwnersBrowse::new));
-    // /owners/123
-    route("/owners/:id", pathParams(digits("id")), handlerFactory(OwnersDetails::new));
+  public final void handle(Http.Exchange http) {
+    switch (http.method()) {
+      case GET, HEAD -> http.ok(this);
+
+      default -> http.methodNotAllowed();
+    }
+  }
+
+  @Override
+  protected final void renderHead() {
+    title("Owners | Objectos PetClinic");
+  }
+
+  @Override
+  final void renderMain() {
+    h1("Owners");
   }
 
 }
