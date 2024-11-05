@@ -20,7 +20,7 @@ import objectos.way.App;
 import objectos.way.Css;
 import objectos.way.Http;
 
-final class UiStyles implements Http.Handler {
+public final class UiStyles implements Http.Handler {
 
   private final App.NoteSink noteSink;
 
@@ -30,6 +30,12 @@ final class UiStyles implements Http.Handler {
     noteSink = injector.noteSink();
 
     stylesScanDirectory = injector.stylesScanDirectory();
+  }
+
+  public UiStyles(App.NoteSink noteSink, Path stylesScanDirectory) {
+    this.noteSink = noteSink;
+
+    this.stylesScanDirectory = stylesScanDirectory;
   }
 
   @Override
@@ -43,7 +49,7 @@ final class UiStyles implements Http.Handler {
 
   private void get(Http.Exchange http) {
     Css.StyleSheet s;
-    s = createStyleSheet();
+    s = generateStyleSheet();
 
     http.status(Http.Status.OK);
 
@@ -59,7 +65,7 @@ final class UiStyles implements Http.Handler {
     http.send(bytes);
   }
 
-  private Css.StyleSheet createStyleSheet() {
+  public final Css.StyleSheet generateStyleSheet() {
     return Css.generateStyleSheet(
         Css.noteSink(noteSink),
 

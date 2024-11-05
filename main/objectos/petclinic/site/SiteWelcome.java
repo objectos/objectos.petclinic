@@ -26,11 +26,27 @@ import objectos.way.Sql;
 @Css.Source
 final class SiteWelcome extends UiTemplate {
 
+  private List<Visit> visits;
+
+  SiteWelcome(SiteInjector injector) {
+    super(injector);
+  }
+
+  @Override
+  public final void handle(Http.Exchange http) {
+    switch (http.method()) {
+      case GET, HEAD -> handleGet(http);
+
+      default -> http.methodNotAllowed();
+    }
+  }
+
   private record Visit(
       String name,
       LocalDate date,
       String description
   ) {
+
     Visit(ResultSet rs, int idx) throws SQLException {
       this(
           rs.getString(idx++),
@@ -42,17 +58,7 @@ final class SiteWelcome extends UiTemplate {
     final String dateText() {
       return date.toString();
     }
-  }
 
-  private List<Visit> visits;
-
-  @Override
-  public final void handle(Http.Exchange http) {
-    switch (http.method()) {
-      case GET, HEAD -> handleGet(http);
-
-      default -> http.methodNotAllowed();
-    }
   }
 
   private void handleGet(Http.Exchange http) {
@@ -60,12 +66,16 @@ final class SiteWelcome extends UiTemplate {
     trx = http.get(Sql.Transaction.class);
 
     trx.sql("""
-    SELECT p.name, v.visit_date, v.description
-      FROM visits as v
-      JOIN pets as p
-        ON v.pet_id = p.id
+    SELECT pets.name,
+           visits.visit_date,
+           visits.description
+
+      FROM visits
+      JOIN pets
+        ON visits.pet_id = pets.id
+
      ORDER
-        BY v.visit_date desc
+        BY visits.visit_date desc
     """);
 
     visits = trx.query(Visit::new);
@@ -83,6 +93,8 @@ final class SiteWelcome extends UiTemplate {
     h1("Welcome");
 
     table(
+        className("w-full"),
+
         thead(
             tr(
                 th("Date"),

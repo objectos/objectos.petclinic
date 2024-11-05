@@ -76,7 +76,8 @@ abstract class Start extends App.Bootstrap {
         webResources,
 
         stylesHandler(),
-        stylesScanDirectory()
+        stylesScanDirectory(),
+        SiteInjector.defaultTemplateHeadPlugin()
     );
 
     // HandlerFactory

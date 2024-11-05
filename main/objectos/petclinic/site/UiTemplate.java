@@ -16,16 +16,30 @@
 package objectos.petclinic.site;
 
 import java.util.Locale;
+import java.util.function.Consumer;
 import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Http;
 
 @Css.Source
-abstract class UiTemplate extends Html.Template implements Http.Handler {
+public abstract class UiTemplate extends Html.Template implements Http.Handler {
 
   static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.of("""
-  text-14px leading-18px font-400 tracking-0.16px
-  """);
+      text-14px leading-18px font-400 tracking-0.16px
+      """);
+
+  private final Consumer<Html.Markup> templateHeadPlugin;
+
+  protected UiTemplate(SiteInjector injector) {
+    templateHeadPlugin = injector.templateHeadPlugin();
+  }
+
+  public static Consumer<Html.Markup> defaultHeadPlugin() {
+    return html -> {
+      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/ui/styles.css"));
+      html.script(html.src("/ui/script.js"));
+    };
+  }
 
   @Override
   protected final void render() {
@@ -40,8 +54,7 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
             meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
             meta(name("viewport"), content("width=device-width, initial-scale=1")),
             link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-            link(rel("stylesheet"), type("text/css"), href("/ui/styles.css")),
-            script(src("/ui/script.js")),
+            renderPlugin(templateHeadPlugin),
             renderFragment(this::renderHead)
         ),
 
@@ -58,11 +71,12 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   private void renderShell() {
     div(
         className("mx-auto w-full max-w-screen-xl flex items-start"),
+        BODY_COMPACT_01,
 
         renderFragment(this::renderSidebar),
 
         main(
-            className("grow"),
+            className("grow px-16px"),
             dataFrame("main", mainFrameName()),
 
             renderFragment(this::renderMain)
@@ -86,7 +100,7 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
         BODY_COMPACT_01,
 
         div(
-            className("flex items-center pt-16px px-16px"),
+            className("flex items-center py-24px px-16px"),
 
             raw(UiIcon.LOGO.value),
 
@@ -98,8 +112,6 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
         ),
 
         nav(
-            className("pt-24px"),
-
             renderSidebarItem(UiIcon.HOME, "Home", "/"),
 
             renderSidebarItem(UiIcon.OWNERS, "Owners", "/owners")

@@ -15,9 +15,18 @@
  */
 package objectos.petclinic.boot;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.sql.SQLException;
+import java.util.function.Consumer;
 import javax.sql.DataSource;
+import objectos.petclinic.site.SiteInjector;
+import objectos.petclinic.site.UiStyles;
 import objectos.way.App;
+import objectos.way.Css.StyleSheet;
+import objectos.way.Html;
+import objectos.way.Script;
 import objectos.way.Sql;
 import org.h2.jdbcx.JdbcConnectionPool;
 
@@ -99,6 +108,79 @@ public final class Testing {
 
     public static App.ShutdownHook get() {
       return INSTANCE;
+    }
+
+  }
+
+  public static final class SiteInjectorSupplier {
+
+    private static final SiteInjector INSTANCE = create();
+
+    private static SiteInjector create() {
+      return new SiteInjector(
+          DatabaseSupplier.get(),
+          NoteSinkSupplier.get(),
+          null,
+
+          null,
+          null,
+          TemplateHeadPlugin.create()
+      );
+    }
+
+    private SiteInjectorSupplier() {}
+
+    public static SiteInjector get() {
+      return INSTANCE;
+    }
+
+  }
+
+  private record TemplateHeadPlugin(String styleSheet, String script) implements Consumer<Html.Markup> {
+
+    public static TemplateHeadPlugin create() {
+      return new TemplateHeadPlugin(
+          createStyleSheet(),
+
+          createScript()
+      );
+    }
+
+    private static String createStyleSheet() {
+      final App.NoteSink noteSink;
+      noteSink = NoteSinkSupplier.get();
+
+      Path classOutput;
+      classOutput = Path.of("work", "main");
+
+      Path absolutePath;
+      absolutePath = classOutput.toAbsolutePath();
+
+      UiStyles styles;
+      styles = new UiStyles(noteSink, absolutePath);
+
+      StyleSheet sheet;
+      sheet = styles.generateStyleSheet();
+
+      return sheet.css();
+    }
+
+    private static String createScript() {
+      try {
+        byte[] bytes;
+        bytes = Script.getBytes();
+
+        return new String(bytes, StandardCharsets.UTF_8);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    @Override
+    public final void accept(Html.Markup html) {
+      html.style(styleSheet);
+
+      html.script(script);
     }
 
   }

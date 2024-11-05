@@ -21,6 +21,10 @@ import objectos.way.Http;
 @Css.Source
 final class Owners extends UiTemplate {
 
+  Owners(SiteInjector injector) {
+    super(injector);
+  }
+
   @Override
   public final void handle(Http.Exchange http) {
     switch (http.method()) {

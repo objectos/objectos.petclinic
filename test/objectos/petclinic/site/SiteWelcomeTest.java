@@ -18,13 +18,18 @@ package objectos.petclinic.site;
 import static org.testng.Assert.assertEquals;
 
 import objectos.petclinic.AbstractTransactionalTest;
+import objectos.petclinic.boot.Testing;
 import objectos.way.Http;
 import objectos.way.Sql;
 import org.testng.annotations.Test;
 
 public class SiteWelcomeTest extends AbstractTransactionalTest {
 
-  @Test
+  private final SiteInjector siteInjector = Testing.SiteInjectorSupplier.get();
+
+  @Test(description = """
+  GET / should list the last pet visits
+  """)
   public void testCase01() {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
@@ -34,7 +39,7 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
     });
 
     SiteWelcome page;
-    page = new SiteWelcome();
+    page = new SiteWelcome(siteInjector);
 
     page.handle(http);
 

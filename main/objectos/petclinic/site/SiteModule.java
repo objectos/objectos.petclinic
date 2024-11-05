@@ -40,10 +40,10 @@ public class SiteModule extends Http.Module {
   protected final void configure() {
     route("/",
         interceptor(injector::transactional),
-        handlerFactory(SiteWelcome::new));
+        handlerFactory(SiteWelcome::new, injector));
 
     route("/owners",
-        handlerFactory(Owners::new));
+        handlerFactory(Owners::new, injector));
 
     route("/ui/styles.css",
         handler(injector.stylesHandler()), // in prod, we serve the file from the filesystem
