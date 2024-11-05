@@ -23,6 +23,9 @@ GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.petclinic
 VERSION := 0.1-SNAPSHOT
 
+## javac --release option
+JAVA_RELEASE := 21
+
 ## Dependencies
 H2_SRC := com.h2database/h2/2.3.232
 H2_LOCAL := br.com.objectos/h2-petclinic/2.2.232
@@ -65,9 +68,6 @@ $(eval $(call module-info,com.h2database,$(H2_LOCAL),$(H2_SRC),$(SLF4J_API)))
 #
 # petclinic@compile
 #
-
-## javac --release option
-JAVA_RELEASE := 21
 
 ## compile deps
 COMPILE_DEPS := $(WAY)

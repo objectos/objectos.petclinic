@@ -15,19 +15,62 @@
  */
 package objectos.petclinic.site;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import objectos.way.Css;
 import objectos.way.Http;
+import objectos.way.Sql;
 
 @Css.Source
 final class SiteWelcome extends UiTemplate {
 
+  private record Visit(
+      String name,
+      LocalDate date,
+      String description
+  ) {
+    Visit(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getString(idx++),
+          rs.getObject(idx++, LocalDate.class),
+          rs.getString(idx++)
+      );
+    }
+
+    final String dateText() {
+      return date.toString();
+    }
+  }
+
+  private List<Visit> visits;
+
   @Override
   public final void handle(Http.Exchange http) {
     switch (http.method()) {
-      case GET, HEAD -> http.ok(this);
+      case GET, HEAD -> handleGet(http);
 
       default -> http.methodNotAllowed();
     }
+  }
+
+  private void handleGet(Http.Exchange http) {
+    Sql.Transaction trx;
+    trx = http.get(Sql.Transaction.class);
+
+    trx.sql("""
+    SELECT p.name, v.visit_date, v.description
+      FROM visits as v
+      JOIN pets as p
+        ON v.pet_id = p.id
+     ORDER
+        BY v.visit_date desc
+    """);
+
+    visits = trx.query(Visit::new);
+
+    http.ok(this);
   }
 
   @Override
@@ -38,6 +81,30 @@ final class SiteWelcome extends UiTemplate {
   @Override
   final void renderMain() {
     h1("Welcome");
+
+    table(
+        thead(
+            tr(
+                th("Date"),
+                th("Pet"),
+                th("Description")
+            )
+        ),
+
+        tbody(
+            renderFragment(this::renderTableBody)
+        )
+    );
+  }
+
+  private void renderTableBody() {
+    for (Visit visit : visits) {
+      tr(
+          td(testable("visit.date", visit.dateText())),
+          td(testable("visit.name", visit.name)),
+          td(testable("visit.description", visit.description))
+      );
+    }
   }
 
 }

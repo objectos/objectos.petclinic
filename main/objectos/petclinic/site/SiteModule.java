@@ -39,6 +39,7 @@ public class SiteModule extends Http.Module {
   @Override
   protected final void configure() {
     route("/",
+        interceptor(injector::transactional),
         handlerFactory(SiteWelcome::new));
 
     route("/owners",

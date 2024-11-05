@@ -29,4 +29,27 @@ public record SiteInjector(
 
     Http.Handler stylesHandler,
     Path stylesScanDirectory
-) {}
+) {
+
+  public final Http.Handler transactional(Http.Handler handler) {
+    return http -> {
+
+      Sql.Transaction trx;
+      trx = db.beginTransaction(Sql.SERIALIZABLE);
+
+      try {
+        http.set(Sql.Transaction.class, trx);
+
+        handler.handle(http);
+
+        trx.commit();
+      } catch (Throwable t) {
+        throw trx.rollbackAndWrap(t);
+      } finally {
+        trx.close();
+      }
+
+    };
+  }
+
+}

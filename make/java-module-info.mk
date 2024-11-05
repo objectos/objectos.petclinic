@@ -76,11 +76,20 @@ $(1)CLASS_OUTPUT := $$(WORK)/$(1)
 ## module-info.class
 $(1)CLASSES := $$($(1)CLASS_OUTPUT)/module-info.class
 
+ifndef $(1)_JAVA_RELEASE
+ifdef JAVA_RELEASE
+$(1)_JAVA_RELEASE := $$(JAVA_RELEASE)
+endif
+endif
+
 ## the javac command
 $(1)JAVACX  = $$(JAVAC)
 $(1)JAVACX += -d $$($(1)CLASS_OUTPUT)
 ifdef $(1)MODULE_PATH
 $(1)JAVACX += --module-path @$$($(1)MODULE_PATH)
+endif
+ifdef $(1)_JAVA_RELEASE
+$(1)JAVACX += --release $$($(1)_JAVA_RELEASE)
 endif
 $(1)JAVACX += --patch-module $(1)=$$($(1)JAR_SRC)
 $(1)JAVACX += $$($(1)MODULE_INFO)
