@@ -84,37 +84,67 @@ final class SiteWelcome extends UiTemplate {
   }
 
   @Override
-  protected final void renderHead() {
+  final void renderHead() {
     title("Objectos PetClinic");
   }
 
   @Override
   final void renderMain() {
-    h1("Welcome");
+    breadcrumb(
+        breadcrumbItem("Home")
+    );
 
-    table(
-        className("w-full"),
+    contents(
+        dataTable(
+            this::tableHead,
 
-        thead(
-            tr(
-                th("Date"),
-                th("Pet"),
-                th("Description")
-            )
-        ),
-
-        tbody(
-            renderFragment(this::renderTableBody)
+            this::tableBody
         )
     );
   }
 
-  private void renderTableBody() {
+  private void tableHead() {
+    tr(
+        th(
+            className("w-144px text-center"),
+
+            text("Date")
+        ),
+
+        th(
+            className("w-224px text-start"),
+
+            text("Pet")
+        ),
+
+        th(
+            className("text-start"),
+
+            text("Description")
+        )
+    );
+  }
+
+  private void tableBody() {
     for (Visit visit : visits) {
       tr(
-          td(testable("visit.date", visit.dateText())),
-          td(testable("visit.name", visit.name)),
-          td(testable("visit.description", visit.description))
+          td(
+              className("w-144px text-center"),
+
+              testable("visit.date", visit.dateText())
+          ),
+
+          td(
+              className("w-224px text-start"),
+
+              testable("visit.name", visit.name)
+          ),
+
+          td(
+              className("text-start"),
+
+              testable("visit.description", visit.description)
+          )
       );
     }
   }

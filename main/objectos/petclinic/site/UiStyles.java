@@ -138,10 +138,27 @@ public final class UiStyles implements Http.Handler {
         0.96px: 0.96px
         """),
 
+        componentsTypography(),
+
         extendColors(),
 
-        extendSpacing()
+        extendSpacing(),
+
+        Css.variants("""
+        tbody: & tbody
+        td: & td
+        th: & th
+        thead: & thead
+        tr: & tr
+        """)
     );
+  }
+
+  private Css.Option componentsTypography() {
+    return Css.components("""
+    # body-compact-01
+    text-14px leading-18px font-400 tracking-0.16px
+    """);
   }
 
   private Css.Option extendColors() {

@@ -35,7 +35,7 @@ final class Owners extends UiTemplate {
   }
 
   @Override
-  protected final void renderHead() {
+  final void renderHead() {
     title("Owners | Objectos PetClinic");
   }
 

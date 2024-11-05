@@ -22,15 +22,11 @@ import objectos.way.Html;
 import objectos.way.Http;
 
 @Css.Source
-public abstract class UiTemplate extends Html.Template implements Http.Handler {
-
-  static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.of("""
-      text-14px leading-18px font-400 tracking-0.16px
-      """);
+abstract class UiTemplate extends Html.Template implements Http.Handler {
 
   private final Consumer<Html.Markup> templateHeadPlugin;
 
-  protected UiTemplate(SiteInjector injector) {
+  UiTemplate(SiteInjector injector) {
     templateHeadPlugin = injector.templateHeadPlugin();
   }
 
@@ -71,12 +67,12 @@ public abstract class UiTemplate extends Html.Template implements Http.Handler {
   private void renderShell() {
     div(
         className("mx-auto w-full max-w-screen-xl flex items-start"),
-        BODY_COMPACT_01,
+        className("body-compact-01"),
 
         renderFragment(this::renderSidebar),
 
-        main(
-            className("grow px-16px"),
+        div(
+            className("grow"),
             dataFrame("main", mainFrameName()),
 
             renderFragment(this::renderMain)
@@ -84,23 +80,13 @@ public abstract class UiTemplate extends Html.Template implements Http.Handler {
     );
   }
 
-  private String mainFrameName() {
-    Class<? extends UiTemplate> thisClass;
-    thisClass = getClass();
-
-    String simpleName;
-    simpleName = thisClass.getSimpleName();
-
-    return simpleName.toLowerCase(Locale.US);
-  }
-
   private void renderSidebar() {
     div(
         className("sticky top-0px w-240px h-screen shrink-0 border-r border-r-border px-16px"),
-        BODY_COMPACT_01,
+        className("body-compact-01"),
 
         div(
-            className("flex items-center py-24px px-16px"),
+            className("flex items-center py-20px px-16px"),
 
             raw(UiIcon.LOGO.value),
 
@@ -112,6 +98,8 @@ public abstract class UiTemplate extends Html.Template implements Http.Handler {
         ),
 
         nav(
+            className("pt-16px"),
+
             renderSidebarItem(UiIcon.HOME, "Home", "/"),
 
             renderSidebarItem(UiIcon.OWNERS, "Owners", "/owners")
@@ -139,6 +127,89 @@ public abstract class UiTemplate extends Html.Template implements Http.Handler {
     );
   }
 
+  private String mainFrameName() {
+    Class<? extends UiTemplate> thisClass;
+    thisClass = getClass();
+
+    String simpleName;
+    simpleName = thisClass.getSimpleName();
+
+    return simpleName.toLowerCase(Locale.US);
+  }
+
   abstract void renderMain();
+
+  //
+  // UI Components
+  //
+
+  //
+  // UI: Breadcrumb
+  //
+
+  record BreadcrumbItem(String name, String href) {}
+
+  final Html.Instruction.OfElement breadcrumb(BreadcrumbItem... items) {
+    return nav(
+        ariaLabel("breadcrumb"),
+
+        className("h-64px flex"),
+
+        renderFragment(this::renderBreadcrumbItems, items)
+    );
+  }
+
+  @SuppressWarnings("unused")
+  private void renderBreadcrumbItems(BreadcrumbItem... items) {
+    for (BreadcrumbItem item : items) {
+
+    }
+  }
+
+  final BreadcrumbItem breadcrumbItem(String name) {
+    return new BreadcrumbItem(name, null);
+  }
+
+  final Html.Instruction.OfElement contents(Html.Instruction.OfElement... elements) {
+    return main(
+        className("p-16px"),
+
+        flatten(elements)
+    );
+  }
+
+  //
+  // UI: Data Table
+  //
+
+  final Html.Instruction.OfElement dataTable(Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
+    return div(
+        table(
+            className("w-full tr:h-40px"),
+
+            thead(
+                className(
+                    "th:px-16px",
+                    "th:align-middle th:text-text-primary"
+                ),
+
+                renderFragment(tableHead)
+            ),
+
+            tbody(
+                className(
+                    "tr:transition-colors tr:duration-75",
+                    "tr:hover:bg-background-hover",
+
+                    "td:border-t td:border-t-border",
+                    "td:px-16px",
+                    "td:align-middle td:text-text-secondary"
+                ),
+
+                renderFragment(tableBody)
+            )
+        )
+    );
+  }
 
 }
