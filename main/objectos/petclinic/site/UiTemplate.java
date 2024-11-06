@@ -26,6 +26,8 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
 
   Http.Exchange http;
 
+  UiSidebar pageSidebar = UiSidebar.HOME;
+
   String pageTitle = "Objectos PetClinic";
 
   public static Consumer<Html.Markup> defaultHeadPlugin() {
@@ -124,32 +126,35 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
 
         nav(
             className("pt-16px"),
+            dataFrame("sidebar", pageSidebar.name()),
 
-            sidebarItem(UiIcon.HOME, "Home", "/"),
-
-            sidebarItem(UiIcon.OWNERS, "Owners", "/owners")
+            renderFragment(this::sidebarItems)
         )
     );
   }
 
-  private Html.Instruction.OfElement sidebarItem(UiIcon icon, String title, String href) {
-    return a(
-        className("flex items-center px-16px py-8px hover:bg-background-hover"),
+  private void sidebarItems() {
+    for (UiSidebar item : UiSidebar.VALUES) {
+      a(
+          className("flex items-center px-16px py-8px hover:bg-background-hover"),
 
-        href(href),
+          item == pageSidebar ? className("bg-background-selected") : noop(),
 
-        div(
-            className("pl-2px"),
+          href(item.href),
 
-            raw(icon.value)
-        ),
+          div(
+              className("pl-2px"),
 
-        div(
-            className("pl-10px"),
+              raw(item.icon)
+          ),
 
-            text(title)
-        )
-    );
+          div(
+              className("pl-10px"),
+
+              text(item.title)
+          )
+      );
+    }
   }
 
   private String mainFrameName() {
@@ -209,22 +214,15 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
             className("w-full tr:h-40px"),
 
             thead(
-                className(
-                    "th:px-16px",
-                    "th:align-middle th:text-text-primary"
-                ),
+                className("th:px-16px th:align-middle th:font-600"),
 
                 renderFragment(tableHead)
             ),
 
             tbody(
                 className(
-                    "tr:transition-colors tr:duration-75",
-                    "tr:hover:bg-background-hover",
-
-                    "td:border-t td:border-t-border",
-                    "td:px-16px",
-                    "td:align-middle td:text-text-secondary"
+                    "tr:transition-colors tr:duration-75 tr:hover:bg-background-hover",
+                    "td:border-t td:border-t-border td:px-16px td:align-middle td:text-text-secondary"
                 ),
 
                 renderFragment(tableBody)

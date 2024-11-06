@@ -75,67 +75,28 @@ public final class UiStyles implements Http.Handler {
         .theme-light {
           --ui-background: #f4f4f4;
           --ui-background-hover: rgba(141, 141, 141, 0.12);
+          --ui-background-selected: rgba(141, 141, 141, 0.2);
           --ui-border: #c6c6c6;
           --ui-text: #161616;
+          --ui-text-secondary: #525252;
         }
         """),
 
         Css.overrideFontSize("""
-        12px: 0.75rem
         14px: 0.875rem
-        16px: 1rem
-        20px: 1.25rem
-        24px: 1.5rem
-        28px: 1.75rem
-        32px: 2rem
-        36px: 2.25rem
-        42px: 2.625rem
-        48px: 3rem
-        54px: 3.375rem
-        60px: 3.75rem
-        68px: 4.25rem
-        76px: 4.75rem
-        84px: 5.25rem
-        92px: 5.75rem
-        122px: 7.625rem
-        156px: 9.75rem
         """),
 
         Css.overrideLineHeight("""
-        16px: 1rem
         18px: 1.125rem
-        20px: 1.25rem
-        22px: 1.375rem
-        28px: 1.75rem
-        32px: 2rem
-        36px: 2.25rem
-        40px: 2.5rem
-        44px: 2.75rem
-        50px: 3.125rem
-        56px: 3.5rem
-        64px: 4rem
-        70px: 4.375rem
-        78px: 4.875rem
-        86px: 5.375rem
-        94px: 5.875rem
-        102px: 6.375rem
-        130px: 8.125rem
-        164px: 10.25rem
         """),
 
         Css.overrideFontWeight("""
-        300: 300
         400: 400
         600: 600
         """),
 
         Css.overrideLetterSpacing("""
-        0px: 0px
-        0.1px: 0.1px
         0.16px: 0.16px
-        0.32px: 0.32px
-        0.64px: 0.64px
-        0.96px: 0.96px
         """),
 
         componentsTypography(),
@@ -165,8 +126,10 @@ public final class UiStyles implements Http.Handler {
     return Css.extendColors("""
     background: var(--ui-background)
     background-hover: var(--ui-background-hover)
+    background-selected: var(--ui-background-selected)
     border: var(--ui-border)
     text: var(--ui-text)
+    text-secondary: var(--ui-text-secondary)
     """);
   }
 

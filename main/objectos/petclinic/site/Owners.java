@@ -50,6 +50,7 @@ final class Owners extends UiTemplate {
 
   @Override
   protected final void preRender() {
+    pageSidebar = UiSidebar.OWNERS;
     pageTitle = "Owners | Objectos PetClinic";
 
     Sql.Transaction trx;

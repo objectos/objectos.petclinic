@@ -49,6 +49,7 @@ final class SiteWelcome extends UiTemplate {
 
   @Override
   protected final void preRender() {
+    pageSidebar = UiSidebar.HOME;
     pageTitle = "Objectos PetClinic";
 
     Sql.Transaction trx;
