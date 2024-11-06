@@ -16,7 +16,6 @@
 package objectos.petclinic.site;
 
 import objectos.way.Http;
-import objectos.way.Web;
 
 public class SiteModule extends Http.Module {
 
@@ -24,16 +23,6 @@ public class SiteModule extends Http.Module {
 
   public SiteModule(SiteInjector injector) {
     this.injector = injector;
-  }
-
-  static Web.Paginator paginator(Http.Exchange http, int count) {
-    String pageAttrName;
-    pageAttrName = "page";
-
-    int pageSize;
-    pageSize = 5;
-
-    return Web.createPaginator(http, pageAttrName, pageSize, count);
   }
 
   @Override
@@ -56,6 +45,8 @@ public class SiteModule extends Http.Module {
   }
 
   private void setInjector(Http.Exchange http) {
+    // sets the injector on every request
+    // (even non-matched requests, which we probably should restrict to only matched requests, BUT it not supported as of yet)
     http.set(SiteInjector.class, injector);
   }
 

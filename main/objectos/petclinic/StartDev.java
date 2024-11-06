@@ -47,7 +47,10 @@ public final class StartDev extends Start {
 
   @Override
   final Http.Handler stylesHandler() {
-    // in dev mode, we want to generate the styles.css file on each request
+    // does nothing...
+    // in dev mode, we should use the secondary handler which generates the styles.css file on each request
+    // BUT... we cannot load its class just yet...
+    // the App.Reloader will have to load it
     return http -> {};
   }
 
