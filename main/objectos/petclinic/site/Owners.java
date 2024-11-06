@@ -15,33 +15,137 @@
  */
 package objectos.petclinic.site;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import objectos.way.Css;
-import objectos.way.Http;
+import objectos.way.Sql;
 
 @Css.Source
 final class Owners extends UiTemplate {
 
-  Owners(SiteInjector injector) {
-    super(injector);
-  }
+  private List<Owner> owners;
 
-  @Override
-  public final void handle(Http.Exchange http) {
-    switch (http.method()) {
-      case GET, HEAD -> http.ok(this);
+  private record Owner(
+      String name,
+      String address,
+      String city,
+      String telephone,
+      String href,
+      String pets
+  ) {
 
-      default -> http.methodNotAllowed();
+    Owner(ResultSet rs, int idx) throws SQLException {
+      this(
+          rs.getString(idx++),
+          rs.getString(idx++),
+          rs.getString(idx++),
+          rs.getString(idx++),
+          rs.getString(idx++),
+          rs.getString(idx++)
+      );
     }
+
   }
 
   @Override
-  final void renderHead() {
-    title("Owners | Objectos PetClinic");
+  protected final void preRender() {
+    pageTitle = "Owners | Objectos PetClinic";
+
+    Sql.Transaction trx;
+    trx = http.get(Sql.Transaction.class);
+
+    trx.sql("""
+    SELECT CONCAT_WS(' ', o.first_name, o.last_name) AS name,
+           o.address,
+           o.city,
+           o.telephone,
+           CONCAT('/owners/', o.id) as href,
+           LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name) AS pets
+
+      FROM owners AS o
+      LEFT
+      JOIN pets AS p
+        ON p.owner_id = o.id
+
+     GROUP
+        BY name
+
+     ORDER
+        BY o.last_name,
+           o.id
+    """);
+
+    owners = trx.query(Owner::new);
   }
 
   @Override
-  final void renderMain() {
-    h1("Owners");
+  final void renderContents() {
+    breadcrumb(
+        breadcrumbItem("Owners")
+    );
+
+    contents(
+        dataTable(
+            this::tableHead,
+
+            this::tableBody
+        )
+    );
+  }
+
+  private void tableHead() {
+    tr(
+        className("th:text-start"),
+
+        th(
+            text("Name")
+        ),
+
+        th(
+            text("Address")
+        ),
+
+        th(
+            text("City")
+        ),
+
+        th(
+            text("Telephone")
+        ),
+
+        th(
+            text("Pets")
+        )
+    );
+  }
+
+  private void tableBody() {
+    for (Owner owner : owners) {
+      tr(
+          className("td:text-start"),
+
+          td(
+              testable("owner.name", owner.name)
+          ),
+
+          td(
+              testable("owner.address", owner.address)
+          ),
+
+          td(
+              testable("owner.city", owner.city)
+          ),
+
+          td(
+              testable("owner.telephone", owner.telephone)
+          ),
+
+          td(
+              testable("owner.pets", owner.pets)
+          )
+      );
+    }
   }
 
 }

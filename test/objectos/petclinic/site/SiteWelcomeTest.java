@@ -35,11 +35,13 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
     http = Http.TestingExchange.create(config -> {
       config.method(Http.Method.GET);
 
+      config.set(SiteInjector.class, siteInjector);
+
       config.set(Sql.Transaction.class, trx);
     });
 
     SiteWelcome page;
-    page = new SiteWelcome(siteInjector);
+    page = new SiteWelcome();
 
     page.handle(http);
 

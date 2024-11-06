@@ -38,18 +38,25 @@ public class SiteModule extends Http.Module {
 
   @Override
   protected final void configure() {
+    filter(this::setInjector);
+
     route("/",
         interceptor(injector::transactional),
-        handlerFactory(SiteWelcome::new, injector));
+        handlerFactory(SiteWelcome::new));
 
     route("/owners",
-        handlerFactory(Owners::new, injector));
+        interceptor(injector::transactional),
+        handlerFactory(Owners::new));
 
     route("/ui/styles.css",
         handler(injector.stylesHandler()), // in prod, we serve the file from the filesystem
         handlerFactory(UiStyles::new, injector)); // in dev, we generate the file on each request
     route("/ui/script.js",
         handler(injector.webResources()));
+  }
+
+  private void setInjector(Http.Exchange http) {
+    http.set(SiteInjector.class, injector);
   }
 
 }

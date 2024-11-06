@@ -20,26 +20,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import objectos.way.Css;
-import objectos.way.Http;
 import objectos.way.Sql;
 
 @Css.Source
 final class SiteWelcome extends UiTemplate {
 
   private List<Visit> visits;
-
-  SiteWelcome(SiteInjector injector) {
-    super(injector);
-  }
-
-  @Override
-  public final void handle(Http.Exchange http) {
-    switch (http.method()) {
-      case GET, HEAD -> handleGet(http);
-
-      default -> http.methodNotAllowed();
-    }
-  }
 
   private record Visit(
       String name,
@@ -61,7 +47,10 @@ final class SiteWelcome extends UiTemplate {
 
   }
 
-  private void handleGet(Http.Exchange http) {
+  @Override
+  protected final void preRender() {
+    pageTitle = "Objectos PetClinic";
+
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
@@ -79,17 +68,10 @@ final class SiteWelcome extends UiTemplate {
     """);
 
     visits = trx.query(Visit::new);
-
-    http.ok(this);
   }
 
   @Override
-  final void renderHead() {
-    title("Objectos PetClinic");
-  }
-
-  @Override
-  final void renderMain() {
+  final void renderContents() {
     breadcrumb(
         breadcrumbItem("Home")
     );

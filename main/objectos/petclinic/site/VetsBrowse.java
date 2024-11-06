@@ -15,14 +15,9 @@
  */
 package objectos.petclinic.site;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import objectos.way.Sql;
-import objectos.way.Web;
+final class VetsBrowse {
 
-final class VetsBrowse extends UiLayout {
-
-  private static final String QUERY = """
+  static final String QUERY = """
   select    concat_ws(' ', v.first_name, v.last_name) as vet_name,
             coalesce(listagg(s.name, ' ') within group (order by s.name), 'none') as spec_names
   from      vets as v
@@ -33,73 +28,5 @@ final class VetsBrowse extends UiLayout {
   group by  vet_name
   order by  v.last_name, v.id
   """;
-
-  @Override
-  protected final void renderHead() {
-    title("Veterinarians :: Objectos PetClinic");
-  }
-
-  @Override
-  protected final void renderContent() throws Exception {
-    Sql.Transaction trx;
-    trx = http.get(Sql.Transaction.class);
-
-    int count;
-    count = trx.count(QUERY);
-
-    Web.Paginator paginator;
-    paginator = SiteModule.paginator(http, count);
-
-    ui(trx, paginator);
-  }
-
-  private void ui(Sql.Transaction trx, Web.Paginator paginator) {
-    dataFrame("main", "vets");
-
-    header(
-        h1("Veterinarians")
-    );
-
-    div(dataFrame("vets-table"),
-
-        pagination(paginator),
-
-        div(
-
-            table(
-                thead(
-                    tr(
-                        th(text("Name")),
-                        th("Specialties")
-                    )
-                ),
-                tbody(
-                    renderFragment(this::tbody, trx, paginator)
-                )
-            )
-
-        )
-
-    );
-  }
-
-  private void tbody(Sql.Transaction trx, Web.Paginator paginator) {
-    trx.processQuery(this::rows, paginator, QUERY);
-  }
-
-  private void rows(ResultSet rs) throws SQLException {
-    while (rs.next()) {
-      String name;
-      name = rs.getString("vet_name");
-
-      String specialties;
-      specialties = rs.getString("spec_names");
-
-      tr(
-          td(name),
-          td(specialties)
-      );
-    }
-  }
 
 }

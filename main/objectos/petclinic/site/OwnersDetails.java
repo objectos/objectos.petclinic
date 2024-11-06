@@ -15,7 +15,7 @@
  */
 package objectos.petclinic.site;
 
-final class OwnersDetails extends UiLayout {
+final class OwnersDetails {
 
   static final String QUERY = """
   SELECT CONCAT_WS(' ', first_name, last_name) AS fullName,
@@ -24,14 +24,5 @@ final class OwnersDetails extends UiLayout {
   FROM   owners
   WHERE  id = ?
   """;
-
-  @Override
-  protected final void renderHead() {
-  }
-
-  @Override
-  protected final void renderContent() throws Exception {
-    // dataFrame("main", "owners:" + id);
-  }
 
 }

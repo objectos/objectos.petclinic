@@ -24,17 +24,30 @@ import objectos.way.Http;
 @Css.Source
 abstract class UiTemplate extends Html.Template implements Http.Handler {
 
-  private final Consumer<Html.Markup> templateHeadPlugin;
+  Http.Exchange http;
 
-  UiTemplate(SiteInjector injector) {
-    templateHeadPlugin = injector.templateHeadPlugin();
-  }
+  String pageTitle = "Objectos PetClinic";
 
   public static Consumer<Html.Markup> defaultHeadPlugin() {
     return html -> {
       html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/ui/styles.css"));
       html.script(html.src("/ui/script.js"));
     };
+  }
+
+  @Override
+  public final void handle(Http.Exchange http) {
+    this.http = http;
+
+    handle();
+  }
+
+  void handle() {
+    switch (http.method()) {
+      case GET, HEAD -> http.ok(this);
+
+      default -> http.methodNotAllowed();
+    }
   }
 
   @Override
@@ -45,43 +58,55 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
         className("theme-light"),
         className("size-full bg-background text-text"),
 
-        head(
-            meta(charset("utf-8")),
-            meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
-            meta(name("viewport"), content("width=device-width, initial-scale=1")),
-            link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-            renderPlugin(templateHeadPlugin),
-            renderFragment(this::renderHead)
-        ),
+        head0(),
 
-        body(
-            className("size-full"),
-
-            renderFragment(this::renderShell)
-        )
+        body0()
     );
   }
 
-  abstract void renderHead();
+  private Html.Instruction.OfElement head0() {
+    SiteInjector injector;
+    injector = http.get(SiteInjector.class);
 
-  private void renderShell() {
-    div(
+    Consumer<Html.Markup> templateHeadPlugin;
+    templateHeadPlugin = injector.templateHeadPlugin();
+
+    return head(
+        meta(charset("utf-8")),
+        meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
+        meta(name("viewport"), content("width=device-width, initial-scale=1")),
+        link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
+        renderPlugin(templateHeadPlugin),
+        title(pageTitle)
+    );
+  }
+
+  private Html.Instruction.OfElement body0() {
+    return body(
+        className("size-full"),
+
+        shell()
+    );
+  }
+
+  private Html.Instruction.OfElement shell() {
+    return div(
         className("mx-auto w-full max-w-screen-xl flex items-start"),
         className("body-compact-01"),
 
-        renderFragment(this::renderSidebar),
+        sidebar(),
 
         div(
             className("grow"),
             dataFrame("main", mainFrameName()),
 
-            renderFragment(this::renderMain)
+            renderFragment(this::renderContents)
         )
     );
   }
 
-  private void renderSidebar() {
-    div(
+  private Html.Instruction.OfElement sidebar() {
+    return div(
         className("sticky top-0px w-240px h-screen shrink-0 border-r border-r-border px-16px"),
         className("body-compact-01"),
 
@@ -100,14 +125,14 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
         nav(
             className("pt-16px"),
 
-            renderSidebarItem(UiIcon.HOME, "Home", "/"),
+            sidebarItem(UiIcon.HOME, "Home", "/"),
 
-            renderSidebarItem(UiIcon.OWNERS, "Owners", "/owners")
+            sidebarItem(UiIcon.OWNERS, "Owners", "/owners")
         )
     );
   }
 
-  private Html.Instruction.OfElement renderSidebarItem(UiIcon icon, String title, String href) {
+  private Html.Instruction.OfElement sidebarItem(UiIcon icon, String title, String href) {
     return a(
         className("flex items-center px-16px py-8px hover:bg-background-hover"),
 
@@ -137,11 +162,7 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
     return simpleName.toLowerCase(Locale.US);
   }
 
-  abstract void renderMain();
-
-  //
-  // UI Components
-  //
+  abstract void renderContents();
 
   //
   // UI: Breadcrumb
