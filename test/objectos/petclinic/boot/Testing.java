@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.function.Consumer;
-import javax.sql.DataSource;
 import objectos.petclinic.site.SiteInjector;
 import objectos.petclinic.site.UiStyles;
 import objectos.way.App;
@@ -32,157 +31,82 @@ import org.h2.jdbcx.JdbcConnectionPool;
 
 public final class Testing {
 
-  public static final class DatabaseSupplier {
+  public static final SiteInjector SITE_INJECTOR = createSiteInjector();
 
-    private static final Sql.Database INSTANCE = create();
+  private static SiteInjector createSiteInjector() {
+    App.NoteSink noteSink;
+    noteSink = App.NoteSink.OfConsole.create();
 
-    private static Sql.Database create() {
-      return Sql.createDatabase(DataSourceSupplier.get());
+    App.ShutdownHook shutdownHook;
+    shutdownHook = App.ShutdownHook.create(noteSink);
+
+    JdbcConnectionPool dataSource;
+
+    try {
+      dataSource = PetClinicH2.createSchema();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
 
-    private DatabaseSupplier() {}
+    shutdownHook.register(dataSource::dispose);
 
-    public static Sql.Transaction beginTransaction(Sql.Transaction.Isolation level) {
-      return INSTANCE.beginTransaction(level);
-    }
+    Sql.Database database;
+    database = Sql.createDatabase(dataSource);
 
-    public static Sql.Database get() {
-      return INSTANCE;
-    }
+    return new SiteInjector(
+        database,
+        noteSink,
+        null,
 
+        null,
+        null,
+        createTemplateHeadPlugin(noteSink)
+    );
   }
 
-  private static final class DataSourceSupplier {
+  private static Consumer<Html.Markup> createTemplateHeadPlugin(App.NoteSink noteSink) {
+    record TemplateHeadPlugin(String styleSheet, String script) implements Consumer<Html.Markup> {
+      @Override
+      public final void accept(Html.Markup html) {
+        html.style(styleSheet);
 
-    private static final DataSource INSTANCE = create();
-
-    private static DataSource create() {
-      try {
-        JdbcConnectionPool ds;
-        ds = PetClinicH2.createSchema();
-
-        App.ShutdownHook shutdownHook;
-        shutdownHook = ShutdownHookSupplier.get();
-
-        shutdownHook.register(ds::dispose);
-
-        return ds;
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
+        html.script(script);
       }
     }
 
-    private DataSourceSupplier() {}
+    Path classOutput;
+    classOutput = Path.of("work", "main");
 
-    public static DataSource get() {
-      return INSTANCE;
+    Path absolutePath;
+    absolutePath = classOutput.toAbsolutePath();
+
+    UiStyles styles;
+    styles = new UiStyles(noteSink, absolutePath);
+
+    StyleSheet sheet;
+    sheet = styles.generateStyleSheet();
+
+    byte[] scriptBytes;
+
+    try {
+      scriptBytes = Script.getBytes();
+    } catch (
+      IOException e) {
+      throw new RuntimeException(e);
     }
 
+    return new TemplateHeadPlugin(
+        sheet.css(),
+
+        new String(scriptBytes, StandardCharsets.UTF_8)
+    );
   }
 
-  public static final class NoteSinkSupplier {
+  public static Sql.Transaction beginTransaction(Sql.Transaction.Isolation level) {
+    Sql.Database db;
+    db = SITE_INJECTOR.db();
 
-    private static final App.NoteSink INSTANCE = create();
-
-    private static App.NoteSink create() {
-      return App.NoteSink.OfConsole.create();
-    }
-
-    private NoteSinkSupplier() {}
-
-    public static App.NoteSink get() {
-      return INSTANCE;
-    }
-
-  }
-
-  public static final class ShutdownHookSupplier {
-
-    private static final App.ShutdownHook INSTANCE = create();
-
-    private static App.ShutdownHook create() {
-      return App.ShutdownHook.create(NoteSinkSupplier.get());
-    }
-
-    private ShutdownHookSupplier() {}
-
-    public static App.ShutdownHook get() {
-      return INSTANCE;
-    }
-
-  }
-
-  public static final class SiteInjectorSupplier {
-
-    private static final SiteInjector INSTANCE = create();
-
-    private static SiteInjector create() {
-      return new SiteInjector(
-          DatabaseSupplier.get(),
-          NoteSinkSupplier.get(),
-          null,
-
-          null,
-          null,
-          TemplateHeadPlugin.create()
-      );
-    }
-
-    private SiteInjectorSupplier() {}
-
-    public static SiteInjector get() {
-      return INSTANCE;
-    }
-
-  }
-
-  private record TemplateHeadPlugin(String styleSheet, String script) implements Consumer<Html.Markup> {
-
-    public static TemplateHeadPlugin create() {
-      return new TemplateHeadPlugin(
-          createStyleSheet(),
-
-          createScript()
-      );
-    }
-
-    private static String createStyleSheet() {
-      final App.NoteSink noteSink;
-      noteSink = NoteSinkSupplier.get();
-
-      Path classOutput;
-      classOutput = Path.of("work", "main");
-
-      Path absolutePath;
-      absolutePath = classOutput.toAbsolutePath();
-
-      UiStyles styles;
-      styles = new UiStyles(noteSink, absolutePath);
-
-      StyleSheet sheet;
-      sheet = styles.generateStyleSheet();
-
-      return sheet.css();
-    }
-
-    private static String createScript() {
-      try {
-        byte[] bytes;
-        bytes = Script.getBytes();
-
-        return new String(bytes, StandardCharsets.UTF_8);
-      } catch (IOException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    @Override
-    public final void accept(Html.Markup html) {
-      html.style(styleSheet);
-
-      html.script(script);
-    }
-
+    return db.beginTransaction(level);
   }
 
   private Testing() {}

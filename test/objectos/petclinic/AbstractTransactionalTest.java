@@ -34,7 +34,7 @@ public abstract class AbstractTransactionalTest {
 
   @BeforeClass
   public void setUp() {
-    trx = Testing.DatabaseSupplier.beginTransaction(Sql.SERIALIZABLE);
+    trx = Testing.beginTransaction(Sql.SERIALIZABLE);
 
     trx.sql(testData());
 

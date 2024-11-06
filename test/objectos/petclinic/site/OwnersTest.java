@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 public class OwnersTest extends AbstractTransactionalTest {
 
-  private final SiteInjector siteInjector = Testing.SiteInjectorSupplier.get();
+  private final SiteInjector siteInjector = Testing.SITE_INJECTOR;
 
   @Test(description = """
   GET /owners should list the owners

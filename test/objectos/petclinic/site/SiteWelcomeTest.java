@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
 
 public class SiteWelcomeTest extends AbstractTransactionalTest {
 
-  private final SiteInjector siteInjector = Testing.SiteInjectorSupplier.get();
+  private final SiteInjector siteInjector = Testing.SITE_INJECTOR;
 
   @Test(description = """
   GET / should list the last pet visits
