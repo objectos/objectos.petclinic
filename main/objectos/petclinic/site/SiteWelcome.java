@@ -73,16 +73,10 @@ final class SiteWelcome extends UiTemplate {
 
   @Override
   final void renderContents() {
-    breadcrumb(
-        breadcrumbItem("Home")
-    );
+    dataTable(
+        this::tableHead,
 
-    contents(
-        dataTable(
-            this::tableHead,
-
-            this::tableBody
-        )
+        this::tableBody
     );
   }
 

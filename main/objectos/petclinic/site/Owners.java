@@ -57,12 +57,12 @@ final class Owners extends UiTemplate {
     trx = http.get(Sql.Transaction.class);
 
     trx.sql("""
-    SELECT CONCAT_WS(' ', o.first_name, o.last_name) AS name,
+    SELECT CONCAT_WS(' ', o.first_name, o.last_name) as name,
            o.address,
            o.city,
            o.telephone,
-           CONCAT('/owners/', o.id) as href,
-           COALESCE(LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name), '') AS pets
+           CONCAT('/owners/', o.id),
+           COALESCE(LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name), '')
 
       FROM owners AS o
       LEFT
@@ -82,16 +82,10 @@ final class Owners extends UiTemplate {
 
   @Override
   final void renderContents() {
-    breadcrumb(
-        breadcrumbItem("Owners")
-    );
+    dataTable(
+        this::tableHead,
 
-    contents(
-        dataTable(
-            this::tableHead,
-
-            this::tableBody
-        )
+        this::tableBody
     );
   }
 

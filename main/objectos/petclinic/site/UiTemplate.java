@@ -98,8 +98,8 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
 
         sidebar(),
 
-        div(
-            className("grow"),
+        main(
+            className("grow p-16px"),
             dataFrame("main", mainFrameName()),
 
             renderFragment(this::renderContents)
@@ -168,41 +168,6 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   }
 
   abstract void renderContents();
-
-  //
-  // UI: Breadcrumb
-  //
-
-  record BreadcrumbItem(String name, String href) {}
-
-  final Html.Instruction.OfElement breadcrumb(BreadcrumbItem... items) {
-    return nav(
-        ariaLabel("breadcrumb"),
-
-        className("h-64px flex"),
-
-        renderFragment(this::renderBreadcrumbItems, items)
-    );
-  }
-
-  @SuppressWarnings("unused")
-  private void renderBreadcrumbItems(BreadcrumbItem... items) {
-    for (BreadcrumbItem item : items) {
-
-    }
-  }
-
-  final BreadcrumbItem breadcrumbItem(String name) {
-    return new BreadcrumbItem(name, null);
-  }
-
-  final Html.Instruction.OfElement contents(Html.Instruction.OfElement... elements) {
-    return main(
-        className("p-16px"),
-
-        flatten(elements)
-    );
-  }
 
   //
   // UI: Data Table
