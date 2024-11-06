@@ -23,14 +23,15 @@ import objectos.way.Http;
 import objectos.way.Sql;
 import org.testng.annotations.Test;
 
-public class SiteWelcomeTest extends AbstractTransactionalTest {
+public class OwnersTest extends AbstractTransactionalTest {
 
   private final SiteInjector siteInjector = Testing.SiteInjectorSupplier.get();
 
   @Test(description = """
-  GET / should list the last pet visits
-  - visits are ordered by date (desc)
-  - visits of the same date are order by id (desc)
+  GET /owners should list the owners
+  - ordered by last name (asc)
+  - owners with the same last name are order by id (asc)
+  - pets are ordered by name
   """)
   public void testCase01() {
     Http.TestingExchange http;
@@ -42,8 +43,8 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    SiteWelcome page;
-    page = new SiteWelcome();
+    Owners page;
+    page = new Owners();
 
     page.handle(http);
 
@@ -53,18 +54,26 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
         writeResponseBody(http, "testCase01"),
 
         """
-        visit.date: 2024-11-04
-        visit.name: TTT
-        visit.description: visit d
-        visit.date: 2024-11-03
-        visit.name: BBB
-        visit.description: visit c
-        visit.date: 2024-11-02
-        visit.name: BBB
-        visit.description: visit b
-        visit.date: 2024-11-01
-        visit.name: LLL
-        visit.description: visit a
+        owner.name: OW12 AAA
+        owner.address: Add 12
+        owner.city: City 12
+        owner.telephone: 12
+        owner.pets: BBB, BBB, CCC
+        owner.name: OW14 BBB
+        owner.address: Add 14
+        owner.city: City 14
+        owner.telephone: 14
+        owner.pets:
+        owner.name: OW11 DDD
+        owner.address: Add 11
+        owner.city: City 11
+        owner.telephone: 11
+        owner.pets: LLL
+        owner.name: OW13 DDD
+        owner.address: Add 13
+        owner.city: City 13
+        owner.telephone: 13
+        owner.pets: TTT
         """
     );
   }
@@ -73,9 +82,10 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
   protected final String testData() {
     return """
     INSERT INTO owners (id, first_name, last_name, address, city, telephone)
-    VALUES (11, 'GGG', 'FFF', '', '', '')
-    ,      (12, 'BBB', 'DDD', '', '', '')
-    ,      (13, 'EEE', 'RRR', '', '', '')
+    VALUES (11, 'OW11', 'DDD', 'Add 11', 'City 11', '11')
+    ,      (12, 'OW12', 'AAA', 'Add 12', 'City 12', '12')
+    ,      (13, 'OW13', 'DDD', 'Add 13', 'City 13', '13')
+    ,      (14, 'OW14', 'BBB', 'Add 14', 'City 14', '14')
 
     INSERT INTO types (id, name)
     VALUES (91, 'Type 1')
@@ -86,13 +96,8 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
     VALUES (11091, 11, 91, 'LLL', '2010-09-07')
     ,      (12092, 12, 92, 'BBB', '2012-08-06')
     ,      (12192, 12, 92, 'CCC', '2012-08-06')
+    ,      (12292, 12, 92, 'BBB', '2012-08-06')
     ,      (13093, 13, 93, 'TTT', '2011-04-17')
-
-    INSERT INTO visits (id, pet_id, visit_date, description)
-    VALUES (110910, 11091, '2024-11-01', 'visit a')
-    ,      (120920, 12092, '2024-11-02', 'visit b')
-    ,      (120921, 12092, '2024-11-03', 'visit c')
-    ,      (130930, 13093, '2024-11-04', 'visit d')
     """;
   }
 

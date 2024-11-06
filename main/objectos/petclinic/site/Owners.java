@@ -61,7 +61,7 @@ final class Owners extends UiTemplate {
            o.city,
            o.telephone,
            CONCAT('/owners/', o.id) as href,
-           LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name) AS pets
+           COALESCE(LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name), '') AS pets
 
       FROM owners AS o
       LEFT
