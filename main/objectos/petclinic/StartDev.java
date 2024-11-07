@@ -79,15 +79,15 @@ public final class StartDev extends Start {
     App.Reloader reloader;
 
     try {
-      reloader = App.createReloader(
-          "objectos.petclinic.site.SiteModule",
+      reloader = App.Reloader.create(config -> {
+        config.binaryName("objectos.petclinic.site.SiteModule");
 
-          watchService,
+        config.watchService(watchService);
 
-          App.noteSink(injector.noteSink()),
+        config.noteSink(injector.noteSink());
 
-          App.watchDirectory(classOutputOption.get())
-      );
+        config.directory(classOutputOption.get());
+      });
 
       shutdownHook.register(reloader);
     } catch (IOException e) {
