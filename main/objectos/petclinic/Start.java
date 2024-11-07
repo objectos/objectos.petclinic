@@ -18,7 +18,6 @@ package objectos.petclinic;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import objectos.notes.NoteSink;
 import objectos.petclinic.boot.PetClinicH2;
 import objectos.petclinic.site.SiteInjector;
 import objectos.way.App;
@@ -115,18 +114,18 @@ abstract class Start extends App.Bootstrap {
 
   abstract App.NoteSink noteSink();
 
-  private Sql.Database db(NoteSink noteSink, App.ShutdownHook shutdownHook) {
+  private Sql.Database db(Note.Sink noteSink, App.ShutdownHook shutdownHook) {
     try {
       JdbcConnectionPool dataSource;
       dataSource = PetClinicH2.create();
 
       shutdownHook.register(dataSource::dispose);
 
-      return Sql.createDatabase(
-          dataSource,
+      return Sql.Database.create(config -> {
+        config.dataSource(dataSource);
 
-          Sql.noteSink(noteSink)
-      );
+        config.noteSink(noteSink);
+      });
     } catch (SQLException e) {
       throw App.serviceFailed("Sql.Database", e);
     }

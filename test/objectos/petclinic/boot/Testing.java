@@ -51,7 +51,7 @@ public final class Testing {
     shutdownHook.register(dataSource::dispose);
 
     Sql.Database database;
-    database = Sql.createDatabase(dataSource);
+    database = Sql.Database.create(config -> config.dataSource(dataSource));
 
     return new SiteInjector(
         database,
