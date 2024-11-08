@@ -53,7 +53,7 @@ abstract class Start extends App.Bootstrap {
 
     // ShutdownHook
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.ShutdownHook.create(noteSink);
+    shutdownHook = App.ShutdownHook.create(config -> config.noteSink(noteSink));
 
     shutdownHook.registerIfPossible(noteSink);
 

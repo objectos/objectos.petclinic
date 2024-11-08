@@ -38,7 +38,7 @@ public final class Testing {
     noteSink = App.NoteSink.OfConsole.create();
 
     App.ShutdownHook shutdownHook;
-    shutdownHook = App.ShutdownHook.create(noteSink);
+    shutdownHook = App.ShutdownHook.create(config -> config.noteSink(noteSink));
 
     JdbcConnectionPool dataSource;
 
