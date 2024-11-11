@@ -26,6 +26,10 @@ VERSION := 001-SNAPSHOT
 ## javac --release option
 JAVA_RELEASE := 21
 
+## Maven interop
+REMOTE_REPOS := https://repo.maven.apache.org/maven2
+REMOTE_REPOS += https://oss.sonatype.org/content/repositories/snapshots/
+
 ## Dependencies
 H2_SRC := com.h2database/h2/2.3.232
 H2_LOCAL := br.com.objectos/h2-petclinic/2.2.232
