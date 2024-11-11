@@ -51,18 +51,7 @@ public final class UiStyles implements Http.Handler {
     Css.StyleSheet s;
     s = generateStyleSheet();
 
-    http.status(Http.Status.OK);
-
-    http.dateNow();
-
-    http.header(Http.HeaderName.CONTENT_TYPE, s.contentType());
-
-    byte[] bytes;
-    bytes = s.toByteArray();
-
-    http.header(Http.HeaderName.CONTENT_LENGTH, bytes.length);
-
-    http.send(bytes);
+    http.ok(s);
   }
 
   public final Css.StyleSheet generateStyleSheet() {

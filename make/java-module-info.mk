@@ -22,6 +22,14 @@
 # $(3) = src gav
 # $(4) = deps
 
+ifndef WORK
+$(error Required common-clean.mk was not included)
+endif
+
+ifndef gav-to-resolution-file
+$(error Required java-core.mk was not included)
+endif
+
 define module-info
 
 ## final resolution file
@@ -115,7 +123,7 @@ $(1)@clean:
 .PHONY: re-$(1)
 re-$(1): $(1)@clean $(1)
 
-$$($(1)MODULE_PATH): $$($(1)DEPS_RESOLUTIONS)
+$$($(1)MODULE_PATH): $$($(1)DEPS_RESOLUTIONS) | $$(WORK)
 	cat $$^ | sort -u > $$@.tmp
 	cat $$@.tmp | paste --delimiter='$(MODULE_PATH_SEPARATOR)' --serial > $$@
 

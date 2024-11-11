@@ -15,7 +15,6 @@
  */
 package objectos.petclinic;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -74,8 +73,11 @@ public abstract class AbstractTransactionalTest {
     Path target;
     target = Path.of(tmpdir, fileName);
 
-    try (BufferedWriter w = Files.newBufferedWriter(target, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-      html.writeTo(w);
+    try {
+      byte[] bytes;
+      bytes = html.mediaBytes();
+
+      Files.write(target, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
