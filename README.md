@@ -43,7 +43,17 @@ TODO
 
 ### VS Code
 
-TODO
+To import the project into VS Code:
+
+```shell
+git clone git@github.com:objectos/objectos.petclinic.git
+cd objectos.petclinic
+make vscode
+```
+
+The last command will generate the VS code required files.
+
+Open the project via `File -> Open Folder` then select the root of the cloned repository. 
 
 ## Features
 
