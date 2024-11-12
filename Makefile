@@ -130,3 +130,9 @@ DEV_ADD_EXPORTS := objectos.petclinic/objectos.petclinic.site=ALL-UNNAMED
 DEV_APP_ARGS := --class-output $(CLASS_OUTPUT)
 
 include make/java-dev.mk
+
+#
+# petclinic@vscode
+#
+
+include make/vscode.mk

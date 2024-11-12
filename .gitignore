@@ -5,3 +5,8 @@
 /.settings/
 /.classpath
 /.project
+
+# VS Code
+/.mvn
+/.vscode
+/pom.xml
