@@ -28,6 +28,23 @@ INFO [HTTP] objectos.way.Http.Server    : Started ServerSocket[addr=localhost/12
 
 Then visit [http://localhost:8004](http://localhost:8004).
 
+## Importing the project in your IDE
+
+Please note that IDE support is a work in progress. 
+We will have Make targets to generate IDE configuration files.
+
+### Eclipse IDE
+
+TODO
+
+### IntelliJ IDEA
+
+TODO
+
+### VS Code
+
+TODO
+
 ## Features
 
 The application is under development. It currently features:
