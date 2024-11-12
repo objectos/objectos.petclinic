@@ -18,6 +18,14 @@
 # Generates a pom.xml so that VS Code can import a project
 #
 
+ifndef COMPILE_MARKER
+$(error Required java-compile.mk was not included)
+endif
+
+ifndef TEST_COMPILE_MARKER
+$(error Required java-test-compile.mk was not included)
+endif
+
 ## generate the dependency tag
 define VSCODE_DEPENDENCY
 		<dependency>
@@ -113,17 +121,21 @@ $(VSCODE_DEPS)	</dependencies>
 </project>
 endef
 
-## all of the requirements
-VSCODE_REQS := $(VSCODE_FILE)
-VSCODE_REQS += $(VSCODE_LOCAL_SETTINGS)
-VSCODE_REQS += $(VSCODE_MAVEN_CONFIG)
+## force dep resolving
+VSCODE_REQS := $(COMPILE_MARKER)
+VSCODE_REQS += $(TEST_COMPILE_MARKER)
+
+## required files
+VSCODE_FILE_REQS := $(VSCODE_FILE)
+VSCODE_FILE_REQS += $(VSCODE_LOCAL_SETTINGS)
+VSCODE_FILE_REQS += $(VSCODE_MAVEN_CONFIG)
 
 .PHONY: vscode
-vscode: $(VSCODE_REQS)
+vscode: $(VSCODE_REQS) $(VSCODE_FILE_REQS)
 
 .PHONY: vscode@clean
 vscode@clean:
-	rm -f $(VSCODE_REQS)
+	rm -f $(VSCODE_FILE_REQS)
 
 $(VSCODE_FILE): Makefile
 	$(file > $@,$(VSCODE_CONTENTS))
