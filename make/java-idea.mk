@@ -50,7 +50,7 @@ define IDEA_DEPENDENCY =
     <orderEntry type="module-library"$(2)>
       <library>
         <CLASSES>
-          <root url="jar:/$(1)!/" />
+          <root url="jar://$(1)!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
