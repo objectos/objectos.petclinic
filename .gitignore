@@ -6,6 +6,10 @@
 /.classpath
 /.project
 
+# IntelliJ IDEA
+/.idea
+/way.iml
+
 # VS Code
 /.mvn
 /.vscode

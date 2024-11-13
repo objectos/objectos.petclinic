@@ -132,7 +132,13 @@ DEV_APP_ARGS := --class-output $(CLASS_OUTPUT)
 include make/java-dev.mk
 
 #
+# petclinic@idea
+#
+
+include make/java-idea.mk
+
+#
 # petclinic@vscode
 #
 
-include make/vscode.mk
+include make/java-vscode.mk
