@@ -8,7 +8,7 @@
 
 # IntelliJ IDEA
 /.idea
-/way.iml
+/objectos.petclinic.iml
 
 # VS Code
 /.mvn

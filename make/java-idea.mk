@@ -28,7 +28,7 @@ endif
 
 ## let's generate at the root of the project
 ## - always generate the file
-IDEA := way.iml
+IDEA := $(MODULE).iml
 .PHONY: $(IDEA)
 
 ## compile deps
@@ -87,6 +87,25 @@ $(IDEA_DEPS)  </component>
 </module>
 endef
 
+## where to store IDEA config files
+IDEA_DIR := .idea
+
+## IDEA modules.xml
+IDEA_MODULES := $(IDEA_DIR)/modules.xml
+.PHONY: $(IDEA_MODULES)
+
+## IDEA modules.xml contents
+define IDEA_MODULES_CONTENTS :=
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$$PROJECT_DIR$$/$(IDEA)" filepath="$$PROJECT_DIR$$/$(IDEA)" />
+    </modules>
+  </component>
+</project>
+endef 
+
 ## force dep resolving
 IDEA_REQS := $(COMPILE_MARKER)
 IDEA_REQS += $(TEST_COMPILE_MARKER)
@@ -96,7 +115,13 @@ IDEA_REQS += $(TEST_COMPILE_MARKER)
 #
 
 .PHONY: idea
-idea: $(IDEA)
+idea: $(IDEA) $(IDEA_MODULES)
 
 $(IDEA): $(IDEA_REQS)
-	$(file > $(IDEA),$(IDEA_CONTENTS))
+	$(file > $@,$(IDEA_CONTENTS))
+
+$(IDEA_MODULES): | $(IDEA_DIR)
+	$(file > $@,$(IDEA_MODULES_CONTENTS))
+
+$(IDEA_DIR):
+	mkdir --parents $@
