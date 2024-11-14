@@ -30,12 +30,22 @@ Then visit [http://localhost:8004](http://localhost:8004).
 
 ## Importing the project in your IDE
 
-Please note that IDE support is a work in progress. 
-We will have Make targets to generate IDE configuration files.
+Please note that IDE support is a work in progress.
+If you run into any problem, please [report an issue](https://github.com/objectos/objectos.petclinic/issues).
 
 ### Eclipse IDE
 
-TODO
+To import the project into Eclipse IDE:
+
+```shell
+git clone git@github.com:objectos/objectos.petclinic.git
+cd objectos.petclinic
+make eclipse
+```
+
+The last command will generate the Eclipse required files.
+
+Open the project via `File -> Open Projects from File System...` and select the root of the cloned repository.
 
 ### IntelliJ IDEA
 
@@ -49,10 +59,11 @@ make idea
 
 The last command will generate the IntelliJ required files.
 
-Open the project by selecting the root of the cloned repository.
-Navigate to a Java file from the project, e.g. `main/module-info.java`.
-IntelliJ will ask you to setup a JDK for the project.
-Select a JDK 21 or later. 
+Open the project by selecting the root of the cloned repository and then:
+
+1. navigate to a Java file from the project, e.g. `main/module-info.java`
+1. IntelliJ will ask you to setup a JDK for the project
+1. select a JDK 21 or later.
 
 ### VS Code
 
@@ -66,7 +77,7 @@ make vscode
 
 The last command will generate the VS code required files.
 
-Open the project via `File -> Open Folder` then select the root of the cloned repository. 
+Open the project via `File -> Open Folder` and select the root of the cloned repository. 
 
 ## Features
 

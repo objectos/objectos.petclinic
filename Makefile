@@ -132,6 +132,12 @@ DEV_APP_ARGS := --class-output $(CLASS_OUTPUT)
 include make/java-dev.mk
 
 #
+# petclinic@eclipse
+#
+
+include make/java-eclipse.mk
+
+#
 # petclinic@idea
 #
 
