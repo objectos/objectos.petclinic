@@ -39,7 +39,20 @@ TODO
 
 ### IntelliJ IDEA
 
-TODO
+To import the project into IntelliJ:
+
+```shell
+git clone git@github.com:objectos/objectos.petclinic.git
+cd objectos.petclinic
+make idea
+```
+
+The last command will generate the IntelliJ required files.
+
+Open the project by selecting the root of the cloned repository.
+Navigate to a Java file from the project, e.g. `main/module-info.java`.
+IntelliJ will ask you to setup a JDK for the project.
+Select a JDK 21 or later. 
 
 ### VS Code
 
