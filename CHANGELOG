@@ -1,0 +1,13 @@
+# v001 (2024-11-15)
+
+First release.
+
+## Features
+
+- welcome: list last visits
+- owners: list all of the owners
+
+## Deps
+
+- Objectos MK 0.1.1
+- Objectos Way 0.1.7  
