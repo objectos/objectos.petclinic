@@ -2,6 +2,11 @@
 
 This project uses third-party code.
 
+## Spring PetCliinic
+
+Objectos PetClinic uses the H2 SQL data from the Spring PetClinic project
+released under version 2.0 of the Apache License.   
+
 ## Heroicons
 
 The UiIcon class contains code from the Heroicons project licensed under the MIT license:

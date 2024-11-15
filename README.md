@@ -1,21 +1,31 @@
 # Objectos PetClinic
 
-A sample [Objectos Way](https://github.com/objectos/objectos.way) web application
-inspired by the [Spring PetClinic Application](https://github.com/spring-projects/spring-petclinic).
+A sample web application written in pure Java.
+It showcases:
 
-## How to run (dev mode)
+- [Objectos Way](https://github.com/objectos/objectos.way): a library for writing web applications in pure Java; and
+- [Objectos MK](https://github.com/objectos/objectos.mk): build Java projects using Make and Makefiles.
 
-To build and run the Objectos PetClinic application you need:
+Objectos PetClinic is inspired by the [Spring PetClinic Application](https://github.com/spring-projects/spring-petclinic).
+
+# Quick start
+
+To build and run Objectos PetClinic you will need:
 
 - JDK 21 (or later)
 - GNU Make 4.4.1 (or later)
 - GNU Wget 1.24.5 (or later)
 
-Clone, build and run:
+Clone the repository and point to the latest tag:
 
 ```shell
-git clone git@github.com:objectos/objectos.petclinic.git
+git clone --branch v001 git@github.com:objectos/objectos.petclinic.git
 cd objectos.petclinic
+```
+
+Start the application in dev mode:
+
+```shell
 make dev
 ```
 
@@ -26,9 +36,38 @@ INFO [main] objectos.petclinic.StartDev : Total time [ms] 564
 INFO [HTTP] objectos.way.Http.Server    : Started ServerSocket[addr=localhost/127.0.0.1,localport=8004]
 ```
 
-Then visit [http://localhost:8004](http://localhost:8004).
+Visit [http://localhost:8004](http://localhost:8004) on your Web browser.
 
-## Importing the project in your IDE
+Press `Ctrl+C` on the console to stop the application.
+
+# Slow start
+
+Thank you for your interest in Objectos PetClinic!
+
+The Objectos PetClinic is an ongoing project whose main purpose is two-fold:
+
+- to serve as a showcase for both Objectos Way and Objectos MK; and
+- to drive the development of both Objectos Way and Objectos MK.
+
+The objective of this section is:
+
+- show you how an Objectos Way application is organized;
+- show you the features Objectos Way offers to the developer; and
+- to serve as an example and inspiration for you to try Objectos Way on your own. 
+
+## System requirements
+
+In order to build, run and work with the Objectos PetClinic you will need:
+
+- **Linux**. The build is currently only tested on Linux.
+  If you have success building and running on a Mac or Windows machine please let us know;
+- **JDK 21** (or later). This is strictly required as Objectos Way requires it;
+- **GNU Make 4.4.1** (or later). You might be able to build the project with an earlier version of GNU Make.
+  Version 4.4.1 was listed here as it is the one used during the development of this project; and
+- **GNU Wget 1.24.5** (or later) You might be able to use an earlier version of GNU Wget.
+  Version 1.24.5 was listed here as it is the one used during the development of this project.
+  
+## Import the project in your IDE
 
 Please note that IDE support is a work in progress.
 If you run into any problem, please [report an issue](https://github.com/objectos/objectos.petclinic/issues).
