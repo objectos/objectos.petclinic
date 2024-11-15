@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.petclinic
-VERSION := 001
+VERSION := 002-SNAPSHOT
 
 ## javac --release option
 JAVA_RELEASE := 21
