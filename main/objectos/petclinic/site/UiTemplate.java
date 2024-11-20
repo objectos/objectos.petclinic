@@ -20,6 +20,8 @@ import java.util.function.Consumer;
 import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Http;
+import objectos.way.Sql;
+import objectos.way.Web;
 
 @Css.Source
 abstract class UiTemplate extends Html.Template implements Http.Handler {
@@ -173,8 +175,11 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   // UI: Data Table
   //
 
-  final Html.Instruction.OfElement dataTable(Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
+  final Html.Instruction.OfElement dataTable(
+      String frameName, Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
     return div(
+        dataFrame(frameName),
+
         table(
             className("w-full tr:h-40px"),
 
@@ -193,6 +198,52 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
                 renderFragment(tableBody)
             )
         )
+    );
+  }
+
+  //
+  // UI: Pagination
+  //
+
+  final Html.Instruction.OfElement pagination(String frameName, Web.Paginator paginator) {
+    Sql.Page page;
+    page = paginator.page();
+
+    String frameValue;
+    frameValue = Integer.toString(page.number());
+
+    return div(
+        className("flex justify-end"),
+
+        dataFrame(frameName, frameValue),
+
+        paginator.hasPrevious()
+            ? paginationLink(UiIcon.CHEVRON_LEFT, "Previous page", paginator.previousHref())
+            : paginationDisabled(UiIcon.CHEVRON_LEFT, "Previous page"),
+
+        paginator.hasNext()
+            ? paginationLink(UiIcon.CHEVRON_RIGHT, "Next page", paginator.nextHref())
+            : paginationDisabled(UiIcon.CHEVRON_RIGHT, "Next page")
+    );
+  }
+
+  private Html.Instruction paginationLink(UiIcon icon, String label, String href) {
+    return a(
+        href(href),
+
+        raw(icon.value)
+    );
+  }
+
+  private Html.Instruction paginationDisabled(UiIcon icon, String label) {
+    return button(
+        className("cursor-not-allowed"),
+
+        ariaLabel(label),
+
+        disabled(),
+
+        raw(icon.value)
     );
   }
 

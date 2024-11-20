@@ -29,6 +29,7 @@ public class OwnersTest extends AbstractTransactionalTest {
 
   @Test(description = """
   GET /owners should list the owners
+  - paginated with each page listing 5 owners
   - ordered by last name (asc)
   - owners with the same last name are order by id (asc)
   - pets are ordered by name
@@ -37,6 +38,8 @@ public class OwnersTest extends AbstractTransactionalTest {
     Http.TestingExchange http;
     http = Http.TestingExchange.create(config -> {
       config.method(Http.Method.GET);
+
+      config.path("/owners");
 
       config.set(SiteInjector.class, siteInjector);
 
@@ -64,6 +67,11 @@ public class OwnersTest extends AbstractTransactionalTest {
         owner.city: City 14
         owner.telephone: 14
         owner.pets:
+        owner.name: OW16 CCC
+        owner.address: Add 16
+        owner.city: City 16
+        owner.telephone: 16
+        owner.pets: AAA, ZZZ
         owner.name: OW11 DDD
         owner.address: Add 11
         owner.city: City 11
@@ -78,6 +86,43 @@ public class OwnersTest extends AbstractTransactionalTest {
     );
   }
 
+  @Test(description = """
+  GET /owners?page=2
+  """)
+  public void testCase02() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.method(Http.Method.GET);
+
+      config.path("/owners");
+
+      config.queryParam("page", "2");
+
+      config.set(SiteInjector.class, siteInjector);
+
+      config.set(Sql.Transaction.class, trx);
+    });
+
+    Owners page;
+    page = new Owners();
+
+    page.handle(http);
+
+    assertEquals(http.responseStatus(), Http.Status.OK);
+
+    assertEquals(
+        writeResponseBody(http, "testCase02"),
+
+        """
+        owner.name: OW15 ZZZ
+        owner.address: Add 15
+        owner.city: City 15
+        owner.telephone: 15
+        owner.pets:
+        """
+    );
+  }
+
   @Override
   protected final String testData() {
     return """
@@ -86,6 +131,8 @@ public class OwnersTest extends AbstractTransactionalTest {
     ,      (12, 'OW12', 'AAA', 'Add 12', 'City 12', '12')
     ,      (13, 'OW13', 'DDD', 'Add 13', 'City 13', '13')
     ,      (14, 'OW14', 'BBB', 'Add 14', 'City 14', '14')
+    ,      (15, 'OW15', 'ZZZ', 'Add 15', 'City 15', '15')
+    ,      (16, 'OW16', 'CCC', 'Add 16', 'City 16', '16')
 
     INSERT INTO types (id, name)
     VALUES (91, 'Type 1')
@@ -98,6 +145,8 @@ public class OwnersTest extends AbstractTransactionalTest {
     ,      (12192, 12, 92, 'CCC', '2012-08-06')
     ,      (12292, 12, 92, 'BBB', '2012-08-06')
     ,      (13093, 13, 93, 'TTT', '2011-04-17')
+    ,      (16091, 16, 91, 'ZZZ', '2020-05-21')
+    ,      (16092, 16, 92, 'AAA', '2021-11-03')
     """;
   }
 

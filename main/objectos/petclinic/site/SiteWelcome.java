@@ -74,6 +74,8 @@ final class SiteWelcome extends UiTemplate {
   @Override
   final void renderContents() {
     dataTable(
+        "visits-table",
+
         this::tableHead,
 
         this::tableBody

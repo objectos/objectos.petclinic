@@ -20,11 +20,10 @@ import java.sql.SQLException;
 import java.util.List;
 import objectos.way.Css;
 import objectos.way.Sql;
+import objectos.way.Web;
 
 @Css.Source
 final class Owners extends UiTemplate {
-
-  private List<Owner> owners;
 
   private record Owner(
       String name,
@@ -48,9 +47,14 @@ final class Owners extends UiTemplate {
 
   }
 
+  private List<Owner> owners;
+
+  private Web.Paginator paginator;
+
   @Override
   protected final void preRender() {
     pageSidebar = UiSidebar.OWNERS;
+
     pageTitle = "Owners | Objectos PetClinic";
 
     Sql.Transaction trx;
@@ -77,12 +81,28 @@ final class Owners extends UiTemplate {
            o.id
     """);
 
+    paginator = Web.Paginator.create(config -> {
+      config.requestTarget(http);
+
+      config.parameterName("page");
+
+      config.pageSize(5);
+
+      config.rowCount(trx.count());
+    });
+
+    trx.paginate(paginator);
+
     owners = trx.query(Owner::new);
   }
 
   @Override
   final void renderContents() {
+    pagination("owners-pagination", paginator);
+
     dataTable(
+        "owners-table",
+
         this::tableHead,
 
         this::tableBody
