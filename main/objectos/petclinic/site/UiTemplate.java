@@ -16,42 +16,37 @@
 package objectos.petclinic.site;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.way.Css;
 import objectos.way.Html;
-import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
 @Css.Source
-abstract class UiTemplate extends Html.Template implements Http.Handler {
+abstract class UiTemplate extends Html.Template {
 
-  Http.Exchange http;
+  static abstract class Config {
+
+    SiteInjector injector;
+
+  }
+
+  final SiteInjector injector;
 
   UiSidebar pageSidebar = UiSidebar.HOME;
 
   String pageTitle = "Objectos PetClinic";
+
+  UiTemplate(Config config) {
+    injector = Objects.requireNonNull(config.injector, "injector == null");
+  }
 
   public static Consumer<Html.Markup> defaultHeadPlugin() {
     return html -> {
       html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/ui/styles.css"));
       html.script(html.src("/ui/script.js"));
     };
-  }
-
-  @Override
-  public final void handle(Http.Exchange http) {
-    this.http = http;
-
-    handle();
-  }
-
-  void handle() {
-    switch (http.method()) {
-      case GET, HEAD -> http.ok(this);
-
-      default -> http.methodNotAllowed();
-    }
   }
 
   @Override
@@ -69,9 +64,6 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   }
 
   private Html.Instruction.OfElement head0() {
-    SiteInjector injector;
-    injector = http.get(SiteInjector.class);
-
     Consumer<Html.Markup> templateHeadPlugin;
     templateHeadPlugin = injector.templateHeadPlugin();
 

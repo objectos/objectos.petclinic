@@ -13,12 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.petclinic {
-  exports objectos.petclinic;
+package objectos.petclinic.site;
 
-  // required by Sql record-mapper
-  opens objectos.petclinic.site to objectos.way;
+import objectos.way.Sql;
 
-  requires objectos.way;
-  requires com.h2database;
+/**
+ * Represents a row of the Owners data table.
+ */
+record OwnersRow(
+    String name,
+    String address,
+    String city,
+    String telephone,
+    String href,
+    String pets
+) {
+
+  static final Sql.Mapper<OwnersRow> MAPPER = Sql.createRecordMapper(OwnersRow.class);
+
 }

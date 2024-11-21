@@ -15,53 +15,36 @@
  */
 package objectos.petclinic.site;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import objectos.way.Css;
-import objectos.way.Html;
-import objectos.way.Script;
+import objectos.way.Http;
 import objectos.way.Sql;
 import objectos.way.Web;
 
-@Css.Source
-final class Owners extends UiTemplate {
+final class Owners implements Http.Handler {
 
-  private record Owner(
-      String name,
-      String address,
-      String city,
-      String telephone,
-      String href,
-      String pets
-  ) {
+  private final SiteInjector injector;
 
-    Owner(ResultSet rs, int idx) throws SQLException {
-      this(
-          rs.getString(idx++),
-          rs.getString(idx++),
-          rs.getString(idx++),
-          rs.getString(idx++),
-          rs.getString(idx++),
-          rs.getString(idx++)
-      );
-    }
-
+  public Owners(SiteInjector injector) {
+    this.injector = injector;
   }
 
-  private List<Owner> owners;
-
-  private Web.Paginator paginator;
-
   @Override
-  protected final void preRender() {
-    pageSidebar = UiSidebar.OWNERS;
+  public final void handle(Http.Exchange http) {
+    switch (http.method()) {
+      case GET, HEAD -> get(http);
 
-    pageTitle = "Owners | Objectos PetClinic";
+      default -> http.methodNotAllowed();
+    }
+  }
 
+  private void get(Http.Exchange http) {
+    // fetch the SQL session from the HTTP exchange
+    // see interceptor(injector::transactional) in the SiteModule.java file
     Sql.Transaction trx;
     trx = http.get(Sql.Transaction.class);
 
+    // the owners SQL query
+    // the where clause is enclosed in a SQL fragment
     trx.sql("""
     select concat_ws(' ', owners.first_name, owners.last_name) as name
          , owners.address
@@ -79,11 +62,15 @@ final class Owners extends UiTemplate {
      order by owners.last_name, owners.id
     """);
 
+    // the search query parameter
     String q;
     q = http.queryParam("q");
 
+    // our SQL fragment will be enabled if the expression on the right evaluates to true
     trx.addIf(q + "%", q != null && !q.isBlank());
 
+    // paginate the SQL query
+    Web.Paginator paginator;
     paginator = Web.Paginator.create(config -> {
       config.requestTarget(http);
 
@@ -96,94 +83,22 @@ final class Owners extends UiTemplate {
 
     trx.paginate(paginator);
 
-    owners = trx.query(Owner::new);
-  }
+    // execute the SQL query
+    List<OwnersRow> rows;
+    rows = trx.query(OwnersRow.MAPPER);
 
-  private static final Html.Id FORM_ID = Html.Id.of("search-form");
+    // create a new view instance
+    OwnersView view;
+    view = OwnersView.create(config -> {
+      config.injector = injector;
 
-  @Override
-  final void renderContents() {
-    h1("Owners");
+      config.paginator = paginator;
 
-    form(FORM_ID,
-        action(http.path()), method("get"),
+      config.rows = rows;
+    });
 
-        input(name("q"), type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
-            dataOnInput(
-                Script.delay(500, Script.submit(FORM_ID))
-            )
-        )
-    );
-
-    div(
-        dataFrame("owners-data"),
-
-        !owners.isEmpty() ? renderFragment(this::data) : p("No data found")
-    );
-  }
-
-  private void data() {
-    pagination("owners-pagination", paginator);
-
-    dataTable(
-        this::tableHead,
-
-        this::tableBody
-    );
-  }
-
-  private void tableHead() {
-    tr(
-        className("th:text-start"),
-
-        th(
-            text("Name")
-        ),
-
-        th(
-            text("Address")
-        ),
-
-        th(
-            text("City")
-        ),
-
-        th(
-            text("Telephone")
-        ),
-
-        th(
-            text("Pets")
-        )
-    );
-  }
-
-  private void tableBody() {
-    for (Owner owner : owners) {
-      tr(
-          className("td:text-start"),
-
-          td(
-              testable("owner.name", owner.name)
-          ),
-
-          td(
-              testable("owner.address", owner.address)
-          ),
-
-          td(
-              testable("owner.city", owner.city)
-          ),
-
-          td(
-              testable("owner.telephone", owner.telephone)
-          ),
-
-          td(
-              testable("owner.pets", owner.pets)
-          )
-      );
-    }
+    // respond 200 OK with our view
+    http.ok(view);
   }
 
 }

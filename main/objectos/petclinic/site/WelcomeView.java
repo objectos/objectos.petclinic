@@ -15,60 +15,42 @@
  */
 package objectos.petclinic.site;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 import objectos.way.Css;
-import objectos.way.Sql;
 
 @Css.Source
-final class SiteWelcome extends UiTemplate {
+final class WelcomeView extends UiTemplate {
 
-  private List<Visit> visits;
+  static final class Config extends UiTemplate.Config {
 
-  private record Visit(
-      String name,
-      LocalDate date,
-      String description
-  ) {
+    List<WelcomeVisit> visits;
 
-    Visit(ResultSet rs, int idx) throws SQLException {
-      this(
-          rs.getString(idx++),
-          rs.getObject(idx++, LocalDate.class),
-          rs.getString(idx++)
-      );
-    }
+  }
 
-    final String dateText() {
-      return date.toString();
-    }
+  private final List<WelcomeVisit> visits;
 
+  WelcomeView(Config config) {
+    super(config);
+
+    visits = Objects.requireNonNull(config.visits, "visits == null");
+  }
+
+  public static WelcomeView create(Consumer<Config> config) {
+    Config cfg;
+    cfg = new Config();
+
+    config.accept(cfg);
+
+    return new WelcomeView(cfg);
   }
 
   @Override
   protected final void preRender() {
     pageSidebar = UiSidebar.HOME;
+
     pageTitle = "Objectos PetClinic";
-
-    Sql.Transaction trx;
-    trx = http.get(Sql.Transaction.class);
-
-    trx.sql("""
-    SELECT pets.name,
-           visits.visit_date,
-           visits.description
-
-      FROM visits
-      JOIN pets
-        ON visits.pet_id = pets.id
-
-     ORDER
-        BY visits.visit_date desc
-    """);
-
-    visits = trx.query(Visit::new);
   }
 
   @Override
@@ -103,7 +85,7 @@ final class SiteWelcome extends UiTemplate {
   }
 
   private void tableBody() {
-    for (Visit visit : visits) {
+    for (WelcomeVisit visit : visits) {
       tr(
           td(
               className("w-144px text-center"),
@@ -114,13 +96,13 @@ final class SiteWelcome extends UiTemplate {
           td(
               className("w-224px text-start"),
 
-              testable("visit.name", visit.name)
+              testable("visit.name", visit.name())
           ),
 
           td(
               className("text-start"),
 
-              testable("visit.description", visit.description)
+              testable("visit.description", visit.description())
           )
       );
     }

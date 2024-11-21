@@ -46,10 +46,10 @@ public class OwnersTest extends AbstractTransactionalTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    Owners page;
-    page = new Owners();
+    Owners owners;
+    owners = new Owners(siteInjector);
 
-    page.handle(http);
+    owners.handle(http);
 
     assertEquals(http.responseStatus(), Http.Status.OK);
 
@@ -103,10 +103,10 @@ public class OwnersTest extends AbstractTransactionalTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    Owners page;
-    page = new Owners();
+    Owners owners;
+    owners = new Owners(siteInjector);
 
-    page.handle(http);
+    owners.handle(http);
 
     assertEquals(http.responseStatus(), Http.Status.OK);
 

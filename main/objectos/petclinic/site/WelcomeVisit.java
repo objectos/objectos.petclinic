@@ -13,12 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-module objectos.petclinic {
-  exports objectos.petclinic;
+package objectos.petclinic.site;
 
-  // required by Sql record-mapper
-  opens objectos.petclinic.site to objectos.way;
+import java.time.LocalDate;
+import objectos.way.Sql;
 
-  requires objectos.way;
-  requires com.h2database;
+/**
+ * Represents a row of the visits data table of the welcome page.
+ */
+record WelcomeVisit(
+    String name,
+    LocalDate date,
+    String description
+) {
+
+  static final Sql.Mapper<WelcomeVisit> MAPPER = Sql.createRecordMapper(WelcomeVisit.class);
+
+  final String dateText() {
+    return date.toString();
+  }
+
 }

@@ -31,11 +31,11 @@ public class SiteModule extends Http.Module {
 
     route("/",
         interceptor(injector::transactional),
-        handlerFactory(SiteWelcome::new));
+        handlerFactory(Welcome::new, injector));
 
     route("/owners",
         interceptor(injector::transactional),
-        handlerFactory(Owners::new));
+        handlerFactory(Owners::new, injector));
 
     route("/ui/styles.css",
         handler(injector.stylesHandler()), // in prod, we serve the file from the filesystem

@@ -23,7 +23,7 @@ import objectos.way.Http;
 import objectos.way.Sql;
 import org.testng.annotations.Test;
 
-public class SiteWelcomeTest extends AbstractTransactionalTest {
+public class WelcomeTest extends AbstractTransactionalTest {
 
   private final SiteInjector siteInjector = Testing.SITE_INJECTOR;
 
@@ -42,8 +42,8 @@ public class SiteWelcomeTest extends AbstractTransactionalTest {
       config.set(Sql.Transaction.class, trx);
     });
 
-    SiteWelcome page;
-    page = new SiteWelcome();
+    Welcome page;
+    page = new Welcome(siteInjector);
 
     page.handle(http);
 
