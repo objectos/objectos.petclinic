@@ -19,6 +19,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import objectos.way.Css;
+import objectos.way.Html;
+import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -61,25 +63,26 @@ final class Owners extends UiTemplate {
     trx = http.get(Sql.Transaction.class);
 
     trx.sql("""
-    SELECT CONCAT_WS(' ', o.first_name, o.last_name) as name,
-           o.address,
-           o.city,
-           o.telephone,
-           CONCAT('/owners/', o.id),
-           COALESCE(LISTAGG(p.name, ', ') WITHIN GROUP (ORDER BY p.name), '')
-
-      FROM owners AS o
-      LEFT
-      JOIN pets AS p
-        ON p.owner_id = o.id
-
-     GROUP
-        BY name
-
-     ORDER
-        BY o.last_name,
-           o.id
+    select concat_ws(' ', owners.first_name, owners.last_name) as name
+         , owners.address
+         , owners.city
+         , owners.telephone
+         , concat('/owners/', owners.id)
+         , coalesce(listagg(pets.name, ', ') within group (order by pets.name), '')
+      from owners
+      left join pets
+        on pets.owner_id = owners.id
+    --
+     where owners.last_name like ?
+    --
+     group by name
+     order by owners.last_name, owners.id
     """);
+
+    String q;
+    q = http.queryParam("q");
+
+    trx.addIf(q + "%", q != null && !q.isBlank());
 
     paginator = Web.Paginator.create(config -> {
       config.requestTarget(http);
@@ -96,13 +99,33 @@ final class Owners extends UiTemplate {
     owners = trx.query(Owner::new);
   }
 
+  private static final Html.Id FORM_ID = Html.Id.of("search-form");
+
   @Override
   final void renderContents() {
+    h1("Owners");
+
+    form(FORM_ID,
+        action(http.path()), method("get"),
+
+        input(name("q"), type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
+            dataOnInput(
+                Script.delay(500, Script.submit(FORM_ID))
+            )
+        )
+    );
+
+    div(
+        dataFrame("owners-data"),
+
+        !owners.isEmpty() ? renderFragment(this::data) : p("No data found")
+    );
+  }
+
+  private void data() {
     pagination("owners-pagination", paginator);
 
     dataTable(
-        "owners-table",
-
         this::tableHead,
 
         this::tableBody

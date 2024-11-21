@@ -175,11 +175,8 @@ abstract class UiTemplate extends Html.Template implements Http.Handler {
   // UI: Data Table
   //
 
-  final Html.Instruction.OfElement dataTable(
-      String frameName, Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
+  final Html.Instruction.OfElement dataTable(Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
     return div(
-        dataFrame(frameName),
-
         table(
             className("w-full tr:h-40px"),
 
