@@ -71,13 +71,20 @@ final class OwnersView extends UiTemplate {
     final Html.Id overlay;
     overlay = Html.Id.of("overlay");
 
-    final Script.Action openTearsheet = Script.actions(
+    final Html.Id tearsheet;
+    tearsheet = Html.Id.of("tearsheet");
+
+    final Script.Action openTearsheet;
+    openTearsheet = Script.actions(
         Script.replaceClass(overlay, "invisible", "visible"),
-        Script.replaceClass(overlay, "opacity-0", "opacity-100")
+        Script.replaceClass(overlay, "opacity-0", "opacity-100"),
+        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0")
     );
 
-    final Script.Action closeTearsheet = Script.actions(
+    final Script.Action closeTearsheet;
+    closeTearsheet = Script.actions(
         Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
+        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
         Script.delay(350, Script.replaceClass(overlay, "invisible", "visible", true))
     );
 
@@ -86,7 +93,21 @@ final class OwnersView extends UiTemplate {
 
         dataOnClick(closeTearsheet),
 
-        className("invisible fixed inset-0px z-tearsheet bg-overlay opacity-0 transition-opacity duration-300")
+        className("invisible fixed inset-0px z-tearsheet flex justify-center bg-overlay opacity-0 transition-opacity duration-300"),
+
+        div(
+            tearsheet,
+
+            className("""
+            flex max-w-screen-sm w-full h-full flex-col
+            bg-layer
+            outline outline-3 -outline-offset-3 outline-transparent
+            transition-transform duration-300
+            translate-y-3/4
+
+            sm:mt-48px
+            """)
+        )
     );
 
     button(

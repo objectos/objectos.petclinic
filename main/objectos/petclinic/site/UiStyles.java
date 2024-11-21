@@ -66,6 +66,7 @@ public final class UiStyles implements Http.Handler {
           --ui-background-hover: rgba(141, 141, 141, 0.12);
           --ui-background-selected: rgba(141, 141, 141, 0.2);
           --ui-border: #c6c6c6;
+          --ui-layer: #ffffff;
           --ui-overlay: rgba(22, 22, 22, 0.5);
           --ui-text: #161616;
           --ui-text-secondary: #525252;
@@ -120,6 +121,7 @@ public final class UiStyles implements Http.Handler {
     background-hover: var(--ui-background-hover)
     background-selected: var(--ui-background-selected)
     border: var(--ui-border)
+    layer: var(--ui-layer)
     overlay: var(--ui-overlay)
     text: var(--ui-text)
     text-secondary: var(--ui-text-secondary)
@@ -172,8 +174,6 @@ public final class UiStyles implements Http.Handler {
     240px: 15rem
     256px: 16rem
     288px: 18rem
-    320px: 20rem
-    384px: 24rem
     """);
   }
 
