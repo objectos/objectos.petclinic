@@ -66,6 +66,7 @@ public final class UiStyles implements Http.Handler {
           --ui-background-hover: rgba(141, 141, 141, 0.12);
           --ui-background-selected: rgba(141, 141, 141, 0.2);
           --ui-border: #c6c6c6;
+          --ui-overlay: rgba(22, 22, 22, 0.5);
           --ui-text: #161616;
           --ui-text-secondary: #525252;
         }
@@ -94,6 +95,8 @@ public final class UiStyles implements Http.Handler {
 
         extendSpacing(),
 
+        extendZIndex(),
+
         Css.variants("""
         tbody: & tbody
         td: & td
@@ -117,6 +120,7 @@ public final class UiStyles implements Http.Handler {
     background-hover: var(--ui-background-hover)
     background-selected: var(--ui-background-selected)
     border: var(--ui-border)
+    overlay: var(--ui-overlay)
     text: var(--ui-text)
     text-secondary: var(--ui-text-secondary)
     """);
@@ -171,6 +175,12 @@ public final class UiStyles implements Http.Handler {
     320px: 20rem
     384px: 24rem
     """);
+  }
+
+  private Css.Option extendZIndex() {
+    return Css.extendZIndex("""
+      tearsheet: 9000
+      """);
   }
 
 }

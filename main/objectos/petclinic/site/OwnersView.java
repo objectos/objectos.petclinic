@@ -34,8 +34,6 @@ final class OwnersView extends UiTemplate {
 
   }
 
-  private static final Html.Id FORM_ID = Html.Id.of("search-form");
-
   private final Web.Paginator paginator;
 
   private final List<OwnersRow> rows;
@@ -68,15 +66,58 @@ final class OwnersView extends UiTemplate {
   final void renderContents() {
     h1("Owners");
 
-    form(FORM_ID,
+    // tearsheet
+
+    final Html.Id overlay;
+    overlay = Html.Id.of("overlay");
+
+    final Script.Action openTearsheet = Script.actions(
+        Script.replaceClass(overlay, "invisible", "visible"),
+        Script.replaceClass(overlay, "opacity-0", "opacity-100")
+    );
+
+    final Script.Action closeTearsheet = Script.actions(
+        Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
+        Script.delay(350, Script.replaceClass(overlay, "invisible", "visible", true))
+    );
+
+    div(
+        overlay,
+
+        dataOnClick(closeTearsheet),
+
+        className("invisible fixed inset-0px z-tearsheet bg-overlay opacity-0 transition-opacity duration-300")
+    );
+
+    button(
+        className("cursor-pointer"),
+
+        dataOnClick(openTearsheet),
+
+        text("Add owner")
+    );
+
+    // search form
+
+    final Html.Id searchForm;
+    searchForm = Html.Id.of("search-form");
+
+    form(
+        searchForm,
+
         action("/owners"), method("get"),
 
-        input(name("q"), type("text"), autocomplete("off"), placeholder("Last name"), tabindex("0"),
+        input(
+            name("q"), type("text"), autocomplete("off"),
+            placeholder("Last name"), tabindex("0"),
+
             dataOnInput(
-                Script.delay(500, Script.submit(FORM_ID))
+                Script.delay(500, Script.submit(searchForm))
             )
         )
     );
+
+    // owners data table
 
     div(
         dataFrame("owners-data"),
