@@ -131,7 +131,11 @@ public class OwnersTest extends AbstractTransactionalTest {
 
       config.queryParam("page", "2");
 
-      config.header(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
+      config.formParam("firstName", "NEW");
+      config.formParam("lastName", "YYY");
+      config.formParam("address", "New Address");
+      config.formParam("city", "New City");
+      config.formParam("telephone", "1122334455");
 
       config.set(Sql.Transaction.class, trx);
     });
@@ -144,9 +148,14 @@ public class OwnersTest extends AbstractTransactionalTest {
     assertEquals(http.responseStatus(), Http.Status.OK);
 
     assertEquals(
-        writeResponseBody(http, "testCase02"),
+        writeResponseBody(http, "testCase03"),
 
         """
+        owner.name: NEW YYY
+        owner.address: New Address
+        owner.city: New City
+        owner.telephone: 1122334455
+        owner.pets:
         owner.name: OW15 ZZZ
         owner.address: Add 15
         owner.city: City 15

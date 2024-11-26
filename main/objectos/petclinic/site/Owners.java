@@ -78,7 +78,8 @@ final class Owners implements Http.Handler {
 
     trx.update();
 
-    OwnersView view = renderView(http);
+    OwnersView view;
+    view = renderView(http);
 
     String wayRequest;
     wayRequest = http.header(Http.HeaderName.WAY_REQUEST);
@@ -118,7 +119,7 @@ final class Owners implements Http.Handler {
     --
      where owners.last_name like ?
     --
-     group by name
+     group by owners.id
      order by owners.last_name, owners.id
     """);
 
