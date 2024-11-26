@@ -41,8 +41,6 @@ public class OwnersTest extends AbstractTransactionalTest {
 
       config.path("/owners");
 
-      config.set(SiteInjector.class, siteInjector);
-
       config.set(Sql.Transaction.class, trx);
     });
 
@@ -98,7 +96,42 @@ public class OwnersTest extends AbstractTransactionalTest {
 
       config.queryParam("page", "2");
 
-      config.set(SiteInjector.class, siteInjector);
+      config.set(Sql.Transaction.class, trx);
+    });
+
+    Owners owners;
+    owners = new Owners(siteInjector);
+
+    owners.handle(http);
+
+    assertEquals(http.responseStatus(), Http.Status.OK);
+
+    assertEquals(
+        writeResponseBody(http, "testCase02"),
+
+        """
+        owner.name: OW15 ZZZ
+        owner.address: Add 15
+        owner.city: City 15
+        owner.telephone: 15
+        owner.pets:
+        """
+    );
+  }
+
+  @Test(description = """
+  POST /owners
+  """)
+  public void testCase03() {
+    Http.TestingExchange http;
+    http = Http.TestingExchange.create(config -> {
+      config.method(Http.Method.POST);
+
+      config.path("/owners");
+
+      config.queryParam("page", "2");
+
+      config.header(Http.HeaderName.CONTENT_TYPE, "application/x-www-form-urlencoded");
 
       config.set(Sql.Transaction.class, trx);
     });

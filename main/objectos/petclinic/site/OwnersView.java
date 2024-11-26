@@ -56,44 +56,59 @@ final class OwnersView extends UiTemplate {
   }
 
   @Override
-  protected final void preRender() {
-    pageSidebar = UiSidebar.OWNERS;
+  protected final void render() {
+    shell(
+        UiSidebar.OWNERS,
 
-    pageTitle = "Owners | Objectos PetClinic";
+        "Owners | Objectos PetClinic",
+
+        this::contents
+    );
   }
 
-  @Override
-  final void renderContents() {
+  private final Html.Id overlay = Html.Id.of("overlay");
+
+  private final Html.Id tearsheet = Html.Id.of("tearsheet");
+
+  private final Script.Action openTearsheet = Script.actions(
+      Script.replaceClass(overlay, "invisible", "visible"),
+      Script.replaceClass(overlay, "opacity-0", "opacity-100"),
+      Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0")
+  );
+
+  private final Script.Action closeTearsheet = Script.actions(
+      Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
+      Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
+      Script.delay(350, Script.replaceClass(overlay, "invisible", "visible", true))
+  );
+
+  final Script.Action createAction() {
+    return Script.actions(
+        Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
+        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
+        Script.delay(
+            350,
+            Script.replaceClass(overlay, "invisible", "visible", true),
+            Script.html(this)
+        )
+    );
+  }
+
+  private void contents() {
     h1("Owners");
 
     // tearsheet
 
-    final Html.Id overlay;
-    overlay = Html.Id.of("overlay");
-
-    final Html.Id tearsheet;
-    tearsheet = Html.Id.of("tearsheet");
-
-    final Script.Action openTearsheet;
-    openTearsheet = Script.actions(
-        Script.replaceClass(overlay, "invisible", "visible"),
-        Script.replaceClass(overlay, "opacity-0", "opacity-100"),
-        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0")
-    );
-
-    final Script.Action closeTearsheet;
-    closeTearsheet = Script.actions(
-        Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
-        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
-        Script.delay(350, Script.replaceClass(overlay, "invisible", "visible", true))
-    );
+    final Html.Id createForm;
+    createForm = Html.Id.of("create-form");
 
     div(
         overlay,
 
-        dataOnClick(closeTearsheet),
-
         className("invisible fixed inset-0px z-tearsheet flex justify-center bg-overlay opacity-0 transition-opacity duration-300"),
+
+        dataFrame("owners-form"),
+        dataOnClick(closeTearsheet),
 
         div(
             tearsheet,
@@ -106,7 +121,56 @@ final class OwnersView extends UiTemplate {
             translate-y-3/4
 
             sm:mt-48px
-            """)
+            """),
+
+            dataOnClick(Script.stopPropagation()),
+
+            form(
+                createForm,
+                action("/owners"),
+                method("post"),
+
+                div(
+                    label(forAttr("firstName"), text("First name")),
+                    input(id("firstName"), name("firstName"), type("text"))
+                ),
+
+                div(
+                    label(forAttr("lastName"), text("Last name")),
+                    input(id("lastName"), name("lastName"), type("text"))
+                ),
+
+                div(
+                    label(forAttr("address"), text("Address")),
+                    input(id("address"), name("address"), type("text"))
+                ),
+
+                div(
+                    label(forAttr("city"), text("City")),
+                    input(id("city"), name("city"), type("text"))
+                ),
+
+                div(
+                    label(forAttr("telephone"), text("Telephone")),
+                    input(id("telephone"), name("telephone"), type("text"))
+                ),
+
+                button(
+                    className("cursor-pointer"),
+
+                    dataOnClick(closeTearsheet),
+
+                    text("Cancel")
+                ),
+
+                button(
+                    className("cursor-pointer"),
+
+                    type("submit"),
+
+                    text("Create")
+                )
+            )
         )
     );
 

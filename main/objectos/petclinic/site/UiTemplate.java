@@ -15,11 +15,11 @@
  */
 package objectos.petclinic.site;
 
-import java.util.Locale;
 import java.util.Objects;
 import java.util.function.Consumer;
 import objectos.way.Css;
 import objectos.way.Html;
+import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -34,10 +34,6 @@ abstract class UiTemplate extends Html.Template {
 
   final SiteInjector injector;
 
-  UiSidebar pageSidebar = UiSidebar.HOME;
-
-  String pageTitle = "Objectos PetClinic";
-
   UiTemplate(Config config) {
     injector = Objects.requireNonNull(config.injector, "injector == null");
   }
@@ -49,60 +45,76 @@ abstract class UiTemplate extends Html.Template {
     };
   }
 
-  @Override
-  protected final void render() {
+  //
+  // UI: shell
+  //
+
+  final void shell(
+      UiSidebar sidebar,
+
+      String title,
+
+      Html.Fragment.Of0 contents
+  ) {
+    Objects.requireNonNull(sidebar, "sidebar == null");
+    Objects.requireNonNull(title, "title == null");
+    Objects.requireNonNull(contents, "contents == null");
+
     doctype();
 
     html(
         className("theme-light"),
         className("size-full bg-background text-text"),
 
-        head0(),
+        renderFragment(this::shellHead, title),
 
-        body0()
+        renderFragment(this::shellBody, sidebar, contents)
     );
   }
 
-  private Html.Instruction.OfElement head0() {
+  private void shellHead(String title) {
     Consumer<Html.Markup> templateHeadPlugin;
     templateHeadPlugin = injector.templateHeadPlugin();
 
-    return head(
+    head(
         meta(charset("utf-8")),
         meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
         meta(name("viewport"), content("width=device-width, initial-scale=1")),
         link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
         renderPlugin(templateHeadPlugin),
-        title(pageTitle)
+        title(title)
     );
   }
 
-  private Html.Instruction.OfElement body0() {
-    return body(
+  private void shellBody(UiSidebar sidebar, Html.Fragment.Of0 contents) {
+    body(
         className("size-full"),
 
-        shell()
-    );
-  }
+        div(
+            className("mx-auto w-full max-w-screen-xl flex items-start"),
+            className("body-compact-01"),
 
-  private Html.Instruction.OfElement shell() {
-    return div(
-        className("mx-auto w-full max-w-screen-xl flex items-start"),
-        className("body-compact-01"),
+            renderFragment(this::shellSidebar, sidebar),
 
-        sidebar(),
+            main(
+                className("grow p-16px"),
+                dataFrame("main", classSimpleName()),
 
-        main(
-            className("grow p-16px"),
-            dataFrame("main", mainFrameName()),
-
-            renderFragment(this::renderContents)
+                renderFragment(contents)
+            )
         )
     );
   }
 
-  private Html.Instruction.OfElement sidebar() {
-    return div(
+  private String classSimpleName() {
+    Class<? extends UiTemplate> thisClass;
+    thisClass = getClass();
+
+    return thisClass.getSimpleName();
+  }
+
+  private void shellSidebar(UiSidebar pageSidebar) {
+    div(
         className("sticky top-0px w-240px h-screen shrink-0 border-r border-r-border px-16px"),
         className("body-compact-01"),
 
@@ -122,17 +134,19 @@ abstract class UiTemplate extends Html.Template {
             className("pt-16px"),
             dataFrame("sidebar", pageSidebar.name()),
 
-            renderFragment(this::sidebarItems)
+            renderFragment(this::shellSidebarItems, pageSidebar)
         )
     );
   }
 
-  private void sidebarItems() {
+  private void shellSidebarItems(UiSidebar pageSidebar) {
     for (UiSidebar item : UiSidebar.VALUES) {
       a(
           className("flex items-center px-16px py-8px hover:bg-background-hover"),
 
           item == pageSidebar ? className("bg-background-selected") : noop(),
+
+          dataOnClick(Script.navigate()),
 
           href(item.href),
 
@@ -150,18 +164,6 @@ abstract class UiTemplate extends Html.Template {
       );
     }
   }
-
-  private String mainFrameName() {
-    Class<? extends UiTemplate> thisClass;
-    thisClass = getClass();
-
-    String simpleName;
-    simpleName = thisClass.getSimpleName();
-
-    return simpleName.toLowerCase(Locale.US);
-  }
-
-  abstract void renderContents();
 
   //
   // UI: Data Table
@@ -218,6 +220,8 @@ abstract class UiTemplate extends Html.Template {
 
   private Html.Instruction paginationLink(UiIcon icon, String label, String href) {
     return a(
+        dataOnClick(Script.navigate()),
+
         href(href),
 
         raw(icon.value)

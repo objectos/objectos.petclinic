@@ -17,6 +17,7 @@ package objectos.petclinic.site;
 
 import java.util.List;
 import objectos.way.Http;
+import objectos.way.Script;
 import objectos.way.Sql;
 import objectos.way.Web;
 
@@ -33,11 +34,70 @@ final class Owners implements Http.Handler {
     switch (http.method()) {
       case GET, HEAD -> get(http);
 
+      case POST -> post(http);
+
       default -> http.methodNotAllowed();
     }
   }
 
   private void get(Http.Exchange http) {
+    // renders the view
+    OwnersView view;
+    view = renderView(http);
+
+    // respond 200 OK with our view
+    http.ok(view);
+  }
+
+  private void post(Http.Exchange http) {
+    // parse the form data
+    Web.FormData formData;
+    formData = Web.FormData.parse(http);
+
+    // TODO validation
+
+    // fetch the SQL session from the HTTP exchange
+    // see interceptor(injector::transactional) in the SiteModule.java file
+    Sql.Transaction trx;
+    trx = http.get(Sql.Transaction.class);
+
+    trx.sql("""
+    insert into owners (first_name, last_name, address, city, telephone)
+    values (?, ?, ?, ?, ?)
+    """);
+
+    trx.add(formData.getOrDefault("firstName", ""));
+
+    trx.add(formData.getOrDefault("lastName", ""));
+
+    trx.add(formData.getOrDefault("address", ""));
+
+    trx.add(formData.getOrDefault("city", ""));
+
+    trx.add(formData.getOrDefault("telephone", ""));
+
+    trx.update();
+
+    OwnersView view = renderView(http);
+
+    String wayRequest;
+    wayRequest = http.header(Http.HeaderName.WAY_REQUEST);
+
+    if ("true".equals(wayRequest)) {
+
+      Script.Action action;
+      action = view.createAction();
+
+      http.ok(action);
+
+    } else {
+
+      http.ok(view);
+
+    }
+  }
+
+  private OwnersView renderView(Http.Exchange http) {
     // fetch the SQL session from the HTTP exchange
     // see interceptor(injector::transactional) in the SiteModule.java file
     Sql.Transaction trx;
@@ -88,17 +148,13 @@ final class Owners implements Http.Handler {
     rows = trx.query(OwnersRow.MAPPER);
 
     // create a new view instance
-    OwnersView view;
-    view = OwnersView.create(config -> {
+    return OwnersView.create(config -> {
       config.injector = injector;
 
       config.paginator = paginator;
 
       config.rows = rows;
     });
-
-    // respond 200 OK with our view
-    http.ok(view);
   }
 
 }

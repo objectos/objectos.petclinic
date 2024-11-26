@@ -47,14 +47,17 @@ final class WelcomeView extends UiTemplate {
   }
 
   @Override
-  protected final void preRender() {
-    pageSidebar = UiSidebar.HOME;
+  protected final void render() {
+    shell(
+        UiSidebar.HOME,
 
-    pageTitle = "Objectos PetClinic";
+        "Objectos PetClinic",
+
+        this::contents
+    );
   }
 
-  @Override
-  final void renderContents() {
+  private void contents() {
     dataTable(
         this::tableHead,
 

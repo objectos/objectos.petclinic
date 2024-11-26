@@ -179,8 +179,8 @@ public final class UiStyles implements Http.Handler {
 
   private Css.Option extendZIndex() {
     return Css.extendZIndex("""
-      tearsheet: 9000
-      """);
+    tearsheet: 9000
+    """);
   }
 
 }
