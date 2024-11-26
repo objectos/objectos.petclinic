@@ -37,7 +37,7 @@ WAY := br.com.objectos/objectos.way/0.1.9-SNAPSHOT
 
 SLF4J_API := org.slf4j/slf4j-api/1.7.36
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
-TESTNG := org.testng/testng/7.9.0
+TESTNG := org.testng/testng/7.10.2
 
 # Delete the default suffixes
 .SUFFIXES:
