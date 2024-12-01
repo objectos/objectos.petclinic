@@ -21,7 +21,7 @@
 ## Coordinates
 GROUP_ID := br.com.objectos
 ARTIFACT_ID := objectos.petclinic
-VERSION := 002-SNAPSHOT
+VERSION := 002
 
 ## javac --release option
 JAVA_RELEASE := 21
@@ -33,7 +33,7 @@ REMOTE_REPOS += https://oss.sonatype.org/content/repositories/snapshots/
 ## Dependencies
 H2_SRC := com.h2database/h2/2.3.232
 H2_LOCAL := br.com.objectos/h2-petclinic/2.2.232
-WAY := br.com.objectos/objectos.way/0.1.9-SNAPSHOT
+WAY := br.com.objectos/objectos.way/0.1.9
 
 SLF4J_API := org.slf4j/slf4j-api/1.7.36
 SLF4J_NOP := org.slf4j/slf4j-nop/1.7.36
