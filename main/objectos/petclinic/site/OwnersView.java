@@ -71,24 +71,24 @@ final class OwnersView extends UiTemplate {
   private final Html.Id tearsheet = Html.Id.of("tearsheet");
 
   private final Script.Action openTearsheet = Script.actions(
-      Script.replaceClass(overlay, "invisible", "visible"),
-      Script.replaceClass(overlay, "opacity-0", "opacity-100"),
-      Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0")
+      Script.toggleClass(overlay, "invisible", "visible"),
+      Script.toggleClass(overlay, "opacity-0", "opacity-100"),
+      Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0")
   );
 
   private final Script.Action closeTearsheet = Script.actions(
-      Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
-      Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
-      Script.delay(350, Script.replaceClass(overlay, "invisible", "visible", true))
+      Script.toggleClass(overlay, "opacity-0", "opacity-100"),
+      Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0"),
+      Script.delay(350, Script.toggleClass(overlay, "invisible", "visible"))
   );
 
   final Script.Action createAction() {
     return Script.actions(
-        Script.replaceClass(overlay, "opacity-0", "opacity-100", true),
-        Script.replaceClass(tearsheet, "translate-y-3/4", "translate-y-0", true),
+        Script.toggleClass(overlay, "opacity-0", "opacity-100"),
+        Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0"),
         Script.delay(
             350,
-            Script.replaceClass(overlay, "invisible", "visible", true),
+            Script.toggleClass(overlay, "invisible", "visible"),
             Script.html(this)
         )
     );
@@ -97,10 +97,17 @@ final class OwnersView extends UiTemplate {
   private void contents() {
     h1("Owners");
 
-    // tearsheet
+    // create button
 
-    final Html.Id createForm;
-    createForm = Html.Id.of("create-form");
+    button(
+        className("cursor-pointer"),
+
+        dataOnClick(openTearsheet),
+
+        text("Add owner")
+    );
+
+    // tearsheet
 
     div(
         overlay,
@@ -123,10 +130,10 @@ final class OwnersView extends UiTemplate {
             sm:mt-48px
             """),
 
+            // clicking on the tearsheet should not hide the overlay
             dataOnClick(Script.stopPropagation()),
 
             form(
-                createForm,
                 action("/owners"),
                 method("post"),
 
@@ -172,14 +179,6 @@ final class OwnersView extends UiTemplate {
                 )
             )
         )
-    );
-
-    button(
-        className("cursor-pointer"),
-
-        dataOnClick(openTearsheet),
-
-        text("Add owner")
     );
 
     // search form

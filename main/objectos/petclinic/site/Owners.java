@@ -67,24 +67,25 @@ final class Owners implements Http.Handler {
     """);
 
     trx.add(formData.getOrDefault("firstName", ""));
-
     trx.add(formData.getOrDefault("lastName", ""));
-
     trx.add(formData.getOrDefault("address", ""));
-
     trx.add(formData.getOrDefault("city", ""));
-
     trx.add(formData.getOrDefault("telephone", ""));
 
     trx.update();
 
+    // re-renders the listing with the new record
     OwnersView view;
     view = renderView(http);
 
+    // checks if this is a request from the Objectos Way JS library
     String wayRequest;
     wayRequest = http.header(Http.HeaderName.WAY_REQUEST);
 
     if ("true".equals(wayRequest)) {
+
+      // Yes, this is a request from the Objectos Way JS library
+      // respond with JSON
 
       Script.Action action;
       action = view.createAction();
@@ -92,6 +93,9 @@ final class Owners implements Http.Handler {
       http.ok(action);
 
     } else {
+
+      // No, this is not a request from the Objectos Way JS library
+      // respond with HTML
 
       http.ok(view);
 
