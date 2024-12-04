@@ -28,11 +28,21 @@ final class OwnersView extends UiTemplate {
 
   static final class Config extends UiTemplate.Config {
 
+    Web.Form form;
+
     Web.Paginator paginator;
 
     List<OwnersRow> rows;
 
+    private UiForm createForm() {
+      Objects.requireNonNull(form, "form == null");
+
+      return new UiForm("owners", form);
+    }
+
   }
+
+  private final UiForm createForm;
 
   private final Web.Paginator paginator;
 
@@ -40,6 +50,8 @@ final class OwnersView extends UiTemplate {
 
   private OwnersView(Config config) {
     super(config);
+
+    createForm = config.createForm();
 
     paginator = Objects.requireNonNull(config.paginator, "paginator == null");
 
@@ -66,32 +78,8 @@ final class OwnersView extends UiTemplate {
     );
   }
 
-  private final Html.Id overlay = Html.Id.of("overlay");
-
-  private final Html.Id tearsheet = Html.Id.of("tearsheet");
-
-  private final Script.Action openTearsheet = Script.actions(
-      Script.toggleClass(overlay, "invisible", "visible"),
-      Script.toggleClass(overlay, "opacity-0", "opacity-100"),
-      Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0")
-  );
-
-  private final Script.Action closeTearsheet = Script.actions(
-      Script.toggleClass(overlay, "opacity-0", "opacity-100"),
-      Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0"),
-      Script.delay(350, Script.toggleClass(overlay, "invisible", "visible"))
-  );
-
-  final Script.Action createAction() {
-    return Script.actions(
-        Script.toggleClass(overlay, "opacity-0", "opacity-100"),
-        Script.toggleClass(tearsheet, "translate-y-3/4", "translate-y-0"),
-        Script.delay(
-            350,
-            Script.toggleClass(overlay, "invisible", "visible"),
-            Script.html(this)
-        )
-    );
+  final Script.Action onCreateAction() {
+    return createForm.onCreateAction(this);
   }
 
   private void contents() {
@@ -102,84 +90,14 @@ final class OwnersView extends UiTemplate {
     button(
         className("cursor-pointer"),
 
-        dataOnClick(openTearsheet),
+        dataOnClick(createForm.showAction()),
 
         text("Add owner")
     );
 
-    // tearsheet
+    // create form
 
-    div(
-        overlay,
-
-        className("invisible fixed inset-0px z-tearsheet flex justify-center bg-overlay opacity-0 transition-opacity duration-300"),
-
-        dataFrame("owners-form"),
-        dataOnClick(closeTearsheet),
-
-        div(
-            tearsheet,
-
-            className("""
-            flex max-w-screen-sm w-full h-full flex-col
-            bg-layer
-            outline outline-3 -outline-offset-3 outline-transparent
-            transition-transform duration-300
-            translate-y-3/4
-
-            sm:mt-48px
-            """),
-
-            // clicking on the tearsheet should not hide the overlay
-            dataOnClick(Script.stopPropagation()),
-
-            form(
-                action("/owners"),
-                method("post"),
-
-                div(
-                    label(forAttr("firstName"), text("First name")),
-                    input(id("firstName"), name("firstName"), type("text"))
-                ),
-
-                div(
-                    label(forAttr("lastName"), text("Last name")),
-                    input(id("lastName"), name("lastName"), type("text"))
-                ),
-
-                div(
-                    label(forAttr("address"), text("Address")),
-                    input(id("address"), name("address"), type("text"))
-                ),
-
-                div(
-                    label(forAttr("city"), text("City")),
-                    input(id("city"), name("city"), type("text"))
-                ),
-
-                div(
-                    label(forAttr("telephone"), text("Telephone")),
-                    input(id("telephone"), name("telephone"), type("text"))
-                ),
-
-                button(
-                    className("cursor-pointer"),
-
-                    dataOnClick(closeTearsheet),
-
-                    text("Cancel")
-                ),
-
-                button(
-                    className("cursor-pointer"),
-
-                    type("submit"),
-
-                    text("Create")
-                )
-            )
-        )
-    );
+    renderTemplate(createForm);
 
     // search form
 

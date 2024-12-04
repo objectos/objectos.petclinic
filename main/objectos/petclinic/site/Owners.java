@@ -40,10 +40,53 @@ final class Owners implements Http.Handler {
     }
   }
 
+  private final Web.FormSpec formSpec = Web.FormSpec.create(config -> {
+    config.action("/owners");
+
+    config.textInput(field -> {
+      field.label("First name");
+      field.name("first_name");
+      field.required();
+      field.maxLength(30);
+    });
+
+    config.textInput(field -> {
+      field.label("Last name");
+      field.name("last_name");
+      field.required();
+      field.maxLength(30);
+    });
+
+    config.textInput(field -> {
+      field.label("Address");
+      field.name("address");
+      field.required();
+      field.maxLength(255);
+    });
+
+    config.textInput(field -> {
+      field.label("City");
+      field.name("city");
+      field.required();
+      field.maxLength(80);
+    });
+
+    config.textInput(field -> {
+      field.label("Telephone");
+      field.name("telephone");
+      field.required();
+      field.maxLength(20);
+    });
+  });
+
   private void get(Http.Exchange http) {
+    // form for creating a new pet owner
+    Web.Form form;
+    form = Web.Form.of(formSpec);
+
     // renders the view
     OwnersView view;
-    view = renderView(http);
+    view = renderView(http, form);
 
     // respond 200 OK with our view
     http.ok(view);
@@ -51,50 +94,52 @@ final class Owners implements Http.Handler {
 
   private void post(Http.Exchange http) {
     // parse the form data
-    Web.FormData formData;
-    formData = Web.FormData.parse(http);
+    Web.Form form;
+    form = formSpec.parse(http);
 
-    // TODO validation
+    if (form.isValid()) {
 
-    // fetch the SQL session from the HTTP exchange
-    // see interceptor(injector::transactional) in the SiteModule.java file
-    Sql.Transaction trx;
-    trx = http.get(Sql.Transaction.class);
+      // fetch the SQL session from the HTTP exchange
+      // see interceptor(injector::transactional) in the SiteModule.java file
+      Sql.Transaction trx;
+      trx = http.get(Sql.Transaction.class);
 
-    trx.sql("""
-    insert into owners (first_name, last_name, address, city, telephone)
-    values (?, ?, ?, ?, ?)
-    """);
+      trx.sql("""
+      insert into owners (first_name, last_name, address, city, telephone)
+      values (?, ?, ?, ?, ?)
+      """);
 
-    trx.add(formData.getOrDefault("firstName", ""));
-    trx.add(formData.getOrDefault("lastName", ""));
-    trx.add(formData.getOrDefault("address", ""));
-    trx.add(formData.getOrDefault("city", ""));
-    trx.add(formData.getOrDefault("telephone", ""));
+      for (Web.Form.Field field : form.fields()) {
+        field.setValue(trx);
+      }
 
-    trx.update();
+      trx.update();
 
-    // re-renders the listing with the new record
+    }
+
+    // re-renders the view with either:
+    // 1) the new record
+    // 2) the form errors
     OwnersView view;
-    view = renderView(http);
+    view = renderView(http, form);
 
     // checks if this is a request from the Objectos Way JS library
     String wayRequest;
     wayRequest = http.header(Http.HeaderName.WAY_REQUEST);
 
-    if ("true".equals(wayRequest)) {
+    if (form.isValid() && "true".equals(wayRequest)) {
 
-      // Yes, this is a request from the Objectos Way JS library
-      // respond with JSON
+      // the pet owner has been created
+      // inform the client UI to hide the form and update the listing
 
       Script.Action action;
-      action = view.createAction();
+      action = view.onCreateAction();
 
       http.ok(action);
 
     } else {
 
-      // No, this is not a request from the Objectos Way JS library
+      // pet owner not created OR not a request from Objectos Way
       // respond with HTML
 
       http.ok(view);
@@ -102,7 +147,7 @@ final class Owners implements Http.Handler {
     }
   }
 
-  private OwnersView renderView(Http.Exchange http) {
+  private OwnersView renderView(Http.Exchange http, Web.Form form) {
     // fetch the SQL session from the HTTP exchange
     // see interceptor(injector::transactional) in the SiteModule.java file
     Sql.Transaction trx;
@@ -155,6 +200,8 @@ final class Owners implements Http.Handler {
     // create a new view instance
     return OwnersView.create(config -> {
       config.injector = injector;
+
+      config.form = form;
 
       config.paginator = paginator;
 
