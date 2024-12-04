@@ -131,8 +131,8 @@ public class OwnersTest extends AbstractTransactionalTest {
 
       config.queryParam("page", "2");
 
-      config.formParam("firstName", "NEW");
-      config.formParam("lastName", "YYY");
+      config.formParam("first_name", "NEW");
+      config.formParam("last_name", "YYY");
       config.formParam("address", "New Address");
       config.formParam("city", "New City");
       config.formParam("telephone", "1122334455");
