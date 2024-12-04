@@ -82,42 +82,78 @@ final class OwnersView extends UiTemplate {
     return createForm.onCreateAction(this);
   }
 
+  private final Html.Id searchForm = Html.Id.of("search-form");
+
   private void contents() {
-    h1("Owners");
+    // page header
 
-    // create button
+    header(
 
-    button(
-        className("cursor-pointer"),
+        className("px-16px"),
 
-        dataOnClick(createForm.showAction()),
+        h1(
+            className("text-28px leading-36px font-400 tracking-0px"),
 
-        text("Add owner")
+            text("Owners")
+        ),
+
+        p(
+            className("body-compact-01"),
+
+            text("Find a pet owner or add a new one.")
+        )
+
+    );
+
+    // page action bar
+
+    div(
+
+        className("mt-28px flex"),
+
+        form(
+            searchForm,
+
+            className("relative flex-1"),
+
+            action("/owners"), method("get"),
+
+            span(
+                className("""
+                absolute left-14px top-14px svg:size-20px svg:stroke-icon-secondary
+                """),
+
+                raw(UiIcon.MAGNIFYING_GLASS.value)
+            ),
+
+            input(
+                className("""
+                w-full h-48px border-0 border-b border-b-border bg-field px-48px outline-none -outline-offset-2
+                focus:outline-focus
+                """),
+
+                name("q"), type("text"), autocomplete("off"),
+                placeholder("Find by last name"), tabindex("0"),
+
+                dataOnInput(
+                    Script.delay(500, Script.submit(searchForm))
+                )
+            )
+        ),
+
+        // create button
+
+        renderButton(
+            dataOnClick(createForm.showAction()),
+
+            text("Add owner")
+        )
+
     );
 
     // create form
 
     renderTemplate(createForm);
-
-    // search form
-
-    final Html.Id searchForm;
-    searchForm = Html.Id.of("search-form");
-
-    form(
-        searchForm,
-
-        action("/owners"), method("get"),
-
-        input(
-            name("q"), type("text"), autocomplete("off"),
-            placeholder("Last name"), tabindex("0"),
-
-            dataOnInput(
-                Script.delay(500, Script.submit(searchForm))
-            )
-        )
-    );
 
     // owners data table
 

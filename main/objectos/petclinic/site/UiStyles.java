@@ -66,19 +66,32 @@ public final class UiStyles implements Http.Handler {
           --ui-background-hover: rgba(141, 141, 141, 0.12);
           --ui-background-selected: rgba(141, 141, 141, 0.2);
           --ui-border: #c6c6c6;
+          --ui-button-primary: #0f62fe;
+          --ui-button-primary-active: #002d9c;
+          --ui-button-primary-hover: #0050e6;
+          --ui-field: #ffffff;
+          --ui-focus: #0f62fe;
+          --ui-icon-secondary: #525252;
           --ui-layer: #ffffff;
           --ui-overlay: rgba(22, 22, 22, 0.5);
           --ui-text: #161616;
+          --ui-text-on-color: #ffffff;
           --ui-text-secondary: #525252;
         }
         """),
 
         Css.overrideFontSize("""
         14px: 0.875rem
+        20px: 1.25rem
+        28px: 1.75rem
+        32px: 2rem
         """),
 
         Css.overrideLineHeight("""
         18px: 1.125rem
+        28px: 1.75rem
+        36px: 2.25rem
+        40px: 2.5rem
         """),
 
         Css.overrideFontWeight("""
@@ -87,6 +100,7 @@ public final class UiStyles implements Http.Handler {
         """),
 
         Css.overrideLetterSpacing("""
+        0px: 0px
         0.16px: 0.16px
         """),
 
@@ -99,6 +113,7 @@ public final class UiStyles implements Http.Handler {
         extendZIndex(),
 
         Css.variants("""
+        svg: & svg
         tbody: & tbody
         td: & td
         th: & th
@@ -121,9 +136,16 @@ public final class UiStyles implements Http.Handler {
     background-hover: var(--ui-background-hover)
     background-selected: var(--ui-background-selected)
     border: var(--ui-border)
+    button-primary: var(--ui-button-primary)
+    button-primary-active: var(--ui-button-primary-active)
+    button-primary-hover: var(--ui-button-primary-hover)
+    field: var(--ui-field)
+    focus: var(--ui-focus)
+    icon-secondary: var(--ui-icon-secondary)
     layer: var(--ui-layer)
     overlay: var(--ui-overlay)
     text: var(--ui-text)
+    text-on-color: var(--ui-text-on-color)
     text-secondary: var(--ui-text-secondary)
     """);
   }
