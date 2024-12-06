@@ -256,7 +256,7 @@ abstract class UiTemplate extends Html.Template {
     frameValue = Integer.toString(page.number());
 
     return div(
-        className("flex justify-end"),
+        className("flex justify-end py-8px"),
 
         dataFrame(frameName, frameValue),
 
@@ -272,6 +272,9 @@ abstract class UiTemplate extends Html.Template {
 
   private Html.Instruction paginationLink(UiIcon icon, String label, String href) {
     return a(
+        className("size-40px flex items-center justify-center"),
+        className("hover:bg-layer-hover"),
+
         dataOnClick(Script.navigate()),
 
         href(href),
@@ -282,6 +285,8 @@ abstract class UiTemplate extends Html.Template {
 
   private Html.Instruction paginationDisabled(UiIcon icon, String label) {
     return button(
+        className("size-40px flex items-center justify-center"),
+        className("hover:bg-layer-hover"),
         className("cursor-not-allowed"),
 
         ariaLabel(label),

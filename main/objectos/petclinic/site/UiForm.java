@@ -59,7 +59,7 @@ final class UiForm extends Html.Template {
         overlay,
 
         className("""
-        invisible fixed inset-0px z-tearsheet
+        invisible fixed inset-0px z-9000
         flex justify-center
         bg-overlay
         opacity-0 transition-opacity duration-300
