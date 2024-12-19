@@ -16,7 +16,6 @@
 package objectos.petclinic.site;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 import objectos.way.Css;
 import objectos.way.Html;
 import objectos.way.Script;
@@ -38,10 +37,10 @@ abstract class UiTemplate extends Html.Template {
     injector = Objects.requireNonNull(config.injector, "injector == null");
   }
 
-  public static Consumer<Html.Markup> defaultHeadPlugin() {
-    return html -> {
-      html.link(html.rel("stylesheet"), html.type("text/css"), html.href("/ui/styles.css"));
-      html.script(html.src("/ui/script.js"));
+  public static Html.Component defaultHeadPlugin() {
+    return m -> {
+      m.link(m.rel("stylesheet"), m.type("text/css"), m.href("/ui/styles.css"));
+      m.script(m.src("/ui/script.js"));
     };
   }
 
@@ -50,7 +49,7 @@ abstract class UiTemplate extends Html.Template {
   //
 
   final void shell(
-      UiSidebar sidebar,
+      SiteSidebar sidebar,
 
       String title,
 
@@ -63,8 +62,12 @@ abstract class UiTemplate extends Html.Template {
     doctype();
 
     html(
-        className("theme-light"),
-        className("size-full bg-background text-text"),
+        className("""
+        width:100%
+        height:100%
+        background-color:background
+        color:foreground
+        """),
 
         renderFragment(this::shellHead, title),
 
@@ -73,31 +76,50 @@ abstract class UiTemplate extends Html.Template {
   }
 
   private void shellHead(String title) {
-    Consumer<Html.Markup> templateHeadPlugin;
-    templateHeadPlugin = injector.templateHeadPlugin();
+    Html.Component templateHeadPlugin;
+    templateHeadPlugin = injector.headComponent();
 
     head(
         meta(charset("utf-8")),
         meta(httpEquiv("content-type"), content("text/html; charset=utf-8")),
         meta(name("viewport"), content("width=device-width, initial-scale=1")),
         link(rel("shortcut icon"), type("image/x-icon"), href("/favicon.png")),
-        renderPlugin(templateHeadPlugin),
+        renderComponent(templateHeadPlugin),
         title(title)
     );
   }
 
-  private void shellBody(UiSidebar sidebar, Html.Fragment.Of0 contents) {
+  private static final Html.ClassName BODY_COMPACT_01 = Html.ClassName.ofText("""
+  font-size:14rx
+  line-height:18rx
+  font-weight:400
+  letter-spacing:0.16px
+  """);
+
+  private void shellBody(SiteSidebar sidebar, Html.Fragment.Of0 contents) {
     body(
-        className("size-full"),
+        classNameText("""
+        width:100%
+        height:100%
+        """),
 
         div(
-            className("mx-auto w-full max-w-screen-xl flex items-start"),
-            className("body-compact-01"),
+            classNameText("""
+            width:100%
+            max-width:screen-xl
+            margin:0_auto
+            display:flex
+            align-items:flex-start
+            """),
+            BODY_COMPACT_01,
 
             renderFragment(this::shellSidebar, sidebar),
 
             main(
-                className("grow p-16px"),
+                classNameText("""
+                flex-grow:1
+                padding:16rx
+                """),
                 dataFrame("main", classSimpleName()),
 
                 renderFragment(contents)
@@ -113,25 +135,36 @@ abstract class UiTemplate extends Html.Template {
     return thisClass.getSimpleName();
   }
 
-  private void shellSidebar(UiSidebar pageSidebar) {
+  private void shellSidebar(SiteSidebar pageSidebar) {
     div(
-        className("sticky top-0px w-240px h-screen shrink-0 border-r border-r-border px-16px"),
-        className("body-compact-01"),
+        classNameText("""
+        position:sticky
+        top:0px
+        width:240rx
+        height:100vh
+        border-right:1px_solid_border
+        padding:0px_16rx
+        """),
+        BODY_COMPACT_01,
 
         div(
-            className("flex items-center py-28px px-16px"),
+            classNameText("""
+            display:flex
+            align-items:center
+            padding:28rx_16rx
+            """),
 
             raw(UiIcon.LOGO.value),
 
             span(
-                className("pl-8px"),
+                className("padding-left:8rx"),
 
                 text("Objectos PetClinic")
             )
         ),
 
         nav(
-            className("pt-16px"),
+            className("padding-top:16rx"),
             dataFrame("sidebar", pageSidebar.name()),
 
             renderFragment(this::shellSidebarItems, pageSidebar)
@@ -139,25 +172,30 @@ abstract class UiTemplate extends Html.Template {
     );
   }
 
-  private void shellSidebarItems(UiSidebar pageSidebar) {
-    for (UiSidebar item : UiSidebar.VALUES) {
+  private void shellSidebarItems(SiteSidebar pageSidebar) {
+    for (SiteSidebar item : SiteSidebar.values()) {
       a(
-          className("flex items-center px-16px py-8px hover:bg-background-hover"),
+          classNameText("""
+          display:flex
+          align-items:center
+          padding:8rx_16px
+          hover:background-color:accent/10
+          """),
 
-          item == pageSidebar ? className("bg-background-selected") : noop(),
+          item == pageSidebar ? className("background-color:accent/20") : noop(),
 
           dataOnClick(Script.navigate()),
 
           href(item.href),
 
           div(
-              className("pl-2px"),
+              className("padding-left:2rx"),
 
               raw(item.icon)
           ),
 
           div(
-              className("pl-10px"),
+              className("padding-left:10rx"),
 
               text(item.title)
           )
@@ -224,19 +262,32 @@ abstract class UiTemplate extends Html.Template {
   final Html.Instruction.OfElement dataTable(Html.Fragment.Of0 tableHead, Html.Fragment.Of0 tableBody) {
     return div(
         table(
-            className("w-full tr:h-40px"),
+            classNameText("""
+            width:100%
+
+            tr:height:40rx
+            """),
 
             thead(
-                className("th:px-16px th:align-middle th:font-600"),
+                classNameText("""
+                th:padding:0_16rx
+                th:text-align:middle
+                th:font-weight:600
+                """),
 
                 renderFragment(tableHead)
             ),
 
             tbody(
-                className(
-                    "tr:transition-colors tr:duration-75 tr:hover:bg-background-hover",
-                    "td:border-t td:border-t-border td:px-16px td:align-middle td:text-text-secondary"
-                ),
+                classNameText("""
+                tr.transition-duration:75ms
+                tr:transition-property:background-color
+                tr:hover:background-color:accent/10
+
+                td:border-top:1px_solid_border
+                td:padding:0_16rx
+                td:vertical-align:middle
+                """),
 
                 renderFragment(tableBody)
             )

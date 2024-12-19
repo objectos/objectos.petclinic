@@ -16,7 +16,6 @@
 package objectos.petclinic.site;
 
 import java.nio.file.Path;
-import java.util.function.Consumer;
 import objectos.way.App;
 import objectos.way.Html;
 import objectos.way.Http;
@@ -31,10 +30,10 @@ public record SiteInjector(
 
     Http.Handler stylesHandler,
     Path stylesScanDirectory,
-    Consumer<Html.Markup> templateHeadPlugin
+    Html.Component headComponent
 ) {
 
-  public static Consumer<Html.Markup> defaultTemplateHeadPlugin() {
+  public static Html.Component defaultTemplateHeadPlugin() {
     return UiTemplate.defaultHeadPlugin();
   }
 

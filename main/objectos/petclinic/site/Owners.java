@@ -16,6 +16,12 @@
 package objectos.petclinic.site;
 
 import java.util.List;
+import objectos.petclinic.ui.UiButton;
+import objectos.petclinic.ui.UiContents;
+import objectos.petclinic.ui.UiPageHeader;
+import objectos.petclinic.ui.UiSearch;
+import objectos.petclinic.ui.UiShell;
+import objectos.way.Html;
 import objectos.way.Http;
 import objectos.way.Script;
 import objectos.way.Sql;
@@ -207,6 +213,57 @@ final class Owners implements Http.Handler {
 
       config.rows = rows;
     });
+  }
+
+  final Html.Component render(Web.Form form) {
+    return UiShell.create(shell -> {
+      shell.pageTitle = "Owners | Objectos PetClinic";
+
+      shell.sidebarItem = SiteSidebar.OWNERS;
+
+      shell.contents = contents(form);
+    });
+  }
+
+  private UiContents contents(Web.Form form) {
+    return UiContents.create(contents -> {
+      contents.frameValue = getClass().getSimpleName();
+
+      contents.components = components(form);
+    });
+  }
+
+  private List<Html.Component> components(Web.Form form) {
+    UiForm createForm;
+    createForm = new UiForm("owners", form);
+
+    return List.of(
+
+        UiPageHeader.create(header -> {
+          header.title = "Owners";
+
+          header.subtitle = "Find a pet owner or add a new one.";
+        }),
+
+        m -> m.div(
+            m.className("display:flex margin-top:28rx"),
+
+            m.renderComponent(UiSearch.create(search -> {
+              search.action = "/owners";
+
+              search.placeholder = "Find by last name";
+            })),
+
+            m.renderComponent(UiButton.create(button -> {
+              button.dataOnClick = createForm.showAction();
+
+              button.text = "Add owner";
+            }))
+        ),
+
+        createForm
+
+    );
   }
 
 }

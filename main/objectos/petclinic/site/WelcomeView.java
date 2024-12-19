@@ -49,7 +49,7 @@ final class WelcomeView extends UiTemplate {
   @Override
   protected final void render() {
     shell(
-        UiSidebar.HOME,
+        SiteSidebar.HOME,
 
         "Objectos PetClinic",
 
@@ -68,19 +68,19 @@ final class WelcomeView extends UiTemplate {
   private void tableHead() {
     tr(
         th(
-            className("w-144px text-center"),
+            className("width:144rx text-align:center"),
 
             text("Date")
         ),
 
         th(
-            className("w-224px text-start"),
+            className("width:224rx text-align:start"),
 
             text("Pet")
         ),
 
         th(
-            className("text-start"),
+            className("text-align:start"),
 
             text("Description")
         )
@@ -91,19 +91,19 @@ final class WelcomeView extends UiTemplate {
     for (WelcomeVisit visit : visits) {
       tr(
           td(
-              className("w-144px text-center"),
+              className("width:144rx text-align:center"),
 
               testable("visit.date", visit.dateText())
           ),
 
           td(
-              className("w-224px text-start"),
+              className("width:224rx text-align:start"),
 
               testable("visit.name", visit.name())
           ),
 
           td(
-              className("text-start"),
+              className("text-align:start"),
 
               testable("visit.description", visit.description())
           )

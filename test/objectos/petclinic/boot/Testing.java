@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.SQLException;
-import java.util.function.Consumer;
 import objectos.petclinic.site.SiteInjector;
 import objectos.petclinic.site.UiStyles;
 import objectos.way.App;
@@ -64,10 +63,10 @@ public final class Testing {
     );
   }
 
-  private static Consumer<Html.Markup> createTemplateHeadPlugin(App.NoteSink noteSink) {
-    record TemplateHeadPlugin(String styleSheet, String script) implements Consumer<Html.Markup> {
+  private static Html.Component createTemplateHeadPlugin(App.NoteSink noteSink) {
+    record TemplateHeadPlugin(String styleSheet, String script) implements Html.Component {
       @Override
-      public final void accept(Html.Markup html) {
+      public final void renderHtml(Html.Markup html) {
         html.style(styleSheet);
 
         html.script(script);

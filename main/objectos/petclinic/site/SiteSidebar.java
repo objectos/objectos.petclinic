@@ -15,13 +15,17 @@
  */
 package objectos.petclinic.site;
 
-enum UiSidebar {
+import java.util.EnumSet;
+import java.util.Set;
+import objectos.petclinic.ui.UiSidebar;
+
+enum SiteSidebar implements UiSidebar.Item {
 
   HOME(UiIcon.HOME, "Home", "/"),
 
   OWNERS(UiIcon.OWNERS, "Owners", "/owners");
 
-  static final UiSidebar[] VALUES = values();
+  private static final Set<? extends UiSidebar.Item> ITEMS = EnumSet.allOf(SiteSidebar.class);
 
   final String icon;
 
@@ -29,12 +33,32 @@ enum UiSidebar {
 
   final String href;
 
-  private UiSidebar(UiIcon icon, String title, String href) {
+  private SiteSidebar(UiIcon icon, String title, String href) {
     this.icon = icon.value;
 
     this.title = title;
 
     this.href = href;
   }
+
+  @Override
+  public final UiSidebar toUi() {
+    return UiSidebar.create(config -> {
+      config.logo = html -> html.raw(UiIcon.LOGO.value);
+
+      config.items = ITEMS;
+
+      config.current = this;
+    });
+  }
+
+  @Override
+  public String icon() { return icon; }
+
+  @Override
+  public String title() { return title; }
+
+  @Override
+  public String href() { return href; }
 
 }

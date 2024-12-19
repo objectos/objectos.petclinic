@@ -70,7 +70,7 @@ final class OwnersView extends UiTemplate {
   @Override
   protected final void render() {
     shell(
-        UiSidebar.OWNERS,
+        SiteSidebar.OWNERS,
 
         "Owners | Objectos PetClinic",
 
@@ -89,10 +89,10 @@ final class OwnersView extends UiTemplate {
 
     header(
 
-        className("px-16px"),
+        className("padding-x-16px"),
 
         h1(
-            className("text-28px leading-36px font-400 tracking-0px"),
+            className("font-size-28px font-weight-400 letter-spacing-0px line-height-36px"),
 
             text("Owners")
         ),
@@ -109,7 +109,7 @@ final class OwnersView extends UiTemplate {
 
     div(
 
-        className("mt-28px flex"),
+        className("display-flex margin-t-28px"),
 
         form(
             searchForm,
@@ -120,7 +120,8 @@ final class OwnersView extends UiTemplate {
 
             span(
                 className("""
-                absolute left-14px top-14px svg:size-20px svg:stroke-icon-secondary
+                position-absolute left-14px top-14px
+                svg:size-20px svg:stroke-icon-secondary
                 """),
 
                 raw(UiIcon.MAGNIFYING_GLASS.value)
@@ -128,7 +129,14 @@ final class OwnersView extends UiTemplate {
 
             input(
                 className("""
-                w-full h-48px border-0 border-b border-b-border bg-field px-48px outline-none -outline-offset-2
+                width-100%
+                height-48px
+                background-color-field
+                border-0px
+                border-b-1px_solid_gray-500
+                padding-x-48px
+                outline-none
+                -outline-offset-2px
                 focus:outline-focus
                 """),
 
@@ -153,7 +161,7 @@ final class OwnersView extends UiTemplate {
 
     // create form
 
-    renderTemplate(createForm);
+    renderComponent(createForm);
 
     // owners data table
 
@@ -176,7 +184,7 @@ final class OwnersView extends UiTemplate {
 
   private void tableHead() {
     tr(
-        className("th:text-start"),
+        className("th:text-align-start"),
 
         th(
             text("Name")
@@ -203,7 +211,7 @@ final class OwnersView extends UiTemplate {
   private void tableBody() {
     for (OwnersRow row : rows) {
       tr(
-          className("td:text-start"),
+          className("td:text-align-start"),
 
           td(
               testable("owner.name", row.name())
